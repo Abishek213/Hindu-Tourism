@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
-import { Eye, EyeOff, User, Lock } from 'lucide-react';
+import { Eye, EyeOff, User, Lock, Sun, Moon } from 'lucide-react';
 import './App.css';
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [darkMode, setDarkMode] = useState(false);
 
   const backgroundImages = [
     '/assets/images/pashupati1.jpg.jpg',
@@ -23,14 +24,38 @@ export default function LoginPage() {
     return () => clearInterval(interval);
   }, []);
 
+  useEffect(() => {
+    if (darkMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [darkMode]);
+
   const handleSubmit = () => {
     console.log('Login attempted with:', username, password);
   };
 
+  const toggleTheme = () => {
+    setDarkMode(!darkMode);
+  };
+
   return (
-    <div className="min-h-screen flex flex-col md:flex-row bg-gradient-to-br from-orange-50 to-orange-100">
+    <div className={`min-h-screen flex flex-col md:flex-row ${darkMode ? 'bg-gray-900' : 'bg-gradient-to-br from-orange-50 to-orange-100'}`}>
+      {/* Theme toggle button - positioned absolutely */}
+      <button
+        onClick={toggleTheme}
+        className="absolute top-4 right-4 z-20 p-2 rounded-full bg-white dark:bg-gray-800 shadow-md hover:shadow-lg transition-all duration-200"
+        aria-label="Toggle theme"
+      >
+        {darkMode ? 
+          <Sun size={18} className="text-yellow-400" /> : 
+          <Moon size={18} className="text-gray-700" />
+        }
+      </button>
+
       {/* Left side - Branding */}
-      <div className="md:w-1/2 flex items-center justify-center bg-gradient-to-br from-orange-500 to-orange-600 p-8 md:p-16">
+      <div className={`md:w-1/2 flex items-center justify-center ${darkMode ? 'bg-gradient-to-br from-orange-800 to-orange-900' : 'bg-gradient-to-br from-orange-500 to-orange-600'} p-8 md:p-16`}>
         <div className="text-center md:text-left">
           <div className="flex items-center justify-center md:justify-start mb-6">
             <img 
@@ -73,20 +98,20 @@ export default function LoginPage() {
           className="absolute inset-0 z-0 bg-cover bg-center transition-opacity duration-1000 ease-in-out"
           style={{
             backgroundImage: `url(${backgroundImages[currentImageIndex]})`,
-            opacity: 0.3
+            opacity: darkMode ? 0.2 : 0.3
           }}
         ></div>
 
         {/* Login form */}
         <div className="z-10 w-full max-w-xs">
-          <div className="bg-white shadow-lg rounded-lg p-4">
-            <h2 className="text-lg font-bold text-orange-800 mb-3 text-center">
+          <div className={`${darkMode ? 'bg-gray-800 shadow-lg' : 'bg-white shadow-lg'} rounded-lg p-4`}>
+            <h2 className={`text-lg font-bold ${darkMode ? 'text-orange-400' : 'text-orange-800'} mb-3 text-center`}>
               Login to CRM
             </h2>
 
             <div>
               <div className="mb-3">
-                <label htmlFor="username" className="block text-xs font-medium text-gray-700 mb-1">
+                <label htmlFor="username" className={`block text-xs font-medium ${darkMode ? 'text-gray-300' : 'text-gray-700'} mb-1`}>
                   Username
                 </label>
                 <div className="relative">
@@ -98,14 +123,14 @@ export default function LoginPage() {
                     id="username"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
-                    className="pl-7 block w-full rounded border-gray-300 shadow-sm focus:border-orange-500 focus:ring focus:ring-orange-200 focus:ring-opacity-50 bg-orange-50 text-xs py-1.5"
+                    className={`pl-7 block w-full rounded border-gray-300 shadow-sm focus:border-orange-500 focus:ring focus:ring-orange-200 focus:ring-opacity-50 ${darkMode ? 'bg-gray-700 text-white' : 'bg-orange-50 text-gray-900'} text-xs py-1.5`}
                     placeholder="Enter your username"
                   />
                 </div>
               </div>
 
               <div className="mb-3">
-                <label htmlFor="password" className="block text-xs font-medium text-gray-700 mb-1">
+                <label htmlFor="password" className={`block text-xs font-medium ${darkMode ? 'text-gray-300' : 'text-gray-700'} mb-1`}>
                   Password
                 </label>
                 <div className="relative">
@@ -117,7 +142,7 @@ export default function LoginPage() {
                     id="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="pl-7 block w-full rounded border-gray-300 shadow-sm focus:border-orange-500 focus:ring focus:ring-orange-200 focus:ring-opacity-50 bg-orange-50 text-xs py-1.5"
+                    className={`pl-7 block w-full rounded border-gray-300 shadow-sm focus:border-orange-500 focus:ring focus:ring-orange-200 focus:ring-opacity-50 ${darkMode ? 'bg-gray-700 text-white' : 'bg-orange-50 text-gray-900'} text-xs py-1.5`}
                     placeholder="Enter your password"
                   />
                   <div className="absolute inset-y-0 right-0 pr-2 flex items-center">
@@ -132,18 +157,18 @@ export default function LoginPage() {
                 </div>
               </div>
 
-              <div className="flex items-center justify-between mb-3 text-xs">
+              <div className={`flex items-center justify-between mb-3 text-xs ${darkMode ? 'text-gray-300' : ''}`}>
                 <div className="flex items-center">
                   <input
                     id="remember-me"
                     type="checkbox"
                     className="h-3 w-3 text-orange-600 border-gray-300 rounded focus:ring-orange-500"
                   />
-                  <label htmlFor="remember-me" className="ml-1 block text-gray-700 text-xs">
+                  <label htmlFor="remember-me" className={`ml-1 block ${darkMode ? 'text-gray-300' : 'text-gray-700'} text-xs`}>
                     Remember me
                   </label>
                 </div>
-                <a href="#" className="text-orange-600 hover:text-orange-800 text-xs">
+                <a href="#" className={`${darkMode ? 'text-orange-400' : 'text-orange-600'} hover:text-orange-800 text-xs`}>
                   Forgot password?
                 </a>
               </div>
@@ -157,8 +182,8 @@ export default function LoginPage() {
             </div>
 
             <div className="mt-3 text-center">
-              <p className="text-xs text-gray-600">
-                Need help? Contact <a href="#" className="text-orange-600 font-medium">IT Support</a>
+              <p className={`text-xs ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
+                Need help? Contact <a href="#" className={`${darkMode ? 'text-orange-400' : 'text-orange-600'} font-medium`}>IT Support</a>
               </p>
             </div>
           </div>
@@ -166,7 +191,7 @@ export default function LoginPage() {
           <div className="mt-4 text-center">
             <div className="flex items-center justify-center space-x-1">
               <div className="w-1.5 h-1.5 rounded-full bg-orange-600"></div>
-              <p className="text-xs text-gray-600">
+              <p className={`text-xs ${darkMode ? 'text-gray-400' : 'text-gray-600'}`}>
                 © 2025 TheHinduTourism.com
               </p>
             </div>
