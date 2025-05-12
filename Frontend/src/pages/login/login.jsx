@@ -1,9 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Eye, EyeOff, User, Lock, Sun, Moon } from 'lucide-react';
 
-
-
-
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [username, setUsername] = useState('');
