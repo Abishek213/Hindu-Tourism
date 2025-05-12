@@ -175,7 +175,7 @@ export default function LoginPage() {
                 onClick={handleSubmit}
                 className="w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-medium py-1.5 px-3 rounded shadow transition duration-200 focus:outline-none focus:ring-2 focus:ring-orange-300 text-xs"
               >
-                Log In
+                Log In hahahaha
               </button>
             </div>
 
