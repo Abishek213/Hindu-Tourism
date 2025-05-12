@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react';
 import { Eye, EyeOff, User, Lock, Sun, Moon } from 'lucide-react';
 
+
+
+
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [username, setUsername] = useState('');
@@ -57,11 +60,7 @@ export default function LoginPage() {
       <div className={`md:w-1/2 flex items-center justify-center ${darkMode ? 'bg-gradient-to-br from-orange-800 to-orange-900' : 'bg-gradient-to-br from-orange-500 to-orange-600'} p-8 md:p-16`}>
         <div className="text-center md:text-left">
           <div className="flex items-center justify-center md:justify-start mb-6">
-            <img 
-              src="/api/placeholder/80/80" 
-              alt="Logo" 
-              className="h-16 w-16 rounded-full bg-white p-2"
-            />
+           
             <h1 className="text-3xl md:text-4xl font-bold text-white ml-4">
               TheHinduTourism
             </h1>
@@ -176,7 +175,7 @@ export default function LoginPage() {
                 onClick={handleSubmit}
                 className="w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-medium py-1.5 px-3 rounded shadow transition duration-200 focus:outline-none focus:ring-2 focus:ring-orange-300 text-xs"
               >
-                Log In
+                Log In hahahaha
               </button>
             </div>
 
