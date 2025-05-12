@@ -1,48 +1,55 @@
 import jwt from 'jsonwebtoken';
-import User from '../models/User';
-import bcrypt from 'bcryptjs';
+import config from '../config/config.js';
+import Staff from '../models/Staff.js';
+
+export const register = async (req, res, next) => {
+  try {
+    const { name, email, username, password, role_id } = req.body;
+
+    const staff = await Staff.create({
+      name,
+      email,
+      username,
+      password_hash: password,
+      role_id
+    });
+
+    const token = jwt.sign({ id: staff._id }, config.JWT_SECRET, {
+      expiresIn: config.JWT_EXPIRE
+    });
+
+    res.status(201).json({
+      success: true,
+      token
+    });
+  } catch (err) {
+    next(err);
+  }
+};
 
 export const login = async (req, res, next) => {
   try {
-    const { email, password } = req.body;
-    
-    // 1. Check if user exists
-    const user = await User.findOne({ email });
-    if (!user) {
-      return res.status(401).json({ message: 'Invalid credentials' });
+    const { username, password } = req.body;
+
+    if (!username || !password) {
+      return next(new Error('Please provide username and password'));
     }
-    
-    // 2. Validate password
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return res.status(401).json({ message: 'Invalid credentials' });
+
+    const staff = await Staff.findOne({ username }).select('+password_hash');
+
+    if (!staff || !(await staff.matchPassword(password))) {
+      return next(new Error('Invalid credentials'));
     }
-    
-    // 3. Generate JWT token
-    const token = jwt.sign(
-      { userId: user._id, role: user.role },
-      process.env.JWT_SECRET,
-      { expiresIn: '1d' }
-    );
-    
-    // 4. Set cookie if using cookie-based auth
-    res.cookie('token', token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      maxAge: 86400000, // 1 day
+
+    const token = jwt.sign({ id: staff._id }, config.JWT_SECRET, {
+      expiresIn: config.JWT_EXPIRE
     });
-    
-    // 5. Send response
-    res.json({
-      token,
-      user: {
-        id: user._id,
-        name: user.name,
-        email: user.email,
-        role: user.role
-      }
+
+    res.status(200).json({
+      success: true,
+      token
     });
-  } catch (error) {
-    next(error);
+  } catch (err) {
+    next(err);
   }
 };
