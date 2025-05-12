@@ -6,6 +6,7 @@ import './App.css';
 
 import Login from './pages/login/login.jsx';
 import Salesdashboard from './pages/dashboard/salesdashboard.jsx';
+//import OperationDashboard from './pages/dashboard/Operationdash.jsx';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -13,6 +14,7 @@ createRoot(document.getElementById('root')).render(
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/Salesdashboard" element={<Salesdashboard />} />
+        
 
       </Routes>
     </BrowserRouter>
