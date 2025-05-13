@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import bcrypt from 'bcryptjs';
+import logger from '../utils/logger.js';
 
 import Role from '../models/Role.js';
 import Staff from '../models/Staff.js';
@@ -58,15 +59,18 @@ const staffSeedData = [
 ];
 
 export const seedStaff = async () => {
+  let connection;
   try {
     // Connect to database
-    await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/travel_agency', {
-      useNewUrlParser: true,
-      useUnifiedTopology: true
+    connection = await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/travel_agency', {
+      serverSelectionTimeoutMS: 5000,
+      maxPoolSize: 10,
     });
+    logger.debug('Database connected for staff seeding');
 
     // Clear existing staff entries
-    await Staff.deleteMany({});
+    const deleteResult = await Staff.deleteMany({});
+    logger.debug(`Cleared ${deleteResult.deletedCount} existing staff records`);
 
     // Fetch roles
     const roles = await Role.find({});
@@ -74,37 +78,56 @@ export const seedStaff = async () => {
     roles.forEach(role => {
       roleMap[role.role_name] = role._id;
     });
+    logger.debug(`Found ${roles.length} roles for staff assignment`);
 
     // Prepare hashed and role-linked staff data
     const staffData = await Promise.all(
-      staffSeedData.map(async (staff) => ({
-        name: staff.name,
-        email: staff.email,
-        phone: staff.phone,
-        username: staff.username,
-        password_hash: await bcrypt.hash(staff.password, 10),
-        is_active: true,
-        role_id: roleMap[staff.role_name],
-        createdAt: new Date(),
-        updatedAt: new Date()
-      }))
+      staffSeedData.map(async (staff) => {
+        const hashedPassword = await bcrypt.hash(staff.password, 10);
+        logger.debug(`Hashed password for ${staff.username}`);
+        
+        return {
+          name: staff.name,
+          email: staff.email,
+          phone: staff.phone,
+          username: staff.username,
+          password_hash: hashedPassword,
+          is_active: true,
+          role_id: roleMap[staff.role_name],
+          createdAt: new Date(),
+          updatedAt: new Date()
+        };
+      })
     );
 
     // Insert new staff
     const insertedStaff = await Staff.insertMany(staffData);
-    console.log(`Staff seeding: Success (${insertedStaff.length} inserted)`);
-    process.exit(0);
+    logger.info(`Staff seeding completed. Inserted ${insertedStaff.length} staff members`);
+    
+    return insertedStaff;
   } catch (error) {
-    console.error(`Staff seeding: Failed (${error.message})`);
-    process.exit(1);
+    logger.error('Staff seeding failed:', {
+      message: error.message,
+      stack: error.stack,
+      dbConnection: connection ? 'active' : 'failed'
+    });
+    throw error;
   } finally {
     if (mongoose.connection.readyState === 1) {
       await mongoose.disconnect();
+      logger.debug('Database connection closed after seeding');
     }
   }
 };
 
 // Execute directly if run as a script
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
-  seedStaff();
+  (async () => {
+    try {
+      await seedStaff();
+      process.exit(0);
+    } catch (error) {
+      process.exit(1);
+    }
+  })();
 }
