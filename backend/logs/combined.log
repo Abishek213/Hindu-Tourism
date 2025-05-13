@@ -1,0 +1,84 @@
+10:31:38 [[34mdebug[39m]: Environment variables loaded from: D:\VSCodeWorksheet\Lishnu\.env
+10:31:38 [[33mwarn[39m]: Missing required environment variable: MONGODB_URI
+10:31:38 [[33mwarn[39m]: Missing required environment variable: JWT_SECRET
+10:31:38 [[33mwarn[39m]: Using default JWT secret - not recommended for production
+10:31:39 [[32minfo[39m]: MongoDB connected: localhost
+10:31:39 [[34mdebug[39m]: MongoDB connection details: 
+      - Database: travel_agency
+      - Port: 27017
+      - Model count: 1
+10:31:39 [[32minfo[39m]: Database connected successfully
+10:31:40 [[34mdebug[39m]: Loaded model: Booking.js
+10:31:40 [[34mdebug[39m]: Loaded model: BookingService.js
+10:31:40 [[34mdebug[39m]: Loaded model: Communication.js
+10:31:40 [[34mdebug[39m]: Loaded model: Customer.js
+10:31:40 [[34mdebug[39m]: Loaded model: CustomerPortal.js
+10:31:40 [[34mdebug[39m]: Loaded model: Document.js
+10:31:40 [[34mdebug[39m]: Loaded model: Guide.js
+10:31:40 [[34mdebug[39m]: Loaded model: index.js
+10:31:40 [[34mdebug[39m]: Loaded model: Invoice.js
+10:31:40 [[34mdebug[39m]: Loaded model: Lead.js
+10:31:40 [[34mdebug[39m]: Loaded model: OptionalService.js
+10:31:40 [[34mdebug[39m]: Loaded model: Package.js
+10:31:40 [[34mdebug[39m]: Loaded model: PackageItinerary.js
+10:31:40 [[34mdebug[39m]: Loaded model: Payment.js
+10:31:40 [[34mdebug[39m]: Loaded model: Role.js
+10:31:40 [[34mdebug[39m]: Loaded model: Staff.js
+10:31:40 [[34mdebug[39m]: Loaded model: Transport.js
+10:31:40 [[32minfo[39m]: Roles already exist. Skipping seed.
+10:31:40 [[34mdebug[39m]: Database connected for staff seeding
+10:31:40 [[34mdebug[39m]: Cleared 5 existing staff records
+10:31:40 [[34mdebug[39m]: Found 5 roles for staff assignment
+10:31:40 [[34mdebug[39m]: Hashed password for admin
+10:31:40 [[34mdebug[39m]: Hashed password for sales_agent
+10:31:40 [[34mdebug[39m]: Hashed password for ops_manager
+10:31:40 [[34mdebug[39m]: Hashed password for finance_accountant
+10:31:40 [[34mdebug[39m]: Hashed password for customer_support
+10:31:40 [[32minfo[39m]: Staff seeding completed. Inserted 5 staff members
+10:31:40 [[33mwarn[39m]: Mongoose default connection disconnected
+10:31:40 [[34mdebug[39m]: Database connection closed after seeding
+10:31:40 [[32minfo[39m]: Database seeding completed
+10:31:40 [[34mdebug[39m]: Routes initialized
+10:31:40 [[32minfo[39m]: Server running in development mode on port 3000
+10:31:58 [[34mdebug[39m]: Environment variables loaded from: D:\VSCodeWorksheet\Lishnu\.env
+10:31:58 [[33mwarn[39m]: Missing required environment variable: MONGODB_URI
+10:31:58 [[33mwarn[39m]: Missing required environment variable: JWT_SECRET
+10:31:58 [[33mwarn[39m]: Using default JWT secret - not recommended for production
+10:32:00 [[32minfo[39m]: MongoDB connected: localhost
+10:32:00 [[34mdebug[39m]: MongoDB connection details: 
+      - Database: travel_agency
+      - Port: 27017
+      - Model count: 1
+10:32:00 [[32minfo[39m]: Database connected successfully
+10:32:00 [[34mdebug[39m]: Loaded model: Booking.js
+10:32:00 [[34mdebug[39m]: Loaded model: BookingService.js
+10:32:00 [[34mdebug[39m]: Loaded model: Communication.js
+10:32:00 [[34mdebug[39m]: Loaded model: Customer.js
+10:32:00 [[34mdebug[39m]: Loaded model: CustomerPortal.js
+10:32:00 [[34mdebug[39m]: Loaded model: Document.js
+10:32:00 [[34mdebug[39m]: Loaded model: Guide.js
+10:32:00 [[34mdebug[39m]: Loaded model: index.js
+10:32:00 [[34mdebug[39m]: Loaded model: Invoice.js
+10:32:00 [[34mdebug[39m]: Loaded model: Lead.js
+10:32:00 [[34mdebug[39m]: Loaded model: OptionalService.js
+10:32:00 [[34mdebug[39m]: Loaded model: Package.js
+10:32:00 [[34mdebug[39m]: Loaded model: PackageItinerary.js
+10:32:00 [[34mdebug[39m]: Loaded model: Payment.js
+10:32:00 [[34mdebug[39m]: Loaded model: Role.js
+10:32:00 [[34mdebug[39m]: Loaded model: Staff.js
+10:32:00 [[34mdebug[39m]: Loaded model: Transport.js
+10:32:00 [[32minfo[39m]: Roles already exist. Skipping seed.
+10:32:00 [[34mdebug[39m]: Database connected for staff seeding
+10:32:00 [[34mdebug[39m]: Cleared 5 existing staff records
+10:32:00 [[34mdebug[39m]: Found 5 roles for staff assignment
+10:32:01 [[34mdebug[39m]: Hashed password for admin
+10:32:01 [[34mdebug[39m]: Hashed password for sales_agent
+10:32:01 [[34mdebug[39m]: Hashed password for ops_manager
+10:32:01 [[34mdebug[39m]: Hashed password for finance_accountant
+10:32:01 [[34mdebug[39m]: Hashed password for customer_support
+10:32:01 [[32minfo[39m]: Staff seeding completed. Inserted 5 staff members
+10:32:01 [[33mwarn[39m]: Mongoose default connection disconnected
+10:32:01 [[34mdebug[39m]: Database connection closed after seeding
+10:32:01 [[32minfo[39m]: Database seeding completed
+10:32:01 [[34mdebug[39m]: Routes initialized
+10:32:01 [[32minfo[39m]: Server running in development mode on port 3000

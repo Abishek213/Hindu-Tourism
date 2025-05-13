@@ -1,5 +1,6 @@
 // seed/roles.seeder.js
 import Role from '../models/Role.js';
+import logger from '../utils/logger.js';
 
 const rolesData = [
   {
@@ -65,12 +66,23 @@ const rolesData = [
 ];
 
 export const seedRoles = async () => {
-  const count = await Role.estimatedDocumentCount();
-  if (count > 0) {
-    console.log('Roles already exist. Skipping seed.');
-    return;
-  }
+  try {
+    const count = await Role.estimatedDocumentCount();
+    
+    if (count > 0) {
+      logger.info('Roles already exist. Skipping seed.');
+      return;
+    }
 
-  const insertedRoles = await Role.insertMany(rolesData);
-  console.log(`Seeded ${insertedRoles.length} roles.`);
+    const insertedRoles = await Role.insertMany(rolesData);
+    logger.info(`Seeded ${insertedRoles.length} roles: ${insertedRoles.map(r => r.role_name).join(', ')}`);
+    
+    return insertedRoles;
+  } catch (error) {
+    logger.error('Role seeding failed:', {
+      message: error.message,
+      stack: error.stack
+    });
+    throw error;
+  }
 };

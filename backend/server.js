@@ -10,6 +10,9 @@ import fs from 'fs';
 import { fileURLToPath, pathToFileURL } from 'url';
 import dotenv from 'dotenv';
 
+// Utils
+import logger from './utils/logger.js';
+
 // Config
 import config from './config/config.js';
 import connectDB from './config/db.js';
@@ -34,6 +37,7 @@ const app = express();
   try {
     // Connect to DB
     await connectDB();
+    logger.info('Database connected successfully');
 
     // Load models
     const modelsPath = path.join(__dirname, 'models');
@@ -42,6 +46,7 @@ const app = express();
     for (const file of modelFiles) {
       const fullPath = path.join(modelsPath, file);
       await import(pathToFileURL(fullPath).href);
+      logger.debug(`Loaded model: ${file}`);
     }
 
     // Seeder (only in development)
@@ -50,6 +55,7 @@ const app = express();
       await seedRoles();
       const { seedStaff } = await import('./seed/staff.seeder.js');
       await seedStaff();
+      logger.info('Database seeding completed');
     }
 
     // Middleware setup
@@ -60,18 +66,27 @@ const app = express();
     app.use(cookieParser());
     app.use(mongoSanitize());
 
+    // Rate limiting
     const limiter = rateLimit({
       windowMs: 15 * 60 * 1000,
-      max: 100
+      max: 100,
+      handler: (req, res) => {
+        logger.warn(`Rate limit exceeded for IP: ${req.ip}`);
+        res.status(429).json({
+          error: 'Too many requests, please try again later'
+        });
+      }
     });
     app.use(limiter);
 
+    // HTTP request logging
     if (process.env.NODE_ENV !== 'production') {
-      app.use(morgan('dev'));
+      app.use(morgan('dev', { stream: { write: message => logger.http(message.trim()) } }));
     }
 
     // Routes
     app.use('/api/auth', authRoutes);
+    logger.debug('Routes initialized');
 
     // Error handling
     app.use(errorHandler);
@@ -79,10 +94,10 @@ const app = express();
     // Start server
     const PORT = config.PORT || 3000;
     app.listen(PORT, () => {
-      console.log(`Server running in ${process.env.NODE_ENV || 'development'} mode on port ${PORT}`);
+      logger.info(`Server running in ${process.env.NODE_ENV || 'development'} mode on port ${PORT}`);
     });
   } catch (err) {
-    console.error('Fatal server error:', err);
+    logger.error('Fatal server error:', err);
     process.exit(1);
   }
 })();
