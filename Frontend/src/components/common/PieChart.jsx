@@ -40,7 +40,7 @@ const CustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, 
 
 const PieChartComponent = ({ data, title, height = 300, colorScheme = ['#FF7B25', '#FF9A52', '#FFB980', '#FFDBAC', '#EA580C'] }) => {
   return (
-    <div className="bg-white p-6 rounded-xl shadow-md border border-gray-100 h-full">
+    <div className="bg-white p-2 rounded-xl shadow-md border border-gray-100 h-full">
       <h3 className="text-base font-medium text-gray-800 mb-4">{title}</h3>
       
       <div style={{ width: '100%', height }}>

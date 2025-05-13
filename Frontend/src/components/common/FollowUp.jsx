@@ -29,7 +29,7 @@ const FollowUpCard = ({ followUps }) => {
   };
 
   return (
-    <div className="bg-white p-6 rounded-xl shadow-md border border-gray-100 h-full">
+    <div className="bg-white p-2 rounded-xl shadow-md border border-gray-100 h-full">
       <div className="flex justify-between items-center mb-4">
         <h3 className="text-base font-medium text-gray-800">Follow-up Reminders</h3>
         <button className="text-sm text-orange-600 hover:text-orange-800">View All</button>

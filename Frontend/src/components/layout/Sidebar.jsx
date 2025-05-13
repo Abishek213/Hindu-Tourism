@@ -14,7 +14,7 @@ import {
   Menu,
   X
 } from 'lucide-react';
-
+import LeadForm from '@components/Leads/LeadForm';
 const SidebarItem = ({ icon, title, path, active, onClick, hasSubmenu, submenuOpen, children }) => {
   return (
     <div className="mb-1">
@@ -84,17 +84,17 @@ const Sidebar = () => {
           ${sidebarOpen ? 'w-64 translate-x-0' : 'w-64 -translate-x-full lg:translate-x-0'}`}
       >
         <div className="p-4 flex items-center justify-between border-b">
-          <div className="flex items-center">
+          <div className="flex items-center ">
             <img 
-              src="/assets/logo.png" 
+              src="logo.jpg" 
               alt="TheHinduTourism" 
-              className="h-8 w-auto mr-2"
+              className="h-20 w-auto mr-2"
               onError={(e) => {
                 e.target.onerror = null;
                 e.target.src = "https://via.placeholder.com/32x32?text=THT";
               }}
             />
-            <h1 className="text-lg font-bold text-orange-600">TheHinduTourism</h1>
+            
           </div>
           <button
             onClick={toggleSidebar}
@@ -136,8 +136,8 @@ const Sidebar = () => {
             />
             <SidebarItem 
               title="Add Lead" 
-              path="/leads/add" 
-              active={isPathActive("/leads/add")} 
+              path="/Leads/Add" 
+              active={isPathActive("/Leads/Add")} 
             />
           </SidebarItem>
           

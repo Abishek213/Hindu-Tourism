@@ -14,10 +14,11 @@ export const mockRevenueStats = {
 };
 
 export const mockLeadSource = [
-  { name: "Website", value: 45, percentage: "45%" },
-  { name: "WhatsApp", value: 30, percentage: "30%" },
+  { name: "Website", value: 45, percentage: "40%" },
+  { name: "WhatsApp", value: 30, percentage: "25%" },
   { name: "Phone Calls", value: 15, percentage: "15%" },
   { name: "Email", value: 10, percentage: "10%" },
+  { name: "Social Media", value: 20, percentage: "20%" },
 ];
 
 export const mockPackagePopularity = [
