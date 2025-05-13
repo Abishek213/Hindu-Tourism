@@ -3,7 +3,7 @@ import Role from '../models/Role.js';
 import bcrypt from 'bcryptjs';
 import { validationResult } from 'express-validator';
 
-//(Admin only)
+// (Admin only)
 // @route   POST /api/staff
 export const createStaff = async (req, res) => {
   try {
@@ -12,10 +12,10 @@ export const createStaff = async (req, res) => {
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const { email, password, firstName, lastName, role: roleName } = req.body;
-    
+    const { name, email, username, phone, password, role: roleName } = req.body;
+
     // Check if role exists
-    const role = await Role.findOne({ name: roleName });
+    const role = await Role.findOne({ role_name: roleName });
     if (!role) {
       return res.status(400).json({ error: 'Invalid role specified' });
     }
@@ -26,33 +26,30 @@ export const createStaff = async (req, res) => {
       return res.status(400).json({ error: 'Staff member already exists' });
     }
 
-    // Hash password
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
-
+    // Remove manual password hashing and just pass the plain password
     const staff = await Staff.create({
-      firstName,
-      lastName,
+      name,
       email,
-      password: hashedPassword,
-      role: role._id,
-      createdBy: req.user.id
+      username,
+      phone,
+      password_hash: password, // Let the pre-save hook handle hashing
+      role_id: role._id
     });
 
     res.status(201).json({
-      _id: staff.id,
-      firstName: staff.firstName,
-      lastName: staff.lastName,
+      _id: staff._id,
+      name: staff.name,
       email: staff.email,
-      role: role.name,
-      isActive: staff.isActive
+      username: staff.username,
+      role: role.role_name,
+      is_active: staff.is_active
     });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
 };
 
-//(Admin only)
+// (Admin only)
 // @route   GET /api/staff
 export const getAllStaff = async (req, res) => {
   try {
@@ -60,30 +57,30 @@ export const getAllStaff = async (req, res) => {
     const query = {};
 
     if (role) {
-      const roleDoc = await Role.findOne({ name: role });
-      if (roleDoc) query.role = roleDoc._id;
+      const roleDoc = await Role.findOne({ role_name: role });
+      if (roleDoc) query.role_id = roleDoc._id;
     }
 
     if (search) {
       query.$or = [
-        { firstName: { $regex: search, $options: 'i' } },
-        { lastName: { $regex: search, $options: 'i' } },
-        { email: { $regex: search, $options: 'i' } }
+        { name: { $regex: search, $options: 'i' } },
+        { email: { $regex: search, $options: 'i' } },
+        { username: { $regex: search, $options: 'i' } }
       ];
     }
 
     const staff = await Staff.find(query)
-      .select('-password')
-      .populate('role', 'name')
-      .limit(limit * 1)
-      .skip((page - 1) * limit)
+      .select('-password_hash')
+      .populate('role_id', 'role_name')
+      .limit(parseInt(limit))
+      .skip((parseInt(page) - 1) * limit)
       .sort('-createdAt');
 
     const count = await Staff.countDocuments(query);
 
     res.json({
       totalPages: Math.ceil(count / limit),
-      currentPage: page,
+      currentPage: parseInt(page),
       staff
     });
   } catch (error) {
@@ -91,13 +88,13 @@ export const getAllStaff = async (req, res) => {
   }
 };
 
-//(Admin only)
+// (Admin only)
 // @route   GET /api/staff/:id
 export const getStaffById = async (req, res) => {
   try {
     const staff = await Staff.findById(req.params.id)
-      .select('-password')
-      .populate('role', 'name');
+      .select('-password_hash')
+      .populate('role_id', 'role_name');
 
     if (!staff) {
       return res.status(404).json({ error: 'Staff member not found' });
@@ -109,7 +106,7 @@ export const getStaffById = async (req, res) => {
   }
 };
 
-//(Admin only)
+// (Admin only)
 // @route   PUT /api/staff/:id
 export const updateStaff = async (req, res) => {
   try {
@@ -118,21 +115,26 @@ export const updateStaff = async (req, res) => {
       return res.status(404).json({ error: 'Staff member not found' });
     }
 
-    const { role: roleName, ...updateData } = req.body;
+    const { role: roleName, password, ...updateData } = req.body;
 
     if (roleName) {
-      const role = await Role.findOne({ name: roleName });
+      const role = await Role.findOne({ role_name: roleName });
       if (!role) {
         return res.status(400).json({ error: 'Invalid role specified' });
       }
-      updateData.role = role._id;
+      updateData.role_id = role._id;
+    }
+
+    if (password) {
+      const salt = await bcrypt.genSalt(10);
+      updateData.password_hash = await bcrypt.hash(password, salt);
     }
 
     const updatedStaff = await Staff.findByIdAndUpdate(
       req.params.id,
       updateData,
       { new: true, runValidators: true }
-    ).select('-password');
+    ).select('-password_hash');
 
     res.json(updatedStaff);
   } catch (error) {
@@ -140,7 +142,7 @@ export const updateStaff = async (req, res) => {
   }
 };
 
-//(Admin only)
+// (Admin only)
 // @route   DELETE /api/staff/:id
 export const deleteStaff = async (req, res) => {
   try {
@@ -149,8 +151,8 @@ export const deleteStaff = async (req, res) => {
       return res.status(404).json({ error: 'Staff member not found' });
     }
 
-    // Soft delete (set isActive to false)
-    staff.isActive = false;
+    // Soft delete (set is_active to false)
+    staff.is_active = false;
     await staff.save();
 
     res.json({ message: 'Staff member deactivated' });
@@ -159,22 +161,22 @@ export const deleteStaff = async (req, res) => {
   }
 };
 
-//(Admin only)
+// (Admin only)
 // @route   GET /api/staff/search
 export const searchStaff = async (req, res) => {
   try {
     const { query } = req.query;
-    
+
     const staff = await Staff.find({
       $or: [
-        { firstName: { $regex: query, $options: 'i' } },
-        { lastName: { $regex: query, $options: 'i' } },
-        { email: { $regex: query, $options: 'i' } }
+        { name: { $regex: query, $options: 'i' } },
+        { email: { $regex: query, $options: 'i' } },
+        { username: { $regex: query, $options: 'i' } }
       ]
     })
-    .select('-password')
-    .populate('role', 'name')
-    .limit(10);
+      .select('-password_hash')
+      .populate('role_id', 'role_name')
+      .limit(10);
 
     res.json(staff);
   } catch (error) {
