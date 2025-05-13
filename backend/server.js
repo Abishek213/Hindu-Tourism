@@ -4,7 +4,6 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
 import rateLimit from 'express-rate-limit';
-import mongoSanitize from 'express-mongo-sanitize';
 import path from 'path';
 import fs from 'fs';
 import { fileURLToPath, pathToFileURL } from 'url';
@@ -21,7 +20,7 @@ import connectDB from './config/db.js';
 import { errorHandler } from './middleware/errorHandler.js';
 
 // Routes
-import authRoutes from './routes/authRoutes.js';
+import mainRouter from './routes/index.js'; 
 
 // ES Module fix
 const __filename = fileURLToPath(import.meta.url);
@@ -64,7 +63,6 @@ const app = express();
     app.use(express.json());
     app.use(express.urlencoded({ extended: true }));
     app.use(cookieParser());
-    app.use(mongoSanitize());
 
     // Rate limiting
     const limiter = rateLimit({
@@ -85,8 +83,8 @@ const app = express();
     }
 
     // Routes
-    app.use('/api/auth', authRoutes);
-    logger.debug('Routes initialized');
+    app.use('/api', mainRouter);
+    logger.debug('All routes initialized');
 
     // Error handling
     app.use(errorHandler);

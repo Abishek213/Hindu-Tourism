@@ -1,11 +1,13 @@
-exports.checkRole = (...roles) => {
+export const checkRole = (...allowedRoles) => {
   return (req, res, next) => {
-    if (!roles.includes(req.user.role.role_name)) {
-      return res.status(403).json({
-        success: false,
-        message: `User role ${req.user.role.role_name} is not authorized to access this route`,
-      });
+    if (!req.user?.role) {
+      return res.status(403).json({ error: 'Access denied - no role specified' });
     }
+    
+    if (!allowedRoles.includes(req.user.role)) {
+      return res.status(403).json({ error: 'Insufficient permissions' });
+    }
+    
     next();
   };
 };
