@@ -15,7 +15,7 @@ const Header = ({ title, userName = "Sales Agent" }) => {
   return (
     <header className="bg-white border-b border-gray-200 py-4 px-6 flex items-center justify-between sticky top-0 z-10">
       <div className="flex items-center">
-        <h1 className="text-xl font-bold text-gray-800 lg:ml-64">{title}</h1>
+        <h1 className="text-xl font-bold text-gray-800 lg:ml-55">{title}</h1>
       </div>
       
       <div className="flex items-center">
