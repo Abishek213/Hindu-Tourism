@@ -12,15 +12,15 @@ createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>
       <Routes>
-        {/* Root route: renders AdminDashboard at "/" */}
-        <Route path="/" element={<AdminDashboard />} />
+        {/* Root route: check for authentication or role */}
+        <Route path="/" element={<Navigate to="/Salesdashboard" />} />  {/* Redirect to Salesdashboard for default */}
 
         <Route path="/login" element={<Login />} />
-        <Route path="/Salesdashboard" element={<Salesdashboard />} />
-        <Route path="/Admindashboard" element={<AdminDashboard />} />
+        <Route path="/salesdashboard" element={<Salesdashboard />} /> {/* Fixed the path case */}
+        <Route path="/admindashboard" element={<AdminDashboard />} />  {/* Fixed the path case */}
 
-        {/* Catch-all: redirect unknown URLs back to "/" */}
-        <Route path="*" element={<Navigate to="/" replace />} />
+        {/* Catch-all: redirect unknown URLs back to /salesdashboard */}
+        <Route path="*" element={<Navigate to="/salesdashboard" replace />} />
       </Routes>
     </BrowserRouter>
   </StrictMode>
