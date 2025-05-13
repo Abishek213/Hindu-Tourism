@@ -530,7 +530,10 @@ export default function AdminDashboard() {
         <div className="container mx-auto px-4">
           <div className="flex justify-between items-center py-4">
             <div className="flex items-center gap-2">
-              <Compass size={24} />
+             <img src="/blacklogo.png" alt="Logo" width="50" height="50" />
+
+
+
               <h1 className="text-xl font-bold">TheHindutourism CRM</h1>
             </div>
             <div className="hidden md:flex items-center gap-4">
@@ -627,7 +630,7 @@ export default function AdminDashboard() {
         </aside>
 
         {/* Main Content */}
-        <main className="flex-1 p-6 md:ml-64">
+        <main className="flex-1 p-6 md:ml-50">
           <div className="container mx-auto">
             <div className="mb-6">
               <h1 className="text-2xl font-bold text-orange-800">
