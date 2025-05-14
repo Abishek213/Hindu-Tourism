@@ -1,5 +1,10 @@
 import { useState, useEffect } from 'react';
 import { Eye, EyeOff, User, Lock, Sun, Moon } from 'lucide-react';
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { jwtDecode } from "jwt-decode";
+
 
 
 
@@ -9,6 +14,9 @@ export default function LoginPage() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [darkMode, setDarkMode] = useState(false);
+  const navigate = useNavigate();
+
+
 
   const backgroundImages = [
     '/assets/images/pashupati1.jpg.jpg',
@@ -42,12 +50,75 @@ export default function LoginPage() {
     setDarkMode(!darkMode);
   };
 
+  const handleLogin = async () => {
+  // Ensure both username and password are provided
+  if (!username || !password) {
+    toast.error("Please enter both username and password");
+    return;
+  }
+
+  try {
+    // Send login request to the backend
+    const response = await axios.post("http://localhost:3000/api/auth/login", {
+      username,
+      password,
+    });
+
+    if (response.data.success) {
+      // Extract the token from the response
+      const { token } = response.data;
+
+      // Decode the JWT token to get user info (including role)
+      const decoded = jwtDecode(token);
+      const role = decoded.role;
+
+      // Save the token to localStorage
+      localStorage.setItem("token", token);
+
+      // Notify the user that login was successful
+      toast.success("Login successful!");
+
+      // Navigate based on the user's role
+      if (role === "Sales Agent") {
+        navigate("/salesdashboard");
+      } else if (role === "Admin") {
+        navigate("/admindashboard");
+      } else {
+        toast.error("Unrecognized user role");
+      }
+    } else {
+      toast.error("Invalid credentials");
+    }
+  } catch (error) {
+    console.error("Login error:", error);
+    toast.error(error.response?.data?.message || "Login failed!");
+  }
+};
+
+
+// const handleLogout = () => {
+//   // Remove token from localStorage
+//   localStorage.removeItem("token");
+
+//   // Optional: clear other items like user, theme, etc.
+//   localStorage.removeItem("user");
+//   localStorage.removeItem("theme");
+
+//   // Show toast
+//   toast.success("Logged out successfully!");
+
+//   // Navigate to login page
+//   navigate("/login");
+// };
+
+
+
   return (
     <div className={`min-h-screen flex flex-col md:flex-row ${darkMode ? 'bg-gray-900' : 'bg-gradient-to-br from-orange-50 to-orange-100'}`}>
       {/* Theme toggle button - positioned absolutely */}
       <button
         onClick={toggleTheme}
-        className="absolute top-4 right-4 z-20 p-2 rounded-full bg-white dark:bg-gray-800 shadow-md hover:shadow-lg transition-all duration-200"
+        className="absolute z-20 p-2 transition-all duration-200 bg-white rounded-full shadow-md top-4 right-4 dark:bg-gray-800 hover:shadow-lg"
         aria-label="Toggle theme"
       >
         {darkMode ? 
@@ -59,27 +130,27 @@ export default function LoginPage() {
       {/* Left side - Branding */}
       <div className={`md:w-1/2 flex items-center justify-center ${darkMode ? 'bg-gradient-to-br from-orange-800 to-orange-900' : 'bg-gradient-to-br from-orange-500 to-orange-600'} p-8 md:p-16`}>
         <div className="text-center md:text-left">
-          <div className="flex items-center justify-center md:justify-start mb-6">
+          <div className="flex items-center justify-center mb-6 md:justify-start">
            
-            <h1 className="text-3xl md:text-4xl font-bold text-white ml-4">
+            <h1 className="ml-4 text-3xl font-bold text-white md:text-4xl">
               TheHinduTourism
             </h1>
           </div>
-          <h2 className="text-2xl text-white font-light mb-6">
+          <h2 className="mb-6 text-2xl font-light text-white">
             Customer Relationship Management
           </h2>
-          <p className="text-orange-100 mb-8 max-w-md">
+          <p className="max-w-md mb-8 text-orange-100">
             Managing pilgrimage journeys to Pashupatinath and Muktinath with excellence and devotion.
           </p>
           <div className="hidden md:block">
-            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 mt-8">
-              <h3 className="text-white text-xl mb-4">Sacred Destinations</h3>
+            <div className="p-6 mt-8 rounded-lg bg-white/10 backdrop-blur-sm">
+              <h3 className="mb-4 text-xl text-white">Sacred Destinations</h3>
               <div className="flex space-x-4">
-                <div className="bg-orange-700/30 p-4 rounded-lg text-white flex-1">
+                <div className="flex-1 p-4 text-white rounded-lg bg-orange-700/30">
                   <p className="font-bold">Pashupatinath</p>
                   <p className="text-sm">Kathmandu, Nepal</p>
                 </div>
-                <div className="bg-orange-700/30 p-4 rounded-lg text-white flex-1">
+                <div className="flex-1 p-4 text-white rounded-lg bg-orange-700/30">
                   <p className="font-bold">Muktinath</p>
                   <p className="text-sm">Mustang, Nepal</p>
                 </div>
@@ -90,10 +161,10 @@ export default function LoginPage() {
       </div>
 
       {/* Right side - Login Form with background slideshow */}
-      <div className="md:w-1/2 relative flex items-center justify-center p-8 md:p-16 overflow-hidden">
+      <div className="relative flex items-center justify-center p-8 overflow-hidden md:w-1/2 md:p-16">
         {/* Background transition */}
         <div
-          className="absolute inset-0 z-0 bg-cover bg-center transition-opacity duration-1000 ease-in-out"
+          className="absolute inset-0 z-0 transition-opacity duration-1000 ease-in-out bg-center bg-cover"
           style={{
             backgroundImage: `url(${backgroundImages[currentImageIndex]})`,
             opacity: darkMode ? 0.2 : 0.3
@@ -113,7 +184,7 @@ export default function LoginPage() {
                   Username
                 </label>
                 <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-2 flex items-center pointer-events-none">
+                  <div className="absolute inset-y-0 left-0 flex items-center pl-2 pointer-events-none">
                     <User size={14} className="text-gray-400" />
                   </div>
                   <input
@@ -132,7 +203,7 @@ export default function LoginPage() {
                   Password
                 </label>
                 <div className="relative">
-                  <div className="absolute inset-y-0 left-0 pl-2 flex items-center pointer-events-none">
+                  <div className="absolute inset-y-0 left-0 flex items-center pl-2 pointer-events-none">
                     <Lock size={14} className="text-gray-400" />
                   </div>
                   <input
@@ -143,7 +214,7 @@ export default function LoginPage() {
                     className={`pl-7 block w-full rounded border-gray-300 shadow-sm focus:border-orange-500 focus:ring focus:ring-orange-200 focus:ring-opacity-50 ${darkMode ? 'bg-gray-700 text-white' : 'bg-orange-50 text-gray-900'} text-xs py-1.5`}
                     placeholder="Enter your password"
                   />
-                  <div className="absolute inset-y-0 right-0 pr-2 flex items-center">
+                  <div className="absolute inset-y-0 right-0 flex items-center pr-2">
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
@@ -160,7 +231,7 @@ export default function LoginPage() {
                   <input
                     id="remember-me"
                     type="checkbox"
-                    className="h-3 w-3 text-orange-600 border-gray-300 rounded focus:ring-orange-500"
+                    className="w-3 h-3 text-orange-600 border-gray-300 rounded focus:ring-orange-500"
                   />
                   <label htmlFor="remember-me" className={`ml-1 block ${darkMode ? 'text-gray-300' : 'text-gray-700'} text-xs`}>
                     Remember me
@@ -172,7 +243,7 @@ export default function LoginPage() {
               </div>
 
               <button
-                onClick={handleSubmit}
+                onClick={handleLogin}
                 className="w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-medium py-1.5 px-3 rounded shadow transition duration-200 focus:outline-none focus:ring-2 focus:ring-orange-300 text-xs"
               >
                 Log In 
