@@ -20,8 +20,19 @@ export const authValidations = [
 ];
 
 export const leadValidations = [
-  body('name').notEmpty().trim(),
-  body('email').isEmail().normalizeEmail(),
-  body('phone').isMobilePhone(),
-  // Add more as needed
+  body('name').notEmpty().trim().withMessage('Name is required'),
+  body('email').isEmail().normalizeEmail().withMessage('Invalid email'),
+  body('phone').isMobilePhone('any').withMessage('Invalid phone number'),
+  body('source')
+    .optional()
+    .isIn(['website', 'referral', 'social_media', 'walk_in', 'other'])
+    .withMessage('Invalid source'),
+  body('status')
+    .optional()
+    .isIn(['new', 'contacted', 'qualified', 'lost'])
+    .withMessage('Invalid status'),
+  body('notes').optional().isString()
 ];
+
+// Export as validateLead for consistency with route imports
+export const validateLead = validateInput(leadValidations);

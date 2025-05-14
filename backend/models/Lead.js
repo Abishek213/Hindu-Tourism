@@ -24,7 +24,7 @@ const leadSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ['new', 'contacted', 'qualified', 'lost'],
+    enum: ['new', 'contacted', 'qualified', 'converted', 'lost'],
     default: 'new'
   },
   staff_id: {
@@ -36,5 +36,10 @@ const leadSchema = new mongoose.Schema({
     type: String
   }
 }, { timestamps: true });
+
+// Add query helpers
+leadSchema.query.byStatus = function(status) {
+  return this.where({ status });
+};
 
 export default mongoose.model('Lead', leadSchema);
