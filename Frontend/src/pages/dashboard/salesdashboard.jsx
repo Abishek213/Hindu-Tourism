@@ -3,10 +3,11 @@ import Header from '@components/layout/Header';
 import Sidebar from '@components/layout/Sidebar';
 import StatsCard from '@components/common/StatCard';
 import DataTable from "@components/common/DataTable";
-
+import PieChart from "@components/common/PieChart";
 import BarChartComponent from '@components/common/BarChart';
 import LineChartComponent from '@components/common/LineChart';
 import FollowUpCard from '@components/common/FollowUp';
+
 
 // Import mock data
 import {
@@ -98,10 +99,10 @@ const SalesDashboard = () => {
     <div className="flex min-h-screen bg-gray-50">
       <Sidebar />
       
-      <div className="flex-1 ml-0 lg:ml-64">
+      <div className="flex-1 ml-0 lg:ml-55 w-full max-w-full overflow-x-auto ">
         <Header title="Sales Dashboard" userName="Sales Agent" />
         
-        <main className="p-4 md:p-6">
+        <main className="p-3 md:p-2">
           {/* Date Range Selector */}
           <div className="mb-6 flex justify-between items-center">
             <h2 className="text-xl font-bold text-gray-800">Sales Overview</h2>
@@ -123,7 +124,7 @@ const SalesDashboard = () => {
           </div>
           
           {/* Stats Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6 w-full max-w-full overflow-x-auto">
             <StatsCard 
               title="Total Leads" 
               value={mockLeadStats.total} 
@@ -182,21 +183,21 @@ const SalesDashboard = () => {
             />
           </div>
           
-          {/*<div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-            <PieChartComponent 
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+            <PieChart 
               data={mockLeadSource}
               title="Lead Sources"
               height={300}
-              colorScheme={['#FF7B25', '#FF9A52', '#FFB980', '#FFDBAC']}
+              colorScheme={['#FF7B25', '#25d366', '#34B7F1', '#D93025' ,'#4C8BF5']}
             />
             
-            <PieChartComponent 
+            <PieChart
               data={mockPackagePopularity}
               title="Package Popularity"
               height={300}
               colorScheme={['#EA580C', '#FF7B25', '#FF9A52']}
             />
-          </div>*/}
+          </div>
           
           {/* Recent Leads */}
           <div className="mb-6">

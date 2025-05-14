@@ -3,7 +3,7 @@ import { ArrowUp, ArrowDown } from 'lucide-react';
 
 const StatsCard = ({ title, value, icon, change, changeType, changeText }) => {
   return (
-    <div className="bg-white p-6 rounded-xl shadow-md border border-gray-100">
+    <div className="bg-white p-2 rounded-xl shadow-md border border-gray-100">
       <div className="flex justify-between items-start">
         <div>
           <p className="text-sm font-medium text-gray-600">{title}</p>

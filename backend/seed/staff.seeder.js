@@ -80,12 +80,27 @@ export const seedStaff = async () => {
     });
     logger.debug(`Found ${roles.length} roles for staff assignment`);
 
+    // Verify password hashing
+    const testHash = await bcrypt.hash('password123', 10);
+    logger.debug(`Test hash for 'password123': ${testHash}`);
+
     // Prepare hashed and role-linked staff data
     const staffData = await Promise.all(
       staffSeedData.map(async (staff) => {
-        const hashedPassword = await bcrypt.hash(staff.password, 10);
-        logger.debug(`Hashed password for ${staff.username}`);
+        // Verify the password is what we expect
+        if (staff.password !== 'password123') {
+          logger.warn(`Unexpected password for ${staff.username}`);
+        }
         
+        const hashedPassword = await bcrypt.hash(staff.password, 10);
+        logger.debug(`Hashed password for ${staff.username}: ${hashedPassword}`);
+        
+        // Verify we can compare the hash later
+        const isMatch = await bcrypt.compare('password123', hashedPassword);
+        if (!isMatch) {
+          throw new Error(`Password hash verification failed for ${staff.username}`);
+        }
+
         return {
           name: staff.name,
           email: staff.email,
@@ -112,11 +127,6 @@ export const seedStaff = async () => {
       dbConnection: connection ? 'active' : 'failed'
     });
     throw error;
-  } finally {
-    if (mongoose.connection.readyState === 1) {
-      await mongoose.disconnect();
-      logger.debug('Database connection closed after seeding');
-    }
   }
 };
 
