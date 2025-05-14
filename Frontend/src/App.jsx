@@ -1,6 +1,7 @@
 // App.jsx
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Login from './pages/login/login.jsx';
+import Unauthorized from './pages/unauthorized/unauthorized.jsx';
 import Salesdashboard from './pages/dashboard/salesdashboard.jsx';
 import AdminDashboard from './pages/dashboard/admindashboard.jsx';
 import AddLead from './pages/leads/LeadAdd';
@@ -13,6 +14,10 @@ const App = () => {
       <Routes>
         {/* Redirect the root URL to salesdashboard */}
         <Route path="/" element={<Navigate to="/salesdashboard" replace />} />
+
+        
+  {/* Unauthorized Page */}
+  <Route path="/unauthorized" element={<Unauthorized />} />
 
         {/* Public routes */}
         <Route path="/login" element={<Login />} />
