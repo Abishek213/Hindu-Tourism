@@ -593,3 +593,21 @@
 11:52:33 [[32minfo[39m]: Server running in development mode on port 3000
 11:53:02 [[32mhttp[39m]: [0mPOST /api/auth/login [32m200[0m 462.256 ms - 226[0m
 11:53:51 [[32mhttp[39m]: [0mPOST /api/auth/login [32m200[0m 341.824 ms - 226[0m
+12:06:04 [[32mhttp[39m]: [0mPOST /api/auth/login [32m200[0m 496.307 ms - 226[0m
+12:06:52 [[32mhttp[39m]: [0mPOST /api/auth/login [32m200[0m 391.458 ms - 226[0m
+12:15:51 [[32mhttp[39m]: [0mPOST /api/auth/login [32m200[0m 140.881 ms - 226[0m
+12:16:04 [[32mhttp[39m]: [0mPOST /api/auth/login [32m200[0m 158.940 ms - 226[0m
+12:16:45 [[32mhttp[39m]: [0mPOST /api/auth/login [32m200[0m 141.600 ms - 218[0m
+12:29:06 [[32mhttp[39m]: [0mPOST /api/auth/login [32m200[0m 331.429 ms - 226[0m
+12:29:23 [[32mhttp[39m]: [0mPOST /api/auth/login [32m200[0m 326.836 ms - 226[0m
+12:41:40 [[32mhttp[39m]: [0mPOST /api/auth/login [32m200[0m 139.075 ms - 226[0m
+12:42:10 [[32mhttp[39m]: [0mPOST /api/auth/login [32m200[0m 286.017 ms - 226[0m
+12:42:28 [[32mhttp[39m]: [0mPOST /api/auth/login [32m200[0m 299.807 ms - 226[0m
+13:01:54 [[32mhttp[39m]: [0mPOST /api/auth/login [32m200[0m 127.325 ms - 226[0m
+13:02:22 [[32mhttp[39m]: [0mPOST /api/auth/login [32m200[0m 123.149 ms - 226[0m
+13:04:46 [[32mhttp[39m]: [0mPOST /api/auth/login [32m200[0m 319.655 ms - 226[0m
+13:05:19 [[32mhttp[39m]: [0mPOST /api/auth/login [32m200[0m 325.737 ms - 226[0m
+13:21:10 [[32mhttp[39m]: [0mPOST /api/auth/login [32m200[0m 118.917 ms - 226[0m
+13:25:24 [[32mhttp[39m]: [0mPOST /api/auth/login [32m200[0m 104.373 ms - 226[0m
+13:26:20 [[32mhttp[39m]: [0mPOST /api/auth/login [32m200[0m 158.677 ms - 218[0m
+13:27:02 [[32mhttp[39m]: [0mPOST /api/auth/login [32m200[0m 172.498 ms - 218[0m
