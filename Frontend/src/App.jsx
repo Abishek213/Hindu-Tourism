@@ -6,14 +6,22 @@ import AddLead from './pages/leads/LeadAdd';
 import BookingAdd from './pages/bookings/BookingAdd';
 import SidebarLayout from './components/layout/SidebarLayout';
 import ProtectedRoute from './components/protectedroute/protectedroute.jsx';
+import PublicRoute from './components/publicroute/publicroute.jsx'; // ✅ import this
 
 const App = () => {
   return (
     <Routes>
-      {/* Public Routes */}
-      <Route path="/login" element={<Login />} />
+      {/* ✅ Public Route with redirection if already logged in */}
+      <Route
+        path="/login"
+        element={
+          <PublicRoute>
+            <Login />
+          </PublicRoute>
+        }
+      />
 
-      {/* Admin Dashboard (Protected for Admin role) */}
+      {/* ✅ Admin Dashboard (Protected for Admin role) */}
       <Route
         path="/admindashboard"
         element={
@@ -23,7 +31,7 @@ const App = () => {
         }
       />
 
-      {/* Sales Agent Routes (Protected for Sales Agent role) */}
+      {/* ✅ Sales Agent Routes (Protected for Sales Agent role) */}
       <Route
         element={
           <ProtectedRoute allowedRoles={['Sales Agent']}>
@@ -36,9 +44,25 @@ const App = () => {
         <Route path="/bookings/new" element={<BookingAdd />} />
       </Route>
 
-      {/* Default Routes */}
-      <Route path="/" element={<Navigate to="/login" />} />
-      <Route path="*" element={<Navigate to="/login" />} />
+      {/* ✅ Default route — redirect to login or dashboard based on token */}
+      <Route
+        path="/"
+        element={
+          <PublicRoute>
+            <Navigate to="/login" />
+          </PublicRoute>
+        }
+      />
+
+      {/* ✅ Catch-all unknown routes */}
+      <Route
+        path="*"
+        element={
+          <PublicRoute>
+            <Navigate to="/login" />
+          </PublicRoute>
+        }
+      />
     </Routes>
   );
 };
