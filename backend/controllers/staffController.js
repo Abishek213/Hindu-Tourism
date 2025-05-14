@@ -1,6 +1,5 @@
 import Staff from '../models/Staff.js';
 import Role from '../models/Role.js';
-import bcrypt from 'bcryptjs';
 import { validationResult } from 'express-validator';
 
 // (Admin only)
@@ -32,7 +31,7 @@ export const createStaff = async (req, res) => {
       email,
       username,
       phone,
-      password_hash: password, // Let the pre-save hook handle hashing
+      password_hash: password, 
       role_id: role._id
     });
 
