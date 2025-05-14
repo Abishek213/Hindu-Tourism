@@ -34,19 +34,6 @@ export const protect = async (req, res, next) => {
   }
 };
 
-// Grant access to specific roles
-export const authorize = (...roles) => {
-  return (req, res, next) => {
-    if (!roles.includes(req.user.role.role_name)) {
-      return res.status(403).json({
-        success: false,
-        message: `User role ${req.user.role.role_name} is not authorized to access this route`
-      });
-    }
-    next();
-  };
-};
-
 // Updated role checking
 export const checkLeadAccess = async (req, res, next) => {
   try {
