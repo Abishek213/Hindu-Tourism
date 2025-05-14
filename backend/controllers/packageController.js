@@ -149,7 +149,6 @@ export const togglePackageStatus = async (req, res) => {
     }
 };
 
-
 // Add itinerary to package
 export const addItinerary = async (req, res) => {
     try {
