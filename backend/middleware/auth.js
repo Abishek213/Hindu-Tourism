@@ -34,15 +34,35 @@ export const protect = async (req, res, next) => {
   }
 };
 
-// Grant access to specific roles
-export const authorize = (...roles) => {
-  return (req, res, next) => {
-    if (!roles.includes(req.user.role.role_name)) {
+// Updated role checking
+export const checkLeadAccess = async (req, res, next) => {
+  try {
+    // Ensure we have fresh role data
+    const staff = await Staff.findById(req.user._id).populate('role_id');
+    
+    if (!staff) {
       return res.status(403).json({
         success: false,
-        message: `User role ${req.user.role.role_name} is not authorized to access this route`
+        message: 'Staff record not found'
       });
     }
+
+    const allowedRoles = ['Admin', 'Sales Agent'];
+    
+    if (!staff.role_id || !allowedRoles.includes(staff.role_id.role_name)) {
+      return res.status(403).json({
+        success: false,
+        message: `Role ${staff.role_id?.role_name || 'undefined'} not authorized`
+      });
+    }
+
+    // Update request user with fresh data
+    req.user = staff;
     next();
-  };
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: 'Authorization check failed'
+    });
+  }
 };

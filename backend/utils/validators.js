@@ -13,15 +13,45 @@ export const validateInput = (validations) => {
   };
 };
 
-// Common validation chains
-export const authValidations = [
-  body('email').isEmail().normalizeEmail(),
-  body('password').isLength({ min: 6 }),
+// Package validations
+export const packageValidations = [
+  body('title').trim().notEmpty().withMessage('Title is required'),
+  body('description').trim().notEmpty().withMessage('Description is required'),
+  body('base_price').isFloat({ min: 0 }).withMessage('Valid base price is required'),
+  body('duration_days').isInt({ min: 1 }).withMessage('Valid duration is required'),
+  body('inclusions').optional().isString(),
+  body('exclusions').optional().isString(),
+  body('is_active').optional().isBoolean()
 ];
 
-export const leadValidations = [
-  body('name').notEmpty().trim(),
-  body('email').isEmail().normalizeEmail(),
-  body('phone').isMobilePhone(),
-  // Add more as needed
+// Itinerary validations
+export const itineraryValidations = [
+  body('day_number').optional().isInt({ min: 1 }).withMessage('Valid day number is required'),
+  body('title').optional().trim().notEmpty().withMessage('Title is required'),
+  body('description').optional().trim().notEmpty().withMessage('Description is required'),
+  body('accommodation').optional().isString(),
+  body('meals').optional().isString(),
+  body('transport').optional().isString()
 ];
+
+// Export validation middleware
+export const validatePackage = validateInput(packageValidations);
+export const validateItinerary = validateInput(itineraryValidations);
+
+export const leadValidations = [
+  body('name').notEmpty().trim().withMessage('Name is required'),
+  body('email').isEmail().normalizeEmail().withMessage('Invalid email'),
+  body('phone').isMobilePhone('any').withMessage('Invalid phone number'),
+  body('source')
+    .optional()
+    .isIn(['website', 'referral', 'social_media', 'walk_in', 'other'])
+    .withMessage('Invalid source'),
+  body('status')
+    .optional()
+    .isIn(['new', 'contacted', 'qualified', 'lost'])
+    .withMessage('Invalid status'),
+  body('notes').optional().isString()
+];
+
+// Export as validateLead for consistency with route imports
+export const validateLead = validateInput(leadValidations);
