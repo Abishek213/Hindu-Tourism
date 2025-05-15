@@ -1,3 +1,5 @@
 # Logs
-logs/
+logs/combined.log
 *.log
+.env
+node_modules

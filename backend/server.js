@@ -16,7 +16,7 @@ import logger from './utils/logger.js';
 import config from './config/config.js';
 import connectDB from './config/db.js';
 
-// Middleware
+// Middlewar  e
 import { errorHandler } from './middleware/errorHandler.js';
 
 // Routes
