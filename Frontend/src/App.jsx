@@ -4,42 +4,47 @@ import Salesdashboard from './pages/dashboard/salesdashboard.jsx';
 import AdminDashboard from './pages/dashboard/admindashboard.jsx';
 import AddLead from './pages/leads/LeadAdd';
 import BookingAdd from './pages/bookings/BookingAdd';
+import BookingListPage from './pages/bookings/BookingListPage';
 import SidebarLayout from './components/layout/SidebarLayout';
 import ProtectedRoute from './components/protectedroute/protectedroute.jsx';
+import { BookingProvider } from './components/Bookings/BookingContext.jsx';
 
 const App = () => {
   return (
-    <Routes>
-      {/* Public Routes */}
-      <Route path="/login" element={<Login />} />
+    <BookingProvider>
+      <Routes>
+        {/* Public Routes */}
+        <Route path="/login" element={<Login />} />
 
-      {/* Admin Dashboard (Protected for Admin role) */}
-      <Route
-        path="/admindashboard"
-        element={
-          <ProtectedRoute allowedRoles={['Admin']}>
-            <AdminDashboard />
-          </ProtectedRoute>
-        }
-      />
+        {/* Admin Dashboard (Protected for Admin role) */}
+        <Route
+          path="/admindashboard"
+          element={
+            <ProtectedRoute allowedRoles={['Admin']}>
+              <AdminDashboard />
+            </ProtectedRoute>
+          }
+        />
 
-      {/* Sales Agent Routes (Protected for Sales Agent role) */}
-      <Route
-        element={
-          <ProtectedRoute allowedRoles={['Sales Agent']}>
-            <SidebarLayout />
-          </ProtectedRoute>
-        }
-      >
-        <Route path="/salesdashboard" element={<Salesdashboard />} />
-        <Route path="/leads/add" element={<AddLead />} />
-        <Route path="/bookings/new" element={<BookingAdd />} />
-      </Route>
+        {/* Sales Agent Routes (Protected for Sales Agent role) */}
+        <Route
+          element={
+            <ProtectedRoute allowedRoles={['Sales Agent']}>
+              <SidebarLayout />
+            </ProtectedRoute>
+          }
+        >
+          <Route path="/salesdashboard" element={<Salesdashboard />} />
+          <Route path="/leads/add" element={<AddLead />} />
+          <Route path="/bookings/new" element={<BookingAdd />} />
+          <Route path="/bookings/list" element={<BookingListPage />} />
+        </Route>
 
-      {/* Default Routes */}
-      <Route path="/" element={<Navigate to="/login" />} />
-      <Route path="*" element={<Navigate to="/login" />} />
-    </Routes>
+        {/* Default Routes */}
+        <Route path="/" element={<Navigate to="/login" />} />
+        <Route path="*" element={<Navigate to="/login" />} />
+      </Routes>
+    </BookingProvider>
   );
 };
 

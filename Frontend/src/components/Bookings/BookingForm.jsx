@@ -1,25 +1,156 @@
+// BookingForm.jsx 
 import { useState } from 'react';
-import { Download, X, CheckCircle } from 'lucide-react';
+import { useBookings } from './BookingContext';
+import { useNavigate } from 'react-router-dom';
+import { X, CheckCircle } from 'lucide-react';
+import BookingDetails from './BookingDetails';
+import TravelersInformation from './TravelersInfo';
+import AdditionalServices from './AdditionalServices';
+import SuccessScreen from './SuccessScreen';
 
 export default function BookingForm() {
+  const navigate = useNavigate();
+  const { addBooking } = useBookings();
+  
+  // Company guide options
+  const guideOptions = [
+    "Rajesh Sharma",
+    "Priya Patel",
+    "Amit Singh",
+    "Neha Verma",
+    "Vikram Desai",
+    "Deepika Gupta"
+  ];
+  
+  // Transport team options
+  const transportTeamOptions = [
+    "Team Alpha",
+    "Team Bravo",
+    "Team Delta",
+    "Team Echo",
+    "Team Foxtrot",
+    "Team Kilo"
+  ];
+  
   const [form, setForm] = useState({
     leadId: '',
     package: '',
     travelers: 1,
+    contactNumber: '',
+    emailAddress: '',
+    advanceAmount: '',
     startDate: '',
     endDate: '',
     guide: '',
     transportTeam: '',
-    passportFile: null,
-    aadhaarFile: null,
+    destination: '',
     helicopter: false,
     hotelUpgrade: false,
     nurseSupport: false
   });
 
+  // State for travelers info
+  const [travelersInfo, setTravelersInfo] = useState([
+    {
+      name: '', // Lead traveler
+      isLead: true,
+      documents: {
+        passportFile: null,
+        aadhaarFrontFile: null,
+        aadhaarBackFile: null
+      }
+    }
+  ]);
+
   const [submitted, setSubmitted] = useState(false);
   const [showForm, setShowForm] = useState(true);
-  const [isDownloading, setIsDownloading] = useState(false);
+  const [errors, setErrors] = useState({});
+
+  // Update number of travelers
+  const handleTravelersChange = (e) => {
+    const newCount = parseInt(e.target.value) || 1;
+    setForm({
+      ...form,
+      travelers: newCount
+    });
+
+    // Adjust travelers info array
+    if (newCount > travelersInfo.length) {
+      // Add new travelers
+      const newTravelers = [...travelersInfo];
+      for (let i = travelersInfo.length; i < newCount; i++) {
+        newTravelers.push({
+          name: '',
+          isLead: false,
+          documents: {
+            passportFile: null,
+            aadhaarFrontFile: null,
+            aadhaarBackFile: null
+          }
+        });
+      }
+      setTravelersInfo(newTravelers);
+    } else if (newCount < travelersInfo.length) {
+      // Remove excess travelers, but keep the lead
+      setTravelersInfo(travelersInfo.slice(0, newCount));
+    }
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+    
+    // Required field validation
+    if (!form.leadId.trim()) newErrors.leadId = "Lead ID/Name is required";
+    if (!form.package) newErrors.package = "Package is required";
+    if (!form.emailAddress) newErrors.emailAddress = "Email is required";
+    if (!form.contactNumber.trim()) newErrors.contactNumber = "Contact number is required";
+    if (!form.advanceAmount.trim()) newErrors.advanceAmount = "Advance amount is required";
+    if (!form.startDate) newErrors.startDate = "Start date is required";
+    if (!form.endDate) newErrors.endDate = "End date is required";
+    if (!form.guide.trim()) newErrors.guide = "Guide name is required";
+    if (!form.transportTeam.trim()) newErrors.transportTeam = "Transport team is required";
+    
+    // Contact number validation
+    if (form.contactNumber && !/^\d{10}$/.test(form.contactNumber.trim())) {
+      newErrors.contactNumber = "Please enter a valid 10-digit contact number";
+    }
+    
+    // Advance amount validation
+    if (form.advanceAmount && isNaN(parseFloat(form.advanceAmount))) {
+      newErrors.advanceAmount = "Please enter a valid amount";
+    }
+    
+    // Date validation
+    if (form.startDate && form.endDate) {
+      const start = new Date(form.startDate);
+      const end = new Date(form.endDate);
+      if (end < start) {
+        newErrors.endDate = "End date cannot be before start date";
+      }
+    }
+    
+    // Validate traveler info
+    travelersInfo.forEach((traveler, index) => {
+      // Name validation for each traveler
+      if (!traveler.name.trim()) {
+        newErrors[`travelerName_${index}`] = "Traveler name is required";
+      }
+
+      // Document validation for each traveler
+      if (!traveler.documents.passportFile) {
+        newErrors[`passport_${index}`] = "Passport file is required";
+      }
+      if (!traveler.documents.aadhaarFrontFile) {
+        newErrors[`aadhaarFront_${index}`] = "Aadhaar front file is required";
+      }
+      if (!traveler.documents.aadhaarBackFile) {
+        newErrors[`aadhaarBack_${index}`] = "Aadhaar back file is required";
+      }
+    });
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -27,67 +158,113 @@ export default function BookingForm() {
       ...form,
       [name]: type === 'checkbox' ? checked : value
     });
+    
+    // Clear error for this field when user changes it
+    if (errors[name]) {
+      setErrors({
+        ...errors,
+        [name]: undefined
+      });
+    }
   };
 
-  const handleFileChange = (e) => {
-    const { name, files } = e.target;
-    setForm({
-      ...form,
-      [name]: files[0]
-    });
+  // Handle traveler name change
+  const handleTravelerNameChange = (index, value) => {
+    const updatedTravelers = [...travelersInfo];
+    updatedTravelers[index].name = value;
+    setTravelersInfo(updatedTravelers);
+    
+    // Clear error
+    if (errors[`travelerName_${index}`]) {
+      setErrors({
+        ...errors,
+        [`travelerName_${index}`]: undefined
+      });
+    }
+  };
+
+  const handleFileChange = (travelerIndex, documentType, e) => {
+    const { files } = e.target;
+    if (files[0]) {
+      // Store both file name and a data URL for preview
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const updatedTravelers = [...travelersInfo];
+        updatedTravelers[travelerIndex].documents[documentType] = {
+          name: files[0].name,
+          type: files[0].type,
+          dataUrl: event.target.result
+        };
+        setTravelersInfo(updatedTravelers);
+        
+        // Clear error for this field
+        let errorKey;
+        switch (documentType) {
+          case 'passportFile':
+            errorKey = `passport_${travelerIndex}`;
+            break;
+          case 'aadhaarFrontFile':
+            errorKey = `aadhaarFront_${travelerIndex}`;
+            break;
+          case 'aadhaarBackFile':
+            errorKey = `aadhaarBack_${travelerIndex}`;
+            break;
+        }
+        
+        if (errorKey && errors[errorKey]) {
+          setErrors({
+            ...errors,
+            [errorKey]: undefined
+          });
+        }
+      };
+      reader.readAsDataURL(files[0]);
+    }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setSubmitted(true);
-  };
-
-  const generatePDF = () => {
-    setIsDownloading(true);
     
-    // Simulate PDF generation and download
-    setTimeout(() => {
-      // In a real implementation, you would use jsPDF or another library
-      // to generate the PDF file here
-      
-      const downloadLink = document.createElement('a');
-      
-      // This is a placeholder - in reality you would create a data URL or blob
-      // from your PDF content
-      const dummyPdfData = "data:application/pdf;base64,JVBERi0xLjMKJf////8KMTAgMCBvYmoKPDwKL1R5cGUgL0V4dEdTdGF0ZQovY2EgMQo+PgplbmRvYmoKMTEgMCBvYmoKPDwKL1R5cGUgL0V4dEdTdGF0ZQovY2EgMQo+PgplbmRvYmo=";
-      
-      downloadLink.href = dummyPdfData;
-      downloadLink.download = `booking-${form.leadId}-${new Date().toISOString().split('T')[0]}.pdf`;
-      
-      document.body.appendChild(downloadLink);
-      downloadLink.click();
-      document.body.removeChild(downloadLink);
-      
-      setIsDownloading(false);
-      
-      // Close the form after download
-      setTimeout(() => {
-        setShowForm(false);
-      }, 500);
-    }, 1500);
+    // Validate form
+    if (!validateForm()) {
+      // Scroll to the first error
+      const firstErrorField = document.querySelector('[aria-invalid="true"]');
+      if (firstErrorField) {
+        firstErrorField.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        firstErrorField.focus();
+      }
+      return;
+    }
+    
+    // Create a booking object for storage with all form data
+    const bookingData = {
+      leadId: form.leadId,
+      email: form.emailAddress,
+      package: form.package,
+      travelers: form.travelers,
+      contactNumber: form.contactNumber,
+      advanceAmount: form.advanceAmount,
+      startDate: form.startDate,
+      endDate: form.endDate,
+      guide: form.guide,
+      transportTeam: form.transportTeam,
+      destination: form.destination,
+      travelersInfo: travelersInfo,
+      helicopter: form.helicopter,
+      hotelUpgrade: form.hotelUpgrade,
+      nurseSupport: form.nurseSupport
+    };
+    
+    // Add the booking to our context
+    addBooking(bookingData);
+    setSubmitted(true);
+    
+    // Navigate to booking list after short delay
+    navigate('');
   };
 
   if (!showForm) {
-    return (
-      <div className="max-w-xl mx-auto p-8 text-center bg-white rounded-lg shadow-md">
-        <div className="flex flex-col items-center justify-center gap-4">
-          <CheckCircle size={64} className="text-green-500" />
-          <h2 className="text-2xl font-bold text-gray-800">Booking Completed!</h2>
-          <p className="text-gray-600">Your booking has been successfully submitted and downloaded.</p>
-          <button 
-            onClick={() => setShowForm(true)} 
-            className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
-          >
-            Create New Booking
-          </button>
-        </div>
-      </div>
-    );
+    return <SuccessScreen onNewBooking={() => setShowForm(true)} />;
   }
 
   return (
@@ -95,7 +272,7 @@ export default function BookingForm() {
       <div className="bg-gradient-to-r from-orange-500 to-red-600 px-6 py-4 flex justify-between items-center">
         <h2 className="text-xl font-bold text-white">New Booking</h2>
         <button 
-          onClick={() => setShowForm(false)}
+          onClick={() => navigate('/salesdashboard')}
           className="text-white hover:bg-red-700 rounded-full p-1"
         >
           <X size={20} />
@@ -103,207 +280,34 @@ export default function BookingForm() {
       </div>
 
       <form onSubmit={handleSubmit} className="p-6 grid gap-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="col-span-2">
-            <label className="block text-sm font-medium text-gray-700 mb-1">Lead ID/Name</label>
-            <input
-              type="text"
-              name="leadId"
-              placeholder="Enter lead ID or client name"
-              required
-              onChange={handleChange}
-              className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
-            />
-          </div>
+        <BookingDetails 
+          form={form}
+          errors={errors}
+          handleChange={handleChange}
+          handleTravelersChange={handleTravelersChange}
+          guideOptions={guideOptions}
+          transportTeamOptions={transportTeamOptions}
+        />
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Package</label>
-            <select
-              name="package"
-              required
-              onChange={handleChange}
-              className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
-            >
-              <option value="">Select Package</option>
-              <option value="Pashupatinath">Pashupatinath</option>
-              <option value="Muktinath">Muktinath</option>
-              <option value="Both">Pashupatinath + Muktinath</option>
-            </select>
-          </div>
+        <TravelersInformation 
+          travelersInfo={travelersInfo}
+          handleTravelerNameChange={handleTravelerNameChange}
+          handleFileChange={handleFileChange}
+          errors={errors}
+        />
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Number of Travelers</label>
-            <input
-              type="number"
-              name="travelers"
-              min="1"
-              placeholder="Enter number"
-              required
-              onChange={handleChange}
-              className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Start Date</label>
-            <input
-              type="date"
-              name="startDate"
-              required
-              onChange={handleChange}
-              className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">End Date</label>
-            <input
-              type="date"
-              name="endDate"
-              required
-              onChange={handleChange}
-              className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Guide</label>
-            <input
-              type="text"
-              name="guide"
-              placeholder="Assign a guide"
-              required
-              onChange={handleChange}
-              className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Transport Team</label>
-            <input
-              type="text"
-              name="transportTeam"
-              placeholder="Assign transport team"
-              required
-              onChange={handleChange}
-              className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
-            />
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Passport</label>
-            <div className="flex items-center justify-center w-full">
-              <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100">
-                <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                  <Download className="w-8 h-8 mb-1 text-gray-500" />
-                  <p className="mb-2 text-sm text-gray-500">Upload passport scan</p>
-                </div>
-                <input 
-                  type="file" 
-                  accept="image/*,.pdf" 
-                  name="passportFile" 
-                  onChange={handleFileChange}
-                  required
-                  className="hidden" 
-                />
-              </label>
-            </div>
-            {form.passportFile && (
-              <p className="mt-1 text-xs text-green-600">
-                {form.passportFile.name} uploaded
-              </p>
-            )}
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Aadhaar</label>
-            <div className="flex items-center justify-center w-full">
-              <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100">
-                <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                  <Download className="w-8 h-8 mb-1 text-gray-500" />
-                  <p className="mb-2 text-sm text-gray-500">Upload Aadhaar scan</p>
-                </div>
-                <input 
-                  type="file" 
-                  accept="image/*,.pdf" 
-                  name="aadhaarFile" 
-                  onChange={handleFileChange}
-                  required
-                  className="hidden" 
-                />
-              </label>
-            </div>
-            {form.aadhaarFile && (
-              <p className="mt-1 text-xs text-green-600">
-                {form.aadhaarFile.name} uploaded
-              </p>
-            )}
-          </div>
-        </div>
-
-        <div className="mt-2">
-          <h3 className="text-sm font-medium text-gray-700 mb-2">Additional Services</h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
-            <label className="flex items-center space-x-2 p-2 border border-gray-200 rounded-md hover:bg-gray-50">
-              <input
-                type="checkbox"
-                name="helicopter"
-                onChange={handleChange}
-                className="h-4 w-4 text-orange-600 focus:ring-orange-500 border-gray-300 rounded"
-              />
-              <span className="text-sm text-gray-600">Helicopter Ride</span>
-            </label>
-            <label className="flex items-center space-x-2 p-2 border border-gray-200 rounded-md hover:bg-gray-50">
-              <input
-                type="checkbox"
-                name="hotelUpgrade"
-                onChange={handleChange}
-                className="h-4 w-4 text-orange-600 focus:ring-orange-500 border-gray-300 rounded"
-              />
-              <span className="text-sm text-gray-600">Hotel Upgrade</span>
-            </label>
-            <label className="flex items-center space-x-2 p-2 border border-gray-200 rounded-md hover:bg-gray-50">
-              <input
-                type="checkbox"
-                name="nurseSupport"
-                onChange={handleChange}
-                className="h-4 w-4 text-orange-600 focus:ring-orange-500 border-gray-300 rounded"
-              />
-              <span className="text-sm text-gray-600">Nurse Support</span>
-            </label>
-          </div>
-        </div>
+        <AdditionalServices 
+          form={form}
+          handleChange={handleChange}
+        />
 
         <div className="mt-4 flex justify-end">
-          {!submitted ? (
-            <button 
-              type="submit" 
-              className="px-4 py-2 bg-gradient-to-r from-orange-500 to-red-600 text-white rounded-md hover:from-orange-600 hover:to-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500"
-            >
-              Submit Booking
-            </button>
-          ) : (
-            <button
-              type="button"
-              onClick={generatePDF}
-              disabled={isDownloading}
-              className="px-4 py-2 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-md hover:from-green-600 hover:to-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 flex items-center gap-2"
-            >
-              {isDownloading ? (
-                <>
-                  <span className="inline-block h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
-                  Downloading...
-                </>
-              ) : (
-                <>
-                  <Download size={16} />
-                  Download Booking PDF
-                </>
-              )}
-            </button>
-          )}
+          <button 
+            type="submit" 
+            className="px-4 py-2 bg-gradient-to-r from-orange-500 to-red-600 text-white rounded-md hover:from-orange-600 hover:to-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500"
+          >
+            Submit Booking
+          </button>
         </div>
 
         {submitted && (
@@ -311,7 +315,7 @@ export default function BookingForm() {
             <div className="flex items-center gap-2">
               <CheckCircle size={20} className="text-green-500" />
               <p className="text-sm text-green-700">
-                Booking submitted successfully! Please download the PDF document.
+                Booking submitted successfully! Redirecting to booking list...
               </p>
             </div>
           </div>
