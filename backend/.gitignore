@@ -3,3 +3,4 @@ logs/combined.log
 *.log
 .env
 node_modules
+./node_modules
