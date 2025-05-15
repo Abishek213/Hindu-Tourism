@@ -1,4 +1,4 @@
-./logs
+
 logs/combined.log
 *.log
 .env
