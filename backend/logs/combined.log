@@ -1,0 +1,40 @@
+11:42:32 [[34mdebug[39m]: Environment variables loaded from: D:\VSCodeWorksheet\Lishnu\.env
+11:42:32 [[33mwarn[39m]: Missing required environment variable: MONGODB_URI
+11:42:32 [[33mwarn[39m]: Missing required environment variable: JWT_SECRET
+11:42:32 [[33mwarn[39m]: Using default JWT secret - not recommended for production
+11:42:49 [[32minfo[39m]: MongoDB connected: localhost
+11:42:49 [[34mdebug[39m]: MongoDB connection details: 
+      - Database: travel_agency
+      - Port: 27017
+      - Model count: 8
+11:42:49 [[32minfo[39m]: Database connected successfully
+11:42:49 [[34mdebug[39m]: Loaded model: Booking.js
+11:42:49 [[34mdebug[39m]: Loaded model: BookingService.js
+11:42:49 [[34mdebug[39m]: Loaded model: CommunicationLog.js
+11:42:49 [[34mdebug[39m]: Loaded model: Customer.js
+11:42:50 [[34mdebug[39m]: Loaded model: CustomerPortal.js
+11:42:50 [[34mdebug[39m]: Loaded model: Document.js
+11:42:50 [[34mdebug[39m]: Loaded model: Guide.js
+11:42:50 [[34mdebug[39m]: Loaded model: Invoice.js
+11:42:50 [[34mdebug[39m]: Loaded model: Lead.js
+11:42:50 [[34mdebug[39m]: Loaded model: OptionalService.js
+11:42:50 [[34mdebug[39m]: Loaded model: Package.js
+11:42:50 [[34mdebug[39m]: Loaded model: PackageItinerary.js
+11:42:50 [[34mdebug[39m]: Loaded model: Payment.js
+11:42:50 [[34mdebug[39m]: Loaded model: Role.js
+11:42:50 [[34mdebug[39m]: Loaded model: Staff.js
+11:42:50 [[34mdebug[39m]: Loaded model: Transport.js
+11:42:50 [[32minfo[39m]: Seeded 5 roles: Admin, Sales Agent, Operation Team, Accountant, Customer Portal
+11:42:50 [[34mdebug[39m]: Database connected for staff seeding
+11:42:50 [[34mdebug[39m]: Cleared 0 existing staff records
+11:42:50 [[34mdebug[39m]: Found 5 roles for staff assignment
+11:42:50 [[34mdebug[39m]: Test hash for 'password123': $2b$10$6lpjK7vwdmiNt.EDOZGCEumgvPYQzAYWzAAJhVuTEPNFOVHhJGKny
+11:42:51 [[34mdebug[39m]: Hashed password for admin: $2b$10$BRrkjvIbCsG8EdrmQGtt1OK7mc7fKVfKlonepFQp/Y229h/0hjdBm
+11:42:51 [[34mdebug[39m]: Hashed password for sales_agent: $2b$10$FE6I1Gxxc2j.Tj/wtNJQKuoEUfG1GuXbt5RTCjFiqINVmpoHcne6C
+11:42:51 [[34mdebug[39m]: Hashed password for ops_manager: $2b$10$PUvCHCQbw0wy8eDB6gQfPefLjO7/wMJeGCY5aWM9EL7VA7emx7pwO
+11:42:51 [[34mdebug[39m]: Hashed password for finance_accountant: $2b$10$N6uky25xWvO3urDiYeV4QOxeSVm4sgkTR3aL.HMmwQD3/mQDw92ia
+11:42:51 [[34mdebug[39m]: Hashed password for customer_support: $2b$10$27Z7qz0mUeUjaVx8GYWn9ejeW.LtCZadT/pFGW.5b/MDd65ZFv/v6
+11:42:51 [[32minfo[39m]: Staff seeding completed. Inserted 5 staff members
+11:42:51 [[32minfo[39m]: Database seeding completed
+11:42:51 [[34mdebug[39m]: All routes initialized
+11:42:51 [[32minfo[39m]: Server running in development mode on port 3000
