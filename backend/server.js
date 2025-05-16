@@ -54,6 +54,10 @@ const app = express();
       await seedRoles();
       const { seedStaff } = await import('./seed/staff.seeder.js');
       await seedStaff();
+      const { seedOptionalServices } = await import('./seed/optionalService.seeder.js');
+      await seedOptionalServices();
+      const { seedAll } = await import('./seed/mainTest.seeder.js');
+      await seedAll();
       logger.info('Database seeding completed');
     }
 
