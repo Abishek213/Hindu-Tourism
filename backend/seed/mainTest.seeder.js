@@ -10,7 +10,7 @@ import { seedRoles } from './roles.seeder.js';
 import { seedStaff } from './staff.seeder.js';
 import { seedOptionalServices } from './optionalService.seeder.js';
 
-// Import models
+// Import all models
 import Customer from '../models/Customer.js';
 import Package from '../models/Package.js';
 import Lead from '../models/Lead.js';
@@ -18,15 +18,20 @@ import Guide from '../models/Guide.js';
 import Transport from '../models/Transport.js';
 import Booking from '../models/Booking.js';
 import BookingService from '../models/BookingService.js';
+import Invoice from '../models/Invoice.js';
+import PackageItinerary from '../models/PackageItinerary.js';
+import CommunicationLog from '../models/CommunicationLog.js';
+import Payment from '../models/Payment.js';
+import Document from '../models/Document.js';
 
-// Setup __dirname for ES module
+// Configure ES modules __dirname
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Load environment variables
 dotenv.config({ path: path.join(__dirname, '../.env') });
 
-// Sample data for other models
+// Sample data configurations
 const customersData = [
   {
     name: 'John Doe',
@@ -98,46 +103,46 @@ const transportsData = [
 export const seedAll = async () => {
   let connection;
   try {
-    // Connect to database
-    connection = await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/travel_agency', {
-      serverSelectionTimeoutMS: 5000,
-      maxPoolSize: 10,
-    });
+    // Database connection setup
+    connection = await mongoose.connect(
+      process.env.MONGODB_URI || 'mongodb://localhost:27017/travel_agency',
+      {
+        serverSelectionTimeoutMS: 5000,
+        maxPoolSize: 10,
+      }
+    );
     logger.info('Database connected for full seeding');
 
-    // Clear existing data (optional - comment out if you want to keep existing data)
-    await mongoose.connection.dropDatabase();
-    logger.info('Cleared existing database');
+    // Check for existing data
+    const customerCount = await Customer.countDocuments();
+    if (customerCount > 0) {
+      logger.info('Database already populated. Seeding skipped.');
+      return;
+    }
 
-    // Seed roles first
+    // Core seeding sequence
     const roles = await seedRoles();
-    logger.info('Roles seeded successfully');
+    logger.info(`Seeded ${roles.length} roles`);
 
-    // Seed staff next (depends on roles)
     const staff = await seedStaff();
-    logger.info('Staff seeded successfully');
+    logger.info(`Seeded ${staff.length} staff members`);
 
-    // Seed optional services
     const optionalServices = await seedOptionalServices();
-    logger.info('Optional services seeded successfully');
+    logger.info(`Seeded ${optionalServices.length} optional services`);
 
-    // Seed customers
     const customers = await Customer.insertMany(customersData);
     logger.info(`Seeded ${customers.length} customers`);
 
-    // Seed packages
     const packages = await Package.insertMany(packagesData);
     logger.info(`Seeded ${packages.length} packages`);
 
-    // Seed guides
     const guides = await Guide.insertMany(guidesData);
     logger.info(`Seeded ${guides.length} guides`);
 
-    // Seed transports
     const transports = await Transport.insertMany(transportsData);
     logger.info(`Seeded ${transports.length} transports`);
 
-    // Seed leads (depends on staff)
+    // Leads seeding
     const leadsData = [
       {
         name: 'Potential Client 1',
@@ -145,7 +150,7 @@ export const seedAll = async () => {
         phone: '+1112223333',
         source: 'website',
         status: 'contacted',
-        staff_id: staff[1]._id, // Sales Agent
+        staff_id: staff[1]._id,
         notes: 'Interested in European tour'
       },
       {
@@ -154,60 +159,184 @@ export const seedAll = async () => {
         phone: '+4445556666',
         source: 'referral',
         status: 'new',
-        staff_id: staff[1]._id, // Sales Agent
+        staff_id: staff[1]._id,
         notes: 'VIP referral from existing customer'
       }
     ];
     const leads = await Lead.insertMany(leadsData);
     logger.info(`Seeded ${leads.length} leads`);
 
-    // Seed bookings (depends on customers, packages, leads, guides, transports)
+    // Communication logs seeding
+    const communicationLogsData = [
+      {
+        lead_id: leads[0]._id,
+        staff_id: staff[1]._id,
+        type: 'call',
+        content: 'Initial contact about European tour',
+        status: 'completed'
+      },
+      {
+        customer_id: customers[0]._id,
+        staff_id: staff[1]._id,
+        type: 'email',
+        content: 'Sent booking confirmation',
+        status: 'completed'
+      },
+      {
+        lead_id: leads[1]._id,
+        staff_id: staff[1]._id,
+        type: 'meeting',
+        content: 'VIP client consultation',
+        status: 'follow_up'
+      }
+    ];
+    const communicationLogs = await CommunicationLog.insertMany(communicationLogsData);
+    logger.info(`Seeded ${communicationLogs.length} communication logs`);
+
+    // Bookings and related data
     const bookingsData = [
       {
         customer_id: customers[0]._id,
         package_id: packages[0]._id,
         lead_id: leads[0]._id,
-        travel_start_date: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days from now
-        travel_end_date: new Date(Date.now() + 44 * 24 * 60 * 60 * 1000), // 44 days from now (14 day trip)
+        travel_start_date: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+        travel_end_date: new Date(Date.now() + 44 * 24 * 60 * 60 * 1000),
         num_travelers: 2,
         status: 'confirmed',
         guide_id: guides[0]._id,
         transport_id: transports[0]._id,
-        special_requirements: 'Vegetarian meals required'
+        special_requirements: 'Vegetarian meals'
       },
       {
         customer_id: customers[1]._id,
         package_id: packages[1]._id,
-        travel_start_date: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000), // 60 days from now
-        travel_end_date: new Date(Date.now() + 81 * 24 * 60 * 60 * 1000), // 81 days from now (21 day trip)
+        travel_start_date: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000),
+        travel_end_date: new Date(Date.now() + 81 * 24 * 60 * 60 * 1000),
         num_travelers: 4,
         status: 'pending',
-        special_requirements: 'Need wheelchair accessible rooms'
+        special_requirements: 'Wheelchair access'
       }
     ];
     const bookings = await Booking.insertMany(bookingsData);
     logger.info(`Seeded ${bookings.length} bookings`);
 
-    // Seed booking services (depends on bookings and optional services)
+    // Booking services
     const bookingServicesData = [
       {
         booking_id: bookings[0]._id,
-        service_id: optionalServices[0]._id, // Helicopter Transfer
+        service_id: optionalServices[0]._id,
         price_applied: optionalServices[0].price
       },
       {
         booking_id: bookings[0]._id,
-        service_id: optionalServices[1]._id, // Hotel Upgrade
+        service_id: optionalServices[1]._id,
         price_applied: optionalServices[1].price
       },
       {
         booking_id: bookings[1]._id,
-        service_id: optionalServices[3]._id, // Private Vehicle
+        service_id: optionalServices[3]._id,
         price_applied: optionalServices[3].price
       }
     ];
     const bookingServices = await BookingService.insertMany(bookingServicesData);
     logger.info(`Seeded ${bookingServices.length} booking services`);
+
+    // Invoices
+    const invoicesData = [
+      {
+        booking_id: bookings[0]._id,
+        amount: 3500,
+        status: 'paid'
+      },
+      {
+        booking_id: bookings[1]._id,
+        amount: 4000,
+        status: 'sent'
+      }
+    ];
+    const invoices = await Invoice.insertMany(invoicesData);
+    logger.info(`Seeded ${invoices.length} invoices`);
+
+    // Package itineraries
+    const packageItinerariesData = [
+      {
+        package_id: packages[0]._id,
+        day_number: 1,
+        title: 'Paris Arrival',
+        description: 'Hotel check-in and orientation',
+        accommodation: 'Hotel Paris',
+        meals: 'Welcome dinner',
+        transport: 'Airport transfer'
+      },
+      {
+        package_id: packages[0]._id,
+        day_number: 2,
+        title: 'City Tour',
+        description: 'Guided tour of major landmarks',
+        accommodation: 'Hotel Paris',
+        meals: 'Breakfast included'
+      }
+    ];
+    const packageItineraries = await PackageItinerary.insertMany(packageItinerariesData);
+    logger.info(`Seeded ${packageItineraries.length} itineraries`);
+
+    // Seed payments (depends on bookings)
+    const paymentsData = [
+      {
+        booking_id: bookings[0]._id,
+        amount: 1500,
+        payment_method: 'credit_card',
+        status: 'completed',
+        transaction_id: 'PAY-123456',
+        notes: 'Deposit payment'
+      },
+      {
+        booking_id: bookings[0]._id,
+        amount: 2000,
+        payment_method: 'bank_transfer',
+        status: 'completed',
+        transaction_id: 'PAY-789012',
+        notes: 'Final payment'
+      },
+      {
+        booking_id: bookings[1]._id,
+        amount: 1000,
+        payment_method: 'credit_card',
+        status: 'pending',
+        notes: 'Advance payment requested'
+      }
+    ];
+    const payments = await Payment.insertMany(paymentsData);
+    logger.info(`Seeded ${payments.length} payments`);
+
+    // Seed documents (depends on customers and bookings)
+    const documentsData = [
+      {
+        customer_id: customers[0]._id,
+        booking_id: bookings[0]._id,
+        document_type: 'passport',
+        file_path: '/uploads/passports/john_doe.pdf'
+      },
+      {
+        customer_id: customers[0]._id,
+        booking_id: bookings[0]._id,
+        document_type: 'visa',
+        file_path: '/uploads/visas/john_doe_eu.pdf'
+      },
+      {
+        customer_id: customers[1]._id,
+        document_type: 'id_proof',
+        file_path: '/uploads/ids/jane_smith.png'
+      },
+      {
+        customer_id: customers[1]._id,
+        booking_id: bookings[1]._id,
+        document_type: 'ticket',
+        file_path: '/uploads/tickets/jane_asia.pdf'
+      }
+    ];
+    const documents = await Document.insertMany(documentsData);
+    logger.info(`Seeded ${documents.length} documents`);
 
     return {
       roles,
@@ -218,27 +347,34 @@ export const seedAll = async () => {
       guides,
       transports,
       leads,
+      communicationLogs,
       bookings,
-      bookingServices
+      bookingServices,
+      invoices,
+      packageItineraries,
+      payments,
+      documents
     };
 
   } catch (error) {
-    logger.error('Full seeding failed:', {
-      message: error.message,
+    logger.error('Seeding failed:', {
+      error: error.message,
       stack: error.stack,
-      dbConnection: connection ? 'active' : 'failed'
+      connectionStatus: connection ? 'Connected' : 'Connection failed'
     });
     throw error;
   }
 };
 
-// Execute directly if run as a script
+// Self-execution for script mode
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
   (async () => {
     try {
       await seedAll();
+      logger.info('Seeding completed successfully');
       process.exit(0);
     } catch (error) {
+      logger.error('Seeding terminated with errors');
       process.exit(1);
     }
   })();
