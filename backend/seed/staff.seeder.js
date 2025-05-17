@@ -47,14 +47,6 @@ const staffSeedData = [
     username: 'finance_accountant',
     password: 'password123',
     role_name: 'Accountant'
-  },
-  {
-    name: 'Customer Support',
-    email: 'support@example.com',
-    phone: '+1234567893',
-    username: 'customer_support',
-    password: 'password123',
-    role_name: 'Customer Portal'
   }
 ];
 

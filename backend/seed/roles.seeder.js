@@ -50,18 +50,6 @@ const rolesData = [
     assign_guides_access: false,
     update_travel_progress_access: false,
     manage_invoices_access: true,
-  },
-  {
-    role_name: "Customer Portal",
-    manage_users_access: false,
-    manage_leads_access: false,
-    manage_bookings_access: false,
-    manage_packages_access: false,
-    manage_payments_access: false,
-    generate_reports_access: false,
-    assign_guides_access: false,
-    update_travel_progress_access: false,
-    manage_invoices_access: false,
   }
 ];
 

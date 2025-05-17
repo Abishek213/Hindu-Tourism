@@ -50,12 +50,6 @@ const app = express();
 
     // Seeder (only in development)
     if (process.env.NODE_ENV === 'development') {
-      const { seedRoles } = await import('./seed/roles.seeder.js');
-      await seedRoles();
-      const { seedStaff } = await import('./seed/staff.seeder.js');
-      await seedStaff();
-      const { seedOptionalServices } = await import('./seed/optionalService.seeder.js');
-      await seedOptionalServices();
       const { seedAll } = await import('./seed/mainTest.seeder.js');
       await seedAll();
       logger.info('Database seeding completed');
