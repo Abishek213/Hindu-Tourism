@@ -46,4 +46,14 @@ packageSchema.virtual('itineraries', {
   foreignField: 'package_id'
 });
 
+packageSchema.virtual('packageItineraries', {
+  ref: 'PackageItinerary',
+  localField: '_id',
+  foreignField: 'package_id'
+});
+
+// Enable virtuals in JSON responses
+packageSchema.set('toObject', { virtuals: true });
+packageSchema.set('toJSON', { virtuals: true });
+
 export default mongoose.model('Package', packageSchema);
