@@ -1,3 +1,13 @@
+
+
+
+
+
+
+
+
+
+
 import { useState } from 'react';
 import {
   PieChart,
@@ -523,6 +533,85 @@ export default function AdminDashboard() {
     </div>
   );
 
+   const LeadManagementContent = () => (
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      {/* Revenue Overview */}
+      <div className="bg-white p-6 rounded-lg shadow">
+        <h2 className="text-xl font-bold mb-4">Revenue Overview</h2>
+        <div className="h-80">
+          <ResponsiveContainer width="100%" height="100%">
+            <LineChart data={revenueData}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="name" />
+              <YAxis />
+              <Tooltip formatter={(value) => `₹${value}`} />
+              <Legend />
+              <Line type="monotone" dataKey="amount" stroke="#FF9933" strokeWidth={2} />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
+      </div>
+      
+      {/* Lead Status */}
+      <div className="bg-white p-6 rounded-lg shadow">
+        <h2 className="text-xl font-bold mb-4">Lead Status</h2>
+        <div className="h-80">
+          <ResponsiveContainer width="100%" height="100%">
+            <PieChart>
+              <Pie
+                data={leadData}
+                cx="50%"
+                cy="50%"
+                labelLine={false}
+                outerRadius={80}
+                dataKey="value"
+                nameKey="name"
+              >
+                {leadData.map((entry, index) => (
+                  <Cell key={`cell-${index}`} fill={entry.color} />
+                ))}
+              </Pie>
+              <Tooltip formatter={(value) => `${value} leads`} />
+              <Legend />
+            </PieChart>
+          </ResponsiveContainer>
+        </div>
+      </div>
+      
+      {/* Top Packages */}
+      <div className="bg-white p-6 rounded-lg shadow">
+        <h2 className="text-xl font-bold mb-4">Top Packages</h2>
+        <div className="h-80">
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart data={bookingData}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="name" />
+              <YAxis />
+              <Tooltip formatter={(value) => `${value} bookings`} />
+              <Legend />
+              <Bar dataKey="count" fill="#FF9933" />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+      </div>
+      
+      {/* Recent Activity */}
+      <div className="col-span-1 lg:col-span-3 bg-white p-6 rounded-lg shadow">
+        <h2 className="text-xl font-bold mb-4">Recent Activity</h2>
+        <ul className="divide-y divide-gray-200">
+          {recentActivity.map((activity) => (
+            <li key={activity.id} className="py-3">
+              <div className="flex justify-between">
+                <p>{activity.activity}</p>
+                <p className="text-gray-500 text-sm">{activity.time}</p>
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  );
+
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col">
       {/* Header */}
@@ -606,6 +695,15 @@ export default function AdminDashboard() {
                     <span>Packages</span>
                   </button>
                 </li>
+                 <li>
+                  <button
+                    onClick={() => setActiveTab('travels')}
+                    className={`flex items-center gap-3 px-4 py-3 w-full rounded-md transition-colors ${activeTab === 'settings' ? 'bg-orange-100 text-orange-700' : 'hover:bg-gray-100'}`}
+                  >
+                    <Settings size={20} />
+                    <span>Travels</span>
+                  </button>
+                </li>
                 <li>
                   <button
                     onClick={() => setActiveTab('payments')}
@@ -613,6 +711,15 @@ export default function AdminDashboard() {
                   >
                     <CreditCard size={20} />
                     <span>Payments</span>
+                  </button>
+                </li>
+                 <li>
+                  <button
+                    onClick={() => setActiveTab('reports')}
+                    className={`flex items-center gap-3 px-4 py-3 w-full rounded-md transition-colors ${activeTab === 'settings' ? 'bg-orange-100 text-orange-700' : 'hover:bg-gray-100'}`}
+                  >
+                    <Settings size={20} />
+                    <span>Reports</span>
                   </button>
                 </li>
                 <li>
@@ -655,10 +762,12 @@ export default function AdminDashboard() {
 
             {activeTab === 'dashboard' && <DashboardContent />}
             {activeTab === 'staff' && <StaffManagementContent />}
-            {activeTab === 'leads' && <div className="bg-white p-6 rounded-lg shadow"><p>Lead Management Content</p></div>}
+            {activeTab === 'leads' && <LeadManagementContent />}
             {activeTab === 'bookings' && <div className="bg-white p-6 rounded-lg shadow"><p>Booking Management Content</p></div>}
             {activeTab === 'packages' && <div className="bg-white p-6 rounded-lg shadow"><p>Package Management Content</p></div>}
+            {activeTab === 'travels' && <div className="bg-white p-6 rounded-lg shadow"><p>Travel Management Content</p></div>}
             {activeTab === 'payments' && <div className="bg-white p-6 rounded-lg shadow"><p>Payment Management Content</p></div>}
+            {activeTab === 'reports' && <div className="bg-white p-6 rounded-lg shadow"><p>Report Management Content</p></div>}
             {activeTab === 'settings' && <div className="bg-white p-6 rounded-lg shadow"><p>Settings Content</p></div>}
           </div>
         </main>

@@ -33,7 +33,18 @@ const packageSchema = new mongoose.Schema({
   brochure_url: {
     type: String
   }
-}, { timestamps: true });
+}, { 
+  timestamps: true,
+  toJSON: { virtuals: true },
+  toObject: { virtuals: true }
+});
+
+// Add virtual population
+packageSchema.virtual('itineraries', {
+  ref: 'PackageItinerary',
+  localField: '_id',
+  foreignField: 'package_id'
+});
 
 packageSchema.virtual('packageItineraries', {
   ref: 'PackageItinerary',
