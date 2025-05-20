@@ -4,6 +4,7 @@ import Customer from '../models/Customer.js';
 import CommunicationLog from '../models/CommunicationLog.js';
 import { validationResult } from 'express-validator';
 
+// @desc    Create new lead
 // @route   POST /api/leads
 // @access  Admin, Sales Agent
 export const createLead = async (req, res) => {
@@ -34,7 +35,7 @@ export const createLead = async (req, res) => {
       source: source.toLowerCase(),
       status: status.toLowerCase(),
       notes,
-      staff_id: req.user._id // Ensure this matches your auth middleware
+      staff_id: req.user._id
     });
 
     res.status(201).json({
@@ -46,13 +47,11 @@ export const createLead = async (req, res) => {
     });
 
   } catch (error) {
-    res.status(500).json({ 
-      error: 'Failed to create lead',
-      details: process.env.NODE_ENV === 'development' ? error.message : undefined
-    });
+    res.status(500).json({ error: 'Failed to create lead' });
   }
 };
 
+// @desc    Get all leads with optional filters
 // @route   GET /api/leads
 // @access  Admin, Sales Agent
 export const getAllLeads = async (req, res) => {
@@ -75,6 +74,7 @@ export const getAllLeads = async (req, res) => {
   }
 };
 
+// @desc    Get lead by ID with staff details
 // @route   GET /api/leads/:id
 // @access  Admin, Sales Agent
 export const getLeadById = async (req, res) => {
@@ -101,13 +101,11 @@ export const getLeadById = async (req, res) => {
 
     res.json(lead);
   } catch (error) {
-    res.status(500).json({ 
-      error: 'Database operation failed',
-      details: process.env.NODE_ENV === 'development' ? error.message : undefined
-    });
+    res.status(500).json({ error: 'Database operation failed' });
   }
 };
 
+// @desc    Update lead status and notes
 // @route   PUT /api/leads/:id
 // @access  Admin, Sales Agent
 export const updateLead = async (req, res) => {
@@ -129,6 +127,7 @@ export const updateLead = async (req, res) => {
   }
 };
 
+// @desc    Convert lead to customer
 // @route   POST /api/leads/:id/convert
 // @access  Admin, Sales Agent
 export const convertLeadToCustomer = async (req, res) => {
@@ -177,13 +176,11 @@ export const convertLeadToCustomer = async (req, res) => {
     });
 
   } catch (error) {
-    res.status(500).json({
-      error: 'Conversion failed',
-      details: process.env.NODE_ENV === 'development' ? error.message : undefined
-    });
+    res.status(500).json({ error: 'Conversion failed' });
   }
 };
 
+// @desc    Add communication log to lead
 // @route   POST /api/leads/:id/logs
 // @access  Admin, Sales Agent
 export const addCommunicationLog = async (req, res) => {
@@ -192,12 +189,7 @@ export const addCommunicationLog = async (req, res) => {
     
     // Check if req.body exists and is an object
     if (!req.body || typeof req.body !== 'object' || Object.keys(req.body).length === 0) {
-      return res.status(400).json({ 
-        error: 'Request body is missing or empty',
-        receivedBody: req.body,
-        bodyType: typeof req.body,
-        contentType: req.headers['content-type']
-      });
+      return res.status(400).json({ error: 'Request body is missing or empty' });
     }
     
     // Validate required fields
@@ -241,13 +233,11 @@ export const addCommunicationLog = async (req, res) => {
 
     res.status(201).json(log);
   } catch (error) {
-    res.status(500).json({ 
-      error: 'Failed to add communication log',
-      details: process.env.NODE_ENV === 'development' ? error.message : undefined
-    });
+    res.status(500).json({ error: 'Failed to add communication log' });
   }
 };
 
+// @desc    Search leads by query, status, or source
 // @route   GET /api/leads/search
 // @access  Admin, Sales Agent
 export const searchLeads = async (req, res) => {
@@ -286,10 +276,6 @@ export const searchLeads = async (req, res) => {
     res.json(leads);
 
   } catch (error) {
-    console.error('Search error:', error);
-    res.status(500).json({ 
-      error: 'Search failed',
-      details: process.env.NODE_ENV === 'development' ? error.message : undefined
-    });
+    res.status(500).json({ error: 'Search failed' });
   }
 };
