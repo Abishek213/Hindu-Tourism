@@ -5286,3 +5286,1205 @@
 13:58:55 [[32mhttp[39m]: [0mPOST /api/transport/checkstatus [32m200[0m 24.110 ms - 33[0m
 14:06:05 [[32mhttp[39m]: [0mPOST /api/auth/login [32m200[0m 104.546 ms - 218[0m
 14:07:36 [[32mhttp[39m]: [0mPUT /api/transport/682ad9e391c1199826780fc6/status [32m200[0m 33.492 ms - 276[0m
+14:33:37 [[34mdebug[39m]: Environment variables loaded from: C:\Users\Lenovo\OneDrive\Desktop\Hindu Tourism\.env
+14:33:37 [[33mwarn[39m]: Missing required environment variable: MONGODB_URI
+14:33:37 [[33mwarn[39m]: Missing required environment variable: JWT_SECRET
+14:33:37 [[33mwarn[39m]: Using default JWT secret - not recommended for production
+14:33:39 [[32minfo[39m]: MongoDB connected: localhost
+14:33:39 [[34mdebug[39m]: MongoDB connection details: 
+      - Database: travel_agency
+      - Port: 27017
+      - Model count: 13
+14:33:39 [[32minfo[39m]: Database connected successfully
+14:33:39 [[34mdebug[39m]: Loaded model: Booking.js
+14:33:39 [[34mdebug[39m]: Loaded model: BookingService.js
+14:33:39 [[34mdebug[39m]: Loaded model: CommunicationLog.js
+14:33:39 [[34mdebug[39m]: Loaded model: Customer.js
+14:33:39 [[34mdebug[39m]: Loaded model: CustomerPortal.js
+14:33:39 [[34mdebug[39m]: Loaded model: Document.js
+14:33:39 [[34mdebug[39m]: Loaded model: Guide.js
+14:33:39 [[34mdebug[39m]: Loaded model: index.js
+14:33:39 [[34mdebug[39m]: Loaded model: Invoice.js
+14:33:39 [[34mdebug[39m]: Loaded model: Lead.js
+14:33:39 [[34mdebug[39m]: Loaded model: OptionalService.js
+14:33:39 [[34mdebug[39m]: Loaded model: Package.js
+14:33:39 [[34mdebug[39m]: Loaded model: PackageItinerary.js
+14:33:39 [[34mdebug[39m]: Loaded model: Payment.js
+14:33:39 [[34mdebug[39m]: Loaded model: Role.js
+14:33:39 [[34mdebug[39m]: Loaded model: Staff.js
+14:33:39 [[34mdebug[39m]: Loaded model: Transport.js
+14:33:39 [[32minfo[39m]: Roles already exist. Skipping seed.
+14:33:39 [[34mdebug[39m]: Database connected for staff seeding
+14:33:39 [[34mdebug[39m]: Cleared 5 existing staff records
+14:33:39 [[34mdebug[39m]: Found 5 roles for staff assignment
+14:33:39 [[34mdebug[39m]: Test hash for 'password123': $2b$10$8/zcTYpyYHhIUtee/JHtjedBpkx3OvL4dFXt1mOjOu3TQ1AIE3xrm
+14:33:39 [[34mdebug[39m]: Hashed password for sales_agent: $2b$10$z7XnBN5bI.gK4BEVX6hO/eTVSDbHBx1II6dt.A9xJ1pEK2iov.woO
+14:33:40 [[34mdebug[39m]: Hashed password for ops_manager: $2b$10$3WkkoEuPesxqh289H4o.zubcA1EESkJnmmFXLx5lbcPR1I9HdvNyW
+14:33:40 [[34mdebug[39m]: Hashed password for finance_accountant: $2b$10$fk9aC3jSk2IdDeBJxZRG..S7sgdDPyDdHkipAC/NTWH/vhzv2pWF2
+14:33:40 [[34mdebug[39m]: Hashed password for customer_support: $2b$10$NdZx7hSsztsCe7Htlu2/z.F2Rxt3GCrm4fmLx3iUO/BzTagqlU996
+14:33:40 [[34mdebug[39m]: Hashed password for admin: $2b$10$MycNlH9zSwcwdWLu4sdkH.uM4ZC5rrGXClU/v8suynvpdKRb9xnOO
+14:33:40 [[32minfo[39m]: Staff seeding completed. Inserted 5 staff members
+14:33:40 [[32minfo[39m]: Database seeding completed
+14:33:40 [[34mdebug[39m]: All routes initialized
+14:33:40 [[32minfo[39m]: Server running in development mode on port 3000
+22:37:46 [[34mdebug[39m]: Environment variables loaded from: C:\Users\Lenovo\OneDrive\Desktop\Hindu Tourism\.env
+22:37:46 [[33mwarn[39m]: Missing required environment variable: MONGODB_URI
+22:37:46 [[33mwarn[39m]: Missing required environment variable: JWT_SECRET
+22:37:46 [[33mwarn[39m]: Using default JWT secret - not recommended for production
+22:37:47 [[32minfo[39m]: MongoDB connected: localhost
+22:37:47 [[34mdebug[39m]: MongoDB connection details: 
+      - Database: travel_agency
+      - Port: 27017
+      - Model count: 13
+22:37:47 [[32minfo[39m]: Database connected successfully
+22:37:47 [[34mdebug[39m]: Loaded model: Booking.js
+22:37:47 [[34mdebug[39m]: Loaded model: BookingService.js
+22:37:47 [[34mdebug[39m]: Loaded model: CommunicationLog.js
+22:37:47 [[34mdebug[39m]: Loaded model: Customer.js
+22:37:47 [[34mdebug[39m]: Loaded model: CustomerPortal.js
+22:37:47 [[34mdebug[39m]: Loaded model: Document.js
+22:37:47 [[34mdebug[39m]: Loaded model: Guide.js
+22:37:47 [[34mdebug[39m]: Loaded model: index.js
+22:37:47 [[34mdebug[39m]: Loaded model: Invoice.js
+22:37:47 [[34mdebug[39m]: Loaded model: Lead.js
+22:37:47 [[34mdebug[39m]: Loaded model: OptionalService.js
+22:37:47 [[34mdebug[39m]: Loaded model: Package.js
+22:37:47 [[34mdebug[39m]: Loaded model: PackageItinerary.js
+22:37:47 [[34mdebug[39m]: Loaded model: Payment.js
+22:37:47 [[34mdebug[39m]: Loaded model: Role.js
+22:37:47 [[34mdebug[39m]: Loaded model: Staff.js
+22:37:47 [[34mdebug[39m]: Loaded model: Transport.js
+22:37:47 [[32minfo[39m]: Roles already exist. Skipping seed.
+22:37:47 [[34mdebug[39m]: Database connected for staff seeding
+22:37:47 [[34mdebug[39m]: Cleared 5 existing staff records
+22:37:47 [[34mdebug[39m]: Found 5 roles for staff assignment
+22:37:47 [[34mdebug[39m]: Test hash for 'password123': $2b$10$eQjA0Ziu6TUn1HtAMmfp1O917HKRZoi3Hm2d09Zru0N5ymd6Y35sO
+22:37:48 [[34mdebug[39m]: Hashed password for ops_manager: $2b$10$mtFH5q.qtSFLYhWU/y.qMe8I4FDHWl9EBrpRxiOBlpj7Q9Zpsyjzm
+22:37:48 [[34mdebug[39m]: Hashed password for finance_accountant: $2b$10$e3yYsFepJs1WD0sO2p4uue1oQcHtBWqHnZfkm.Z58L0rmwM5gBUlu
+22:37:48 [[34mdebug[39m]: Hashed password for admin: $2b$10$gBhOA3o/tMCGEYi5KOfnue3mC8qZ6SnvsAdQiAPsOujVN2GMXaRpa
+22:37:48 [[34mdebug[39m]: Hashed password for sales_agent: $2b$10$gckFyc8WFdiB9pMxicVIqOPPi2s9QM2jUQwpCGQoS8oTPwbZx1Any
+22:37:48 [[34mdebug[39m]: Hashed password for customer_support: $2b$10$Mhr7UFKQ.EiM8O0PH4N4M.Ufz17icHHjBwKSN9LfmFANfxoaCDn4C
+22:37:49 [[32minfo[39m]: Staff seeding completed. Inserted 5 staff members
+22:37:49 [[32minfo[39m]: Database seeding completed
+22:37:49 [[34mdebug[39m]: All routes initialized
+22:37:49 [[32minfo[39m]: Server running in development mode on port 3000
+22:39:05 [[34mdebug[39m]: Environment variables loaded from: C:\Users\Lenovo\OneDrive\Desktop\Hindu Tourism\.env
+22:39:08 [[34mdebug[39m]: Environment variables loaded from: C:\Users\Lenovo\OneDrive\Desktop\Hindu Tourism\.env
+22:39:08 [[33mwarn[39m]: Missing required environment variable: MONGODB_URI
+22:39:08 [[33mwarn[39m]: Missing required environment variable: JWT_SECRET
+22:39:08 [[33mwarn[39m]: Using default JWT secret - not recommended for production
+22:39:09 [[32minfo[39m]: MongoDB connected: localhost
+22:39:09 [[34mdebug[39m]: MongoDB connection details: 
+      - Database: travel_agency
+      - Port: 27017
+      - Model count: 13
+22:39:09 [[32minfo[39m]: Database connected successfully
+22:39:09 [[34mdebug[39m]: Loaded model: Booking.js
+22:39:09 [[34mdebug[39m]: Loaded model: BookingService.js
+22:39:09 [[34mdebug[39m]: Loaded model: CommunicationLog.js
+22:39:09 [[34mdebug[39m]: Loaded model: Customer.js
+22:39:09 [[34mdebug[39m]: Loaded model: CustomerPortal.js
+22:39:09 [[34mdebug[39m]: Loaded model: Document.js
+22:39:09 [[34mdebug[39m]: Loaded model: Guide.js
+22:39:09 [[34mdebug[39m]: Loaded model: index.js
+22:39:09 [[34mdebug[39m]: Loaded model: Invoice.js
+22:39:09 [[34mdebug[39m]: Loaded model: Lead.js
+22:39:09 [[34mdebug[39m]: Loaded model: OptionalService.js
+22:39:09 [[34mdebug[39m]: Loaded model: Package.js
+22:39:09 [[34mdebug[39m]: Loaded model: PackageItinerary.js
+22:39:09 [[34mdebug[39m]: Loaded model: Payment.js
+22:39:09 [[34mdebug[39m]: Loaded model: Role.js
+22:39:09 [[34mdebug[39m]: Loaded model: Staff.js
+22:39:09 [[34mdebug[39m]: Loaded model: Transport.js
+22:39:09 [[32minfo[39m]: Roles already exist. Skipping seed.
+22:39:09 [[34mdebug[39m]: Database connected for staff seeding
+22:39:09 [[34mdebug[39m]: Cleared 5 existing staff records
+22:39:09 [[34mdebug[39m]: Found 5 roles for staff assignment
+22:39:10 [[34mdebug[39m]: Test hash for 'password123': $2b$10$erFrC4eeUKge5e.3QDLXhu8Ka2bi2GJBX2AIH9qFsiFxBWNMJGTHa
+22:39:10 [[34mdebug[39m]: Hashed password for admin: $2b$10$wn7wGRavuLoqPnsYB7N3xOoteHkYMwPeMe9wVGrpMjQsBKihtshc2
+22:39:10 [[34mdebug[39m]: Hashed password for sales_agent: $2b$10$UnI550AUPuDsV9mAjG4cO.SROB2orLRKUTlcxjHD1.wDsVCXbtDwG
+22:39:10 [[34mdebug[39m]: Hashed password for ops_manager: $2b$10$CDpUPXdXbTAorv9at5uEwupIGuQWVs0hXkwrejK3kJB4Y9E4z5wMW
+22:39:10 [[34mdebug[39m]: Hashed password for finance_accountant: $2b$10$OvZDDds6djvsT3hsus5zoufqD3g/EB48jJTGHfHFPYxYmGZ7Mr542
+22:39:11 [[34mdebug[39m]: Hashed password for customer_support: $2b$10$P553BxSdUdgUy./IGJv1Du4BYrAyft2AqrY/LRrhYPYC.T3Wlk3Om
+22:39:11 [[32minfo[39m]: Staff seeding completed. Inserted 5 staff members
+22:39:11 [[32minfo[39m]: Database seeding completed
+22:39:11 [[34mdebug[39m]: All routes initialized
+22:39:11 [[32minfo[39m]: Server running in development mode on port 3000
+22:40:04 [[34mdebug[39m]: Environment variables loaded from: C:\Users\Lenovo\OneDrive\Desktop\Hindu Tourism\.env
+22:40:04 [[33mwarn[39m]: Missing required environment variable: MONGODB_URI
+22:40:04 [[33mwarn[39m]: Missing required environment variable: JWT_SECRET
+22:40:04 [[33mwarn[39m]: Using default JWT secret - not recommended for production
+22:40:05 [[32minfo[39m]: MongoDB connected: localhost
+22:40:05 [[34mdebug[39m]: MongoDB connection details: 
+      - Database: travel_agency
+      - Port: 27017
+      - Model count: 13
+22:40:05 [[32minfo[39m]: Database connected successfully
+22:40:05 [[34mdebug[39m]: Loaded model: Booking.js
+22:40:05 [[34mdebug[39m]: Loaded model: BookingService.js
+22:40:05 [[34mdebug[39m]: Loaded model: CommunicationLog.js
+22:40:05 [[34mdebug[39m]: Loaded model: Customer.js
+22:40:05 [[34mdebug[39m]: Loaded model: CustomerPortal.js
+22:40:05 [[34mdebug[39m]: Loaded model: Document.js
+22:40:05 [[34mdebug[39m]: Loaded model: Guide.js
+22:40:05 [[34mdebug[39m]: Loaded model: index.js
+22:40:05 [[34mdebug[39m]: Loaded model: Invoice.js
+22:40:05 [[34mdebug[39m]: Loaded model: Lead.js
+22:40:05 [[34mdebug[39m]: Loaded model: OptionalService.js
+22:40:06 [[34mdebug[39m]: Loaded model: Package.js
+22:40:06 [[34mdebug[39m]: Loaded model: PackageItinerary.js
+22:40:06 [[34mdebug[39m]: Loaded model: Payment.js
+22:40:06 [[34mdebug[39m]: Loaded model: Role.js
+22:40:06 [[34mdebug[39m]: Loaded model: Staff.js
+22:40:06 [[34mdebug[39m]: Loaded model: Transport.js
+22:40:06 [[32minfo[39m]: Roles already exist. Skipping seed.
+22:40:06 [[34mdebug[39m]: Database connected for staff seeding
+22:40:06 [[34mdebug[39m]: Cleared 5 existing staff records
+22:40:06 [[34mdebug[39m]: Found 5 roles for staff assignment
+22:40:06 [[34mdebug[39m]: Test hash for 'password123': $2b$10$0X0pSACNNDDAtKgzUxR3/uDvDf4lX94VNrRBoaXBpr2Y.GjEVnhN2
+22:40:06 [[34mdebug[39m]: Hashed password for admin: $2b$10$prE5IWA8gr5LSpjjKOVeXexQExKgC5RyqfArVNO9Bm5FvHdSnJ1Ca
+22:40:07 [[34mdebug[39m]: Hashed password for sales_agent: $2b$10$U24Luz3E5nzQhKH04h5OP.XhE3WpPfHEwgybLtWDLWcdxoDg92/my
+22:40:07 [[34mdebug[39m]: Hashed password for ops_manager: $2b$10$bWrMM3vKWapfaiaskHm2EOKIFe3oQKcy1J3VXlSC17Qx0ca1LHCMO
+22:40:07 [[34mdebug[39m]: Hashed password for finance_accountant: $2b$10$fJU6OkcEfzHD059Uve7mk.nTMDVmsbWzrYJw5PaJXPMU74Y/U9dem
+22:40:07 [[34mdebug[39m]: Hashed password for customer_support: $2b$10$6hx8vyBUhwO46AKMOiqYwOU2YKruMY3Jk6OAx6iG248zc/2/PLGey
+22:40:07 [[32minfo[39m]: Staff seeding completed. Inserted 5 staff members
+22:40:07 [[32minfo[39m]: Database seeding completed
+22:40:07 [[34mdebug[39m]: All routes initialized
+22:40:07 [[32minfo[39m]: Server running in development mode on port 3000
+22:44:15 [[34mdebug[39m]: Environment variables loaded from: C:\Users\Lenovo\OneDrive\Desktop\Hindu Tourism\.env
+22:44:15 [[33mwarn[39m]: Missing required environment variable: MONGODB_URI
+22:44:15 [[33mwarn[39m]: Missing required environment variable: JWT_SECRET
+22:44:15 [[33mwarn[39m]: Using default JWT secret - not recommended for production
+22:44:17 [[32minfo[39m]: MongoDB connected: localhost
+22:44:17 [[34mdebug[39m]: MongoDB connection details: 
+      - Database: travel_agency
+      - Port: 27017
+      - Model count: 13
+22:44:17 [[32minfo[39m]: Database connected successfully
+22:44:17 [[34mdebug[39m]: Loaded model: Booking.js
+22:44:17 [[34mdebug[39m]: Loaded model: BookingService.js
+22:44:17 [[34mdebug[39m]: Loaded model: CommunicationLog.js
+22:44:17 [[34mdebug[39m]: Loaded model: Customer.js
+22:44:17 [[34mdebug[39m]: Loaded model: CustomerPortal.js
+22:44:17 [[34mdebug[39m]: Loaded model: Document.js
+22:44:17 [[34mdebug[39m]: Loaded model: Guide.js
+22:44:17 [[34mdebug[39m]: Loaded model: index.js
+22:44:17 [[34mdebug[39m]: Loaded model: Invoice.js
+22:44:17 [[34mdebug[39m]: Loaded model: Lead.js
+22:44:17 [[34mdebug[39m]: Loaded model: OptionalService.js
+22:44:17 [[34mdebug[39m]: Loaded model: Package.js
+22:44:17 [[34mdebug[39m]: Loaded model: PackageItinerary.js
+22:44:17 [[34mdebug[39m]: Loaded model: Payment.js
+22:44:17 [[34mdebug[39m]: Loaded model: Role.js
+22:44:17 [[34mdebug[39m]: Loaded model: Staff.js
+22:44:17 [[34mdebug[39m]: Loaded model: Transport.js
+22:44:17 [[32minfo[39m]: Roles already exist. Skipping seed.
+22:44:17 [[34mdebug[39m]: Database connected for staff seeding
+22:44:17 [[34mdebug[39m]: Cleared 5 existing staff records
+22:44:18 [[34mdebug[39m]: Found 5 roles for staff assignment
+22:44:18 [[34mdebug[39m]: Test hash for 'password123': $2b$10$8DDZ77Kr8zFX0RX4FM4nl.KlBU2pmu9x583NADVAK.xFnnhyZoP7C
+22:44:18 [[34mdebug[39m]: Hashed password for admin: $2b$10$NBUkbMvBsFdQenTZus0SMOLaUTpKwLJ1iSfCx5hCBqdI/J1mz7Q.K
+22:44:19 [[34mdebug[39m]: Hashed password for sales_agent: $2b$10$kYQaQjiJoULmFjieB/aC.O2Mm7.dgPd/qobYPMDUA8DgnZwrN5nJC
+22:44:19 [[34mdebug[39m]: Hashed password for ops_manager: $2b$10$VRvUuYW7HNFut/u3kCFKEOpm7gay2Ezdh1BiP7bOR4nF2nnU0UMc.
+22:44:19 [[34mdebug[39m]: Hashed password for finance_accountant: $2b$10$MCRqKCIcAOukoR5j9Rjx1.1fjBnZIjXualAkQrb7xhItTURc4J3ry
+22:44:19 [[34mdebug[39m]: Hashed password for customer_support: $2b$10$9SnXG6Ij4/ENu5vDOdJnfuhXIYEHAd0rQgz7yIh5bejtH5urF17tm
+22:44:19 [[32minfo[39m]: Staff seeding completed. Inserted 5 staff members
+22:44:19 [[32minfo[39m]: Database seeding completed
+22:44:19 [[34mdebug[39m]: All routes initialized
+22:44:19 [[32minfo[39m]: Server running in development mode on port 3000
+22:45:31 [[34mdebug[39m]: Environment variables loaded from: C:\Users\Lenovo\OneDrive\Desktop\Hindu Tourism\.env
+22:45:31 [[33mwarn[39m]: Missing required environment variable: MONGODB_URI
+22:45:31 [[33mwarn[39m]: Missing required environment variable: JWT_SECRET
+22:45:31 [[33mwarn[39m]: Using default JWT secret - not recommended for production
+22:45:32 [[32minfo[39m]: MongoDB connected: localhost
+22:45:32 [[34mdebug[39m]: MongoDB connection details: 
+      - Database: travel_agency
+      - Port: 27017
+      - Model count: 13
+22:45:32 [[32minfo[39m]: Database connected successfully
+22:45:32 [[34mdebug[39m]: Loaded model: Booking.js
+22:45:32 [[34mdebug[39m]: Loaded model: BookingService.js
+22:45:32 [[34mdebug[39m]: Loaded model: CommunicationLog.js
+22:45:32 [[34mdebug[39m]: Loaded model: Customer.js
+22:45:33 [[34mdebug[39m]: Loaded model: CustomerPortal.js
+22:45:33 [[34mdebug[39m]: Loaded model: Document.js
+22:45:33 [[34mdebug[39m]: Loaded model: Guide.js
+22:45:33 [[34mdebug[39m]: Loaded model: index.js
+22:45:33 [[34mdebug[39m]: Loaded model: Invoice.js
+22:45:33 [[34mdebug[39m]: Loaded model: Lead.js
+22:45:33 [[34mdebug[39m]: Loaded model: OptionalService.js
+22:45:33 [[34mdebug[39m]: Loaded model: Package.js
+22:45:33 [[34mdebug[39m]: Loaded model: PackageItinerary.js
+22:45:33 [[34mdebug[39m]: Loaded model: Payment.js
+22:45:33 [[34mdebug[39m]: Loaded model: Role.js
+22:45:33 [[34mdebug[39m]: Loaded model: Staff.js
+22:45:33 [[34mdebug[39m]: Loaded model: Transport.js
+22:45:33 [[32minfo[39m]: Roles already exist. Skipping seed.
+22:45:33 [[34mdebug[39m]: Database connected for staff seeding
+22:45:33 [[34mdebug[39m]: Cleared 5 existing staff records
+22:45:33 [[34mdebug[39m]: Found 5 roles for staff assignment
+22:45:33 [[34mdebug[39m]: Test hash for 'password123': $2b$10$jx4nj6WjercS/Hgw1RPMsODQ1HyZwzYwIMS8hA1oaka0M.7TqtLAG
+22:45:34 [[34mdebug[39m]: Hashed password for sales_agent: $2b$10$2x9KOU2g6tPI9JJPP2sbB.3IwtdELCa7SyB5No8zUo.CIuVeYcYZu
+22:45:34 [[34mdebug[39m]: Hashed password for ops_manager: $2b$10$cVIZMhy2doKwW57EboBgUOcSTRf5kM0d.U8PHTZC4nkzegNJ7R1eS
+22:45:34 [[34mdebug[39m]: Hashed password for customer_support: $2b$10$GVJx/xt2JxIBmPT5/TrEe.qwP4flP8H05NOwV/FAdHI8zTQu3kWFm
+22:45:34 [[34mdebug[39m]: Hashed password for admin: $2b$10$P9ivD77Y/J7zDaWbDlMf2Oxtu0UuOu0V7akpDIr6KxVXPxB5AdPle
+22:45:34 [[34mdebug[39m]: Hashed password for finance_accountant: $2b$10$mTmCHSds5sSwz8RUwn8UOelQk.WOiGEt6e4FBmvQ85jerxID0GvZO
+22:45:35 [[32minfo[39m]: Staff seeding completed. Inserted 5 staff members
+22:45:35 [[32minfo[39m]: Database seeding completed
+22:45:35 [[34mdebug[39m]: All routes initialized
+22:45:35 [[32minfo[39m]: Server running in development mode on port 3000
+22:50:31 [[34mdebug[39m]: Environment variables loaded from: C:\Users\Lenovo\OneDrive\Desktop\Hindu Tourism\.env
+22:50:31 [[33mwarn[39m]: Missing required environment variable: MONGODB_URI
+22:50:31 [[33mwarn[39m]: Missing required environment variable: JWT_SECRET
+22:50:31 [[33mwarn[39m]: Using default JWT secret - not recommended for production
+22:50:32 [[32minfo[39m]: MongoDB connected: localhost
+22:50:32 [[34mdebug[39m]: MongoDB connection details: 
+      - Database: travel_agency
+      - Port: 27017
+      - Model count: 13
+22:50:32 [[32minfo[39m]: Database connected successfully
+22:50:32 [[34mdebug[39m]: Loaded model: Booking.js
+22:50:32 [[34mdebug[39m]: Loaded model: BookingService.js
+22:50:32 [[34mdebug[39m]: Loaded model: CommunicationLog.js
+22:50:32 [[34mdebug[39m]: Loaded model: Customer.js
+22:50:32 [[34mdebug[39m]: Loaded model: CustomerPortal.js
+22:50:32 [[34mdebug[39m]: Loaded model: Document.js
+22:50:32 [[34mdebug[39m]: Loaded model: Guide.js
+22:50:32 [[34mdebug[39m]: Loaded model: index.js
+22:50:32 [[34mdebug[39m]: Loaded model: Invoice.js
+22:50:32 [[34mdebug[39m]: Loaded model: Lead.js
+22:50:32 [[34mdebug[39m]: Loaded model: OptionalService.js
+22:50:32 [[34mdebug[39m]: Loaded model: Package.js
+22:50:32 [[34mdebug[39m]: Loaded model: PackageItinerary.js
+22:50:32 [[34mdebug[39m]: Loaded model: Payment.js
+22:50:32 [[34mdebug[39m]: Loaded model: Role.js
+22:50:32 [[34mdebug[39m]: Loaded model: Staff.js
+22:50:32 [[34mdebug[39m]: Loaded model: Transport.js
+22:50:32 [[32minfo[39m]: Roles already exist. Skipping seed.
+22:50:32 [[34mdebug[39m]: Database connected for staff seeding
+22:50:32 [[34mdebug[39m]: Cleared 5 existing staff records
+22:50:32 [[34mdebug[39m]: Found 5 roles for staff assignment
+22:50:32 [[34mdebug[39m]: Test hash for 'password123': $2b$10$KfIyHuoyPIhhhc/OZoEc7eVLJmfUCNE/KX.o9Yjyn835/J9ooZ1uS
+22:50:33 [[34mdebug[39m]: Hashed password for admin: $2b$10$vzMc3gMuRh8mMMA7X8igq.DrH8xbyKzc3xyMhurC0wKlIkQ5tmKcO
+22:50:33 [[34mdebug[39m]: Hashed password for sales_agent: $2b$10$rrOe.ISdUfw1LldeFQ7mPuTXhvTOCUBnF7s.QRwY1lQdBJI3/XOZS
+22:50:33 [[34mdebug[39m]: Hashed password for ops_manager: $2b$10$M4pLR8z4oKyrvzpgPHT6aelrVUEOzBKqxZ78paU9RE5WaFkHOll.S
+22:50:33 [[34mdebug[39m]: Hashed password for finance_accountant: $2b$10$VCkyRMOF7t7tIv1Eht9iQOk2yiZlu9SwljcrDKEiPKCrV88JcLJb2
+22:50:33 [[34mdebug[39m]: Hashed password for customer_support: $2b$10$BKPrYTeIIjx8147U12iQPOjtPwgtJGdO/hctxFbQ99BOL5CyW8bkq
+22:50:33 [[32minfo[39m]: Staff seeding completed. Inserted 5 staff members
+22:50:33 [[32minfo[39m]: Database seeding completed
+22:50:33 [[34mdebug[39m]: All routes initialized
+22:50:33 [[32minfo[39m]: Server running in development mode on port 3000
+22:51:11 [[34mdebug[39m]: Environment variables loaded from: C:\Users\Lenovo\OneDrive\Desktop\Hindu Tourism\.env
+22:51:11 [[33mwarn[39m]: Missing required environment variable: MONGODB_URI
+22:51:11 [[33mwarn[39m]: Missing required environment variable: JWT_SECRET
+22:51:11 [[33mwarn[39m]: Using default JWT secret - not recommended for production
+22:51:12 [[32minfo[39m]: MongoDB connected: localhost
+22:51:12 [[34mdebug[39m]: MongoDB connection details: 
+      - Database: travel_agency
+      - Port: 27017
+      - Model count: 13
+22:51:12 [[32minfo[39m]: Database connected successfully
+22:51:12 [[34mdebug[39m]: Loaded model: Booking.js
+22:51:12 [[34mdebug[39m]: Loaded model: BookingService.js
+22:51:12 [[34mdebug[39m]: Loaded model: CommunicationLog.js
+22:51:12 [[34mdebug[39m]: Loaded model: Customer.js
+22:51:12 [[34mdebug[39m]: Loaded model: CustomerPortal.js
+22:51:12 [[34mdebug[39m]: Loaded model: Document.js
+22:51:12 [[34mdebug[39m]: Loaded model: Guide.js
+22:51:12 [[34mdebug[39m]: Loaded model: index.js
+22:51:12 [[34mdebug[39m]: Loaded model: Invoice.js
+22:51:12 [[34mdebug[39m]: Loaded model: Lead.js
+22:51:12 [[34mdebug[39m]: Loaded model: OptionalService.js
+22:51:12 [[34mdebug[39m]: Loaded model: Package.js
+22:51:12 [[34mdebug[39m]: Loaded model: PackageItinerary.js
+22:51:12 [[34mdebug[39m]: Loaded model: Payment.js
+22:51:12 [[34mdebug[39m]: Loaded model: Role.js
+22:51:12 [[34mdebug[39m]: Loaded model: Staff.js
+22:51:12 [[34mdebug[39m]: Loaded model: Transport.js
+22:51:12 [[32minfo[39m]: Roles already exist. Skipping seed.
+22:51:12 [[34mdebug[39m]: Database connected for staff seeding
+22:51:12 [[34mdebug[39m]: Cleared 5 existing staff records
+22:51:12 [[34mdebug[39m]: Found 5 roles for staff assignment
+22:51:13 [[34mdebug[39m]: Environment variables loaded from: C:\Users\Lenovo\OneDrive\Desktop\Hindu Tourism\.env
+22:51:13 [[33mwarn[39m]: Missing required environment variable: MONGODB_URI
+22:51:13 [[33mwarn[39m]: Missing required environment variable: JWT_SECRET
+22:51:13 [[33mwarn[39m]: Using default JWT secret - not recommended for production
+22:51:14 [[32minfo[39m]: MongoDB connected: localhost
+22:51:14 [[34mdebug[39m]: MongoDB connection details: 
+      - Database: travel_agency
+      - Port: 27017
+      - Model count: 13
+22:51:14 [[32minfo[39m]: Database connected successfully
+22:51:14 [[34mdebug[39m]: Loaded model: Booking.js
+22:51:14 [[34mdebug[39m]: Loaded model: BookingService.js
+22:51:14 [[34mdebug[39m]: Loaded model: CommunicationLog.js
+22:51:14 [[34mdebug[39m]: Loaded model: Customer.js
+22:51:14 [[34mdebug[39m]: Loaded model: CustomerPortal.js
+22:51:14 [[34mdebug[39m]: Loaded model: Document.js
+22:51:14 [[34mdebug[39m]: Loaded model: Guide.js
+22:51:14 [[34mdebug[39m]: Loaded model: index.js
+22:51:14 [[34mdebug[39m]: Loaded model: Invoice.js
+22:51:14 [[34mdebug[39m]: Loaded model: Lead.js
+22:51:14 [[34mdebug[39m]: Loaded model: OptionalService.js
+22:51:14 [[34mdebug[39m]: Loaded model: Package.js
+22:51:14 [[34mdebug[39m]: Loaded model: PackageItinerary.js
+22:51:14 [[34mdebug[39m]: Loaded model: Payment.js
+22:51:14 [[34mdebug[39m]: Loaded model: Role.js
+22:51:14 [[34mdebug[39m]: Loaded model: Staff.js
+22:51:14 [[34mdebug[39m]: Loaded model: Transport.js
+22:51:14 [[32minfo[39m]: Roles already exist. Skipping seed.
+22:51:14 [[34mdebug[39m]: Database connected for staff seeding
+22:51:14 [[34mdebug[39m]: Cleared 0 existing staff records
+22:51:14 [[34mdebug[39m]: Found 5 roles for staff assignment
+22:51:14 [[34mdebug[39m]: Test hash for 'password123': $2b$10$qTfmIBClAhc.OXce/COmVOP18Y5.aEOLWsE2NSR3EADOOm27ZTSgC
+22:51:15 [[34mdebug[39m]: Hashed password for sales_agent: $2b$10$wYONomrKRF2sE2gvdIqnGuV8tRWsrrJMNvT/FA3AfIPrfYlHMTA2W
+22:51:15 [[34mdebug[39m]: Hashed password for admin: $2b$10$dNnZk4mzUxfBIJ370TsBtuTOCm/r67JTqmNUT1OSKBZmzCchvmo2C
+22:51:16 [[34mdebug[39m]: Environment variables loaded from: C:\Users\Lenovo\OneDrive\Desktop\Hindu Tourism\.env
+22:51:16 [[33mwarn[39m]: Missing required environment variable: MONGODB_URI
+22:51:16 [[33mwarn[39m]: Missing required environment variable: JWT_SECRET
+22:51:16 [[33mwarn[39m]: Using default JWT secret - not recommended for production
+22:51:17 [[32minfo[39m]: MongoDB connected: localhost
+22:51:17 [[34mdebug[39m]: MongoDB connection details: 
+      - Database: travel_agency
+      - Port: 27017
+      - Model count: 13
+22:51:17 [[32minfo[39m]: Database connected successfully
+22:51:17 [[34mdebug[39m]: Loaded model: Booking.js
+22:51:17 [[34mdebug[39m]: Loaded model: BookingService.js
+22:51:17 [[34mdebug[39m]: Loaded model: CommunicationLog.js
+22:51:17 [[34mdebug[39m]: Loaded model: Customer.js
+22:51:17 [[34mdebug[39m]: Loaded model: CustomerPortal.js
+22:51:17 [[34mdebug[39m]: Loaded model: Document.js
+22:51:17 [[34mdebug[39m]: Loaded model: Guide.js
+22:51:17 [[34mdebug[39m]: Loaded model: index.js
+22:51:17 [[34mdebug[39m]: Loaded model: Invoice.js
+22:51:17 [[34mdebug[39m]: Loaded model: Lead.js
+22:51:17 [[34mdebug[39m]: Loaded model: OptionalService.js
+22:51:17 [[34mdebug[39m]: Loaded model: Package.js
+22:51:17 [[34mdebug[39m]: Loaded model: PackageItinerary.js
+22:51:17 [[34mdebug[39m]: Loaded model: Payment.js
+22:51:17 [[34mdebug[39m]: Loaded model: Role.js
+22:51:17 [[34mdebug[39m]: Loaded model: Staff.js
+22:51:17 [[34mdebug[39m]: Loaded model: Transport.js
+22:51:17 [[32minfo[39m]: Roles already exist. Skipping seed.
+22:51:17 [[34mdebug[39m]: Database connected for staff seeding
+22:51:17 [[34mdebug[39m]: Cleared 0 existing staff records
+22:51:17 [[34mdebug[39m]: Found 5 roles for staff assignment
+22:51:17 [[34mdebug[39m]: Test hash for 'password123': $2b$10$MdWESpnKjEvaK3WBm6zXWOKrHs1dVz56H/WrBap9RpQqlUUJw1viO
+22:51:17 [[34mdebug[39m]: Hashed password for admin: $2b$10$yxDOZgd/ThzhgHKaGwmvXezGehr40yV7ttQWGmMdQRdv94MS2EYby
+22:51:17 [[34mdebug[39m]: Hashed password for sales_agent: $2b$10$N.QO4HSPuTmiP09J9vLvXOwpVr6MJKb4VfSrcOXs2IStKXFvAr07S
+22:51:18 [[34mdebug[39m]: Hashed password for ops_manager: $2b$10$kZSWP8JT7ww2VN7TGuY3ueWMujNMpb3r07Dtyb1EG.F3OWHpqbroe
+22:51:18 [[34mdebug[39m]: Hashed password for finance_accountant: $2b$10$CISlpCGZxcX6pBgJpaFWZ.gku1hps2Twz023iBkdwVX5vuk.EqacG
+22:51:18 [[34mdebug[39m]: Hashed password for customer_support: $2b$10$.aHH6bTUeArb8qa08D8kd.VC8CRoq7fyn/IDfHmIPoYw7ii97dUcy
+22:51:18 [[32minfo[39m]: Staff seeding completed. Inserted 5 staff members
+22:51:18 [[32minfo[39m]: Database seeding completed
+22:51:18 [[34mdebug[39m]: All routes initialized
+22:51:18 [[32minfo[39m]: Server running in development mode on port 3000
+22:52:01 [[34mdebug[39m]: Environment variables loaded from: C:\Users\Lenovo\OneDrive\Desktop\Hindu Tourism\.env
+22:52:01 [[33mwarn[39m]: Missing required environment variable: MONGODB_URI
+22:52:01 [[33mwarn[39m]: Missing required environment variable: JWT_SECRET
+22:52:01 [[33mwarn[39m]: Using default JWT secret - not recommended for production
+22:52:02 [[32minfo[39m]: MongoDB connected: localhost
+22:52:02 [[34mdebug[39m]: MongoDB connection details: 
+      - Database: travel_agency
+      - Port: 27017
+      - Model count: 13
+22:52:02 [[32minfo[39m]: Database connected successfully
+22:52:02 [[34mdebug[39m]: Loaded model: Booking.js
+22:52:02 [[34mdebug[39m]: Loaded model: BookingService.js
+22:52:02 [[34mdebug[39m]: Loaded model: CommunicationLog.js
+22:52:02 [[34mdebug[39m]: Loaded model: Customer.js
+22:52:02 [[34mdebug[39m]: Loaded model: CustomerPortal.js
+22:52:02 [[34mdebug[39m]: Loaded model: Document.js
+22:52:02 [[34mdebug[39m]: Loaded model: Guide.js
+22:52:02 [[34mdebug[39m]: Loaded model: index.js
+22:52:02 [[34mdebug[39m]: Loaded model: Invoice.js
+22:52:02 [[34mdebug[39m]: Loaded model: Lead.js
+22:52:02 [[34mdebug[39m]: Loaded model: OptionalService.js
+22:52:02 [[34mdebug[39m]: Loaded model: Package.js
+22:52:02 [[34mdebug[39m]: Loaded model: PackageItinerary.js
+22:52:02 [[34mdebug[39m]: Loaded model: Payment.js
+22:52:02 [[34mdebug[39m]: Loaded model: Role.js
+22:52:02 [[34mdebug[39m]: Loaded model: Staff.js
+22:52:02 [[34mdebug[39m]: Loaded model: Transport.js
+22:52:02 [[32minfo[39m]: Roles already exist. Skipping seed.
+22:52:02 [[34mdebug[39m]: Database connected for staff seeding
+22:52:02 [[34mdebug[39m]: Cleared 5 existing staff records
+22:52:03 [[34mdebug[39m]: Found 5 roles for staff assignment
+22:52:03 [[34mdebug[39m]: Test hash for 'password123': $2b$10$YXPdZEwZbhF2XD/CHUqbh.tsDuaYi.LbjweRIWD6ZbJMpRsKACSde
+22:52:03 [[34mdebug[39m]: Hashed password for finance_accountant: $2b$10$KXQRhI3jTaQJSPx/d6X71.XnP0oR4F1JB5FsLk7RXUwtTA1YeMagC
+22:52:03 [[34mdebug[39m]: Hashed password for admin: $2b$10$utTb..rqyDgFNvlZpF0FTe98a6YIc59ubC1STPDtwfgy460WtJs3y
+22:52:03 [[34mdebug[39m]: Hashed password for sales_agent: $2b$10$9G7NASPuW.F1wlAY87dXKeKaw1Q0ZKk1ETGAcw1MBJ20a3n4c5BZe
+22:52:04 [[34mdebug[39m]: Hashed password for ops_manager: $2b$10$03ShgfNn6TBGK9jjh/PhZ.oCFGS0BzPmU5bzrFVdjPYfsA0olhXs6
+22:52:04 [[34mdebug[39m]: Hashed password for customer_support: $2b$10$tsAT8yMK/An6iLdus4u6G.54aFaUzDUkZNu5i44CkH39Ckc3.gkHS
+22:52:04 [[32minfo[39m]: Staff seeding completed. Inserted 5 staff members
+22:52:04 [[32minfo[39m]: Database seeding completed
+22:52:04 [[34mdebug[39m]: All routes initialized
+22:52:04 [[32minfo[39m]: Server running in development mode on port 3000
+22:52:22 [[34mdebug[39m]: Environment variables loaded from: C:\Users\Lenovo\OneDrive\Desktop\Hindu Tourism\.env
+22:52:22 [[33mwarn[39m]: Missing required environment variable: MONGODB_URI
+22:52:22 [[33mwarn[39m]: Missing required environment variable: JWT_SECRET
+22:52:22 [[33mwarn[39m]: Using default JWT secret - not recommended for production
+22:52:23 [[32minfo[39m]: MongoDB connected: localhost
+22:52:23 [[34mdebug[39m]: MongoDB connection details: 
+      - Database: travel_agency
+      - Port: 27017
+      - Model count: 13
+22:52:23 [[32minfo[39m]: Database connected successfully
+22:52:23 [[34mdebug[39m]: Loaded model: Booking.js
+22:52:23 [[34mdebug[39m]: Loaded model: BookingService.js
+22:52:23 [[34mdebug[39m]: Loaded model: CommunicationLog.js
+22:52:23 [[34mdebug[39m]: Loaded model: Customer.js
+22:52:23 [[34mdebug[39m]: Loaded model: CustomerPortal.js
+22:52:23 [[34mdebug[39m]: Loaded model: Document.js
+22:52:23 [[34mdebug[39m]: Loaded model: Guide.js
+22:52:23 [[34mdebug[39m]: Loaded model: index.js
+22:52:23 [[34mdebug[39m]: Loaded model: Invoice.js
+22:52:23 [[34mdebug[39m]: Loaded model: Lead.js
+22:52:23 [[34mdebug[39m]: Loaded model: OptionalService.js
+22:52:23 [[34mdebug[39m]: Loaded model: Package.js
+22:52:23 [[34mdebug[39m]: Loaded model: PackageItinerary.js
+22:52:23 [[34mdebug[39m]: Loaded model: Payment.js
+22:52:23 [[34mdebug[39m]: Loaded model: Role.js
+22:52:23 [[34mdebug[39m]: Loaded model: Staff.js
+22:52:23 [[34mdebug[39m]: Loaded model: Transport.js
+22:52:23 [[32minfo[39m]: Roles already exist. Skipping seed.
+22:52:23 [[34mdebug[39m]: Database connected for staff seeding
+22:52:23 [[34mdebug[39m]: Cleared 5 existing staff records
+22:52:23 [[34mdebug[39m]: Found 5 roles for staff assignment
+22:52:23 [[34mdebug[39m]: Test hash for 'password123': $2b$10$eqQVZ1.uxXiHt8UngS3U1OdEY03t0/ts0HvCqs7fZFI96XN/m4.Ba
+22:52:24 [[34mdebug[39m]: Hashed password for admin: $2b$10$ViMglNI.28OO6bzyXFyLr.LiPhkIQtzYZCW.vozBkD4zDuG/ZDH62
+22:52:24 [[34mdebug[39m]: Environment variables loaded from: C:\Users\Lenovo\OneDrive\Desktop\Hindu Tourism\.env
+22:52:24 [[33mwarn[39m]: Missing required environment variable: MONGODB_URI
+22:52:24 [[33mwarn[39m]: Missing required environment variable: JWT_SECRET
+22:52:24 [[33mwarn[39m]: Using default JWT secret - not recommended for production
+22:52:25 [[32minfo[39m]: MongoDB connected: localhost
+22:52:25 [[34mdebug[39m]: MongoDB connection details: 
+      - Database: travel_agency
+      - Port: 27017
+      - Model count: 13
+22:52:25 [[32minfo[39m]: Database connected successfully
+22:52:25 [[34mdebug[39m]: Loaded model: Booking.js
+22:52:25 [[34mdebug[39m]: Loaded model: BookingService.js
+22:52:25 [[34mdebug[39m]: Loaded model: CommunicationLog.js
+22:52:25 [[34mdebug[39m]: Loaded model: Customer.js
+22:52:25 [[34mdebug[39m]: Loaded model: CustomerPortal.js
+22:52:25 [[34mdebug[39m]: Loaded model: Document.js
+22:52:25 [[34mdebug[39m]: Loaded model: Guide.js
+22:52:25 [[34mdebug[39m]: Loaded model: index.js
+22:52:25 [[34mdebug[39m]: Loaded model: Invoice.js
+22:52:25 [[34mdebug[39m]: Loaded model: Lead.js
+22:52:25 [[34mdebug[39m]: Loaded model: OptionalService.js
+22:52:25 [[34mdebug[39m]: Loaded model: Package.js
+22:52:25 [[34mdebug[39m]: Loaded model: PackageItinerary.js
+22:52:25 [[34mdebug[39m]: Loaded model: Payment.js
+22:52:25 [[34mdebug[39m]: Loaded model: Role.js
+22:52:25 [[34mdebug[39m]: Loaded model: Staff.js
+22:52:25 [[34mdebug[39m]: Loaded model: Transport.js
+22:52:25 [[32minfo[39m]: Roles already exist. Skipping seed.
+22:52:25 [[34mdebug[39m]: Database connected for staff seeding
+22:52:26 [[34mdebug[39m]: Cleared 0 existing staff records
+22:52:26 [[34mdebug[39m]: Found 5 roles for staff assignment
+22:52:26 [[34mdebug[39m]: Test hash for 'password123': $2b$10$qEZDq6F3NIYI4d35ka9zDOWHWS0a/yj.G/xKQ0P1XhahvlPRU1.xC
+22:52:26 [[34mdebug[39m]: Hashed password for admin: $2b$10$Dkr1lxPNVulZ/Xyu.MvqGOcSYWx6sJhRowxVbl9bW1fks/yw7JA9e
+22:52:26 [[34mdebug[39m]: Hashed password for sales_agent: $2b$10$DS3Y7i5i2oWmMQSu51q8Oefj4AXzzEBmyS0vnBB/.XNS8e7fzncSG
+22:52:26 [[34mdebug[39m]: Hashed password for ops_manager: $2b$10$tSdgtq5X8Nqvvz9oiwJl1OOEGaFpWlJHp5AEDK1KLYyl5bNAP7qtq
+22:52:26 [[34mdebug[39m]: Hashed password for finance_accountant: $2b$10$QFNaW5zfbkDiNcWqIa9q.eYo3v2M8qbsdzH/BJyLd4AcyUFpHSiSy
+22:52:26 [[34mdebug[39m]: Hashed password for customer_support: $2b$10$DGvCIalF8OQT1vkSN64cR.bl5VtmQHPGP3hSe0Rme/uGwkIh0jjuS
+22:52:27 [[32minfo[39m]: Staff seeding completed. Inserted 5 staff members
+22:52:27 [[32minfo[39m]: Database seeding completed
+22:52:27 [[34mdebug[39m]: All routes initialized
+22:52:27 [[32minfo[39m]: Server running in development mode on port 3000
+22:54:46 [[34mdebug[39m]: Environment variables loaded from: C:\Users\Lenovo\OneDrive\Desktop\Hindu Tourism\.env
+22:54:46 [[33mwarn[39m]: Missing required environment variable: MONGODB_URI
+22:54:46 [[33mwarn[39m]: Missing required environment variable: JWT_SECRET
+22:54:46 [[33mwarn[39m]: Using default JWT secret - not recommended for production
+22:54:47 [[32minfo[39m]: MongoDB connected: localhost
+22:54:47 [[34mdebug[39m]: MongoDB connection details: 
+      - Database: travel_agency
+      - Port: 27017
+      - Model count: 13
+22:54:47 [[32minfo[39m]: Database connected successfully
+22:54:47 [[34mdebug[39m]: Loaded model: Booking.js
+22:54:47 [[34mdebug[39m]: Loaded model: BookingService.js
+22:54:47 [[34mdebug[39m]: Loaded model: CommunicationLog.js
+22:54:47 [[34mdebug[39m]: Loaded model: Customer.js
+22:54:47 [[34mdebug[39m]: Loaded model: CustomerPortal.js
+22:54:47 [[34mdebug[39m]: Loaded model: Document.js
+22:54:47 [[34mdebug[39m]: Loaded model: Guide.js
+22:54:47 [[34mdebug[39m]: Loaded model: index.js
+22:54:47 [[34mdebug[39m]: Loaded model: Invoice.js
+22:54:47 [[34mdebug[39m]: Loaded model: Lead.js
+22:54:47 [[34mdebug[39m]: Loaded model: OptionalService.js
+22:54:47 [[34mdebug[39m]: Loaded model: Package.js
+22:54:47 [[34mdebug[39m]: Loaded model: PackageItinerary.js
+22:54:47 [[34mdebug[39m]: Loaded model: Payment.js
+22:54:47 [[34mdebug[39m]: Loaded model: Role.js
+22:54:47 [[34mdebug[39m]: Loaded model: Staff.js
+22:54:47 [[34mdebug[39m]: Loaded model: Transport.js
+22:54:47 [[32minfo[39m]: Roles already exist. Skipping seed.
+22:54:47 [[34mdebug[39m]: Database connected for staff seeding
+22:54:47 [[34mdebug[39m]: Cleared 5 existing staff records
+22:54:47 [[34mdebug[39m]: Found 5 roles for staff assignment
+22:54:47 [[34mdebug[39m]: Test hash for 'password123': $2b$10$76FctGk0FnwKtIwEooNxXOpOnn6uoKfYwm.yjeCiOtDAmzQbytE5.
+22:54:48 [[34mdebug[39m]: Hashed password for ops_manager: $2b$10$P7jlb629p5CKpaE26Uv3DuHh4H7hkG1hHAB0UA4z5Azcv5qf0yFbS
+22:54:48 [[34mdebug[39m]: Hashed password for finance_accountant: $2b$10$.M3cEY8P.IMgept9O4R1S.R6u17KRq4UtTerf39ANmgNbRTH3Vd1e
+22:54:48 [[34mdebug[39m]: Hashed password for customer_support: $2b$10$mvkEsvBDzu2K3SRBx66ICObTOdsx6g3aNTZWiHdHkBFVyMoYvi.jm
+22:54:48 [[34mdebug[39m]: Hashed password for admin: $2b$10$x2pmBbMHBJDv45L51O9L1uLaPvCB3k7/Gd4Xze/XuzeLijIN.mPmW
+22:54:48 [[34mdebug[39m]: Hashed password for sales_agent: $2b$10$btvg0nUPpcHlxts7rUenbOgbTx8kx6yuAUuIEkqqQyJN4S8BSry4q
+22:54:48 [[32minfo[39m]: Staff seeding completed. Inserted 5 staff members
+22:54:48 [[32minfo[39m]: Database seeding completed
+22:54:48 [[34mdebug[39m]: All routes initialized
+22:54:48 [[32minfo[39m]: Server running in development mode on port 3000
+22:55:21 [[34mdebug[39m]: Environment variables loaded from: C:\Users\Lenovo\OneDrive\Desktop\Hindu Tourism\.env
+22:55:21 [[33mwarn[39m]: Missing required environment variable: MONGODB_URI
+22:55:21 [[33mwarn[39m]: Missing required environment variable: JWT_SECRET
+22:55:21 [[33mwarn[39m]: Using default JWT secret - not recommended for production
+22:55:22 [[32minfo[39m]: MongoDB connected: localhost
+22:55:22 [[34mdebug[39m]: MongoDB connection details: 
+      - Database: travel_agency
+      - Port: 27017
+      - Model count: 13
+22:55:22 [[32minfo[39m]: Database connected successfully
+22:55:22 [[34mdebug[39m]: Loaded model: Booking.js
+22:55:22 [[34mdebug[39m]: Loaded model: BookingService.js
+22:55:22 [[34mdebug[39m]: Loaded model: CommunicationLog.js
+22:55:22 [[34mdebug[39m]: Loaded model: Customer.js
+22:55:22 [[34mdebug[39m]: Loaded model: CustomerPortal.js
+22:55:22 [[34mdebug[39m]: Loaded model: Document.js
+22:55:22 [[34mdebug[39m]: Loaded model: Guide.js
+22:55:22 [[34mdebug[39m]: Loaded model: index.js
+22:55:22 [[34mdebug[39m]: Loaded model: Invoice.js
+22:55:22 [[34mdebug[39m]: Loaded model: Lead.js
+22:55:22 [[34mdebug[39m]: Loaded model: OptionalService.js
+22:55:22 [[34mdebug[39m]: Loaded model: Package.js
+22:55:22 [[34mdebug[39m]: Loaded model: PackageItinerary.js
+22:55:22 [[34mdebug[39m]: Loaded model: Payment.js
+22:55:22 [[34mdebug[39m]: Loaded model: Role.js
+22:55:22 [[34mdebug[39m]: Loaded model: Staff.js
+22:55:22 [[34mdebug[39m]: Loaded model: Transport.js
+22:55:22 [[32minfo[39m]: Roles already exist. Skipping seed.
+22:55:22 [[34mdebug[39m]: Database connected for staff seeding
+22:55:22 [[34mdebug[39m]: Cleared 5 existing staff records
+22:55:22 [[34mdebug[39m]: Found 5 roles for staff assignment
+22:55:22 [[34mdebug[39m]: Test hash for 'password123': $2b$10$JusnbZesXiISRs32LTkLXumS1tga7yB95jSa3fEcPNX2.bMLNw4NS
+22:55:22 [[34mdebug[39m]: Hashed password for finance_accountant: $2b$10$sAl7yq1DiTH4iT5HRU.YjOEOcu.BHwvhfI2QsBZd2wnUgapWN4vXu
+22:55:23 [[34mdebug[39m]: Hashed password for customer_support: $2b$10$RHDoMQsfcKIzZPtCn6CaruwY4r8g6iRQTLPx2ZanqW2k7nxxWXxmC
+22:55:23 [[34mdebug[39m]: Hashed password for admin: $2b$10$X9SEzD45KLGL.t3lZvx3O.EO4FD/ihEKl14g9raB2Bxd7v.32mlz2
+22:55:23 [[34mdebug[39m]: Hashed password for sales_agent: $2b$10$990YicQcByyzOLW9TOd4Lug.8CylHwwpaA8RLnW1Bhm41gMZa0sJe
+22:55:23 [[34mdebug[39m]: Hashed password for ops_manager: $2b$10$AZyzKd/EesACCFuj2dIHwOB0yu3fdSTxwkFheAoOoSyRGPJ38B/0W
+22:55:23 [[32minfo[39m]: Staff seeding completed. Inserted 5 staff members
+22:55:23 [[32minfo[39m]: Database seeding completed
+22:55:23 [[34mdebug[39m]: All routes initialized
+22:55:23 [[32minfo[39m]: Server running in development mode on port 3000
+22:55:35 [[32mhttp[39m]: [0mPOST /api/auth/login [32m200[0m 198.222 ms - 218[0m
+22:56:55 [[32mhttp[39m]: [0mPOST /api/communication/createlog [32m201[0m 28.483 ms - 364[0m
+22:59:10 [[34mdebug[39m]: Environment variables loaded from: C:\Users\Lenovo\OneDrive\Desktop\Hindu Tourism\.env
+22:59:10 [[33mwarn[39m]: Missing required environment variable: MONGODB_URI
+22:59:10 [[33mwarn[39m]: Missing required environment variable: JWT_SECRET
+22:59:10 [[33mwarn[39m]: Using default JWT secret - not recommended for production
+22:59:11 [[32minfo[39m]: MongoDB connected: localhost
+22:59:11 [[34mdebug[39m]: MongoDB connection details: 
+      - Database: travel_agency
+      - Port: 27017
+      - Model count: 13
+22:59:11 [[32minfo[39m]: Database connected successfully
+22:59:11 [[34mdebug[39m]: Loaded model: Booking.js
+22:59:11 [[34mdebug[39m]: Loaded model: BookingService.js
+22:59:11 [[34mdebug[39m]: Loaded model: CommunicationLog.js
+22:59:11 [[34mdebug[39m]: Loaded model: Customer.js
+22:59:11 [[34mdebug[39m]: Loaded model: CustomerPortal.js
+22:59:11 [[34mdebug[39m]: Loaded model: Document.js
+22:59:11 [[34mdebug[39m]: Loaded model: Guide.js
+22:59:11 [[34mdebug[39m]: Loaded model: index.js
+22:59:11 [[34mdebug[39m]: Loaded model: Invoice.js
+22:59:11 [[34mdebug[39m]: Loaded model: Lead.js
+22:59:11 [[34mdebug[39m]: Loaded model: OptionalService.js
+22:59:11 [[34mdebug[39m]: Loaded model: Package.js
+22:59:11 [[34mdebug[39m]: Loaded model: PackageItinerary.js
+22:59:11 [[34mdebug[39m]: Loaded model: Payment.js
+22:59:11 [[34mdebug[39m]: Loaded model: Role.js
+22:59:11 [[34mdebug[39m]: Loaded model: Staff.js
+22:59:11 [[34mdebug[39m]: Loaded model: Transport.js
+22:59:11 [[32minfo[39m]: Roles already exist. Skipping seed.
+22:59:11 [[34mdebug[39m]: Database connected for staff seeding
+22:59:11 [[34mdebug[39m]: Cleared 5 existing staff records
+22:59:11 [[34mdebug[39m]: Found 5 roles for staff assignment
+22:59:12 [[34mdebug[39m]: Test hash for 'password123': $2b$10$qot7uBTj4Lyp1/qiE8Fvn.gqixne/hdiaOby2WtS/5B1Z3Tt8lFSa
+22:59:12 [[34mdebug[39m]: Hashed password for admin: $2b$10$SSdmqXN9Aifjxvdgz5G9meylz3W1j9uaKXEZZGB5sPfjwvm0tkPwu
+22:59:12 [[34mdebug[39m]: Hashed password for sales_agent: $2b$10$JpwMYKD5XYmRq5pvkQ7DOeCX5KD5gr380jeKsx4f9.GRprtpk3SBK
+22:59:12 [[34mdebug[39m]: Hashed password for ops_manager: $2b$10$jb5.lagsN2z5hAHhepsoee4RAMD4/XmZ9ikFtDGV5tySk1Myfk5Ai
+22:59:12 [[34mdebug[39m]: Hashed password for customer_support: $2b$10$9s0CIQANxIyV.RzxmRA4mesxzrR6VmkfoiBWO2WCH0pzsfke29L72
+22:59:12 [[34mdebug[39m]: Hashed password for finance_accountant: $2b$10$peaoDPb3FUDucUYvzSoCzudGgf1UJksKIE0bU6SQAHBD21Zp9NXaG
+22:59:13 [[32minfo[39m]: Staff seeding completed. Inserted 5 staff members
+22:59:13 [[32minfo[39m]: Database seeding completed
+22:59:13 [[34mdebug[39m]: All routes initialized
+22:59:13 [[32minfo[39m]: Server running in development mode on port 3000
+22:59:43 [[32mhttp[39m]: [0mPOST /api/communication/createlog [33m403[0m 20.300 ms - 45[0m
+22:59:48 [[32mhttp[39m]: [0mPOST /api/auth/login [32m200[0m 141.753 ms - 218[0m
+23:00:02 [[32mhttp[39m]: [0mPOST /api/communication/createlog [31m500[0m 25.945 ms - 1559[0m
+23:00:43 [[34mdebug[39m]: Environment variables loaded from: C:\Users\Lenovo\OneDrive\Desktop\Hindu Tourism\.env
+23:00:43 [[33mwarn[39m]: Missing required environment variable: MONGODB_URI
+23:00:43 [[33mwarn[39m]: Missing required environment variable: JWT_SECRET
+23:00:43 [[33mwarn[39m]: Using default JWT secret - not recommended for production
+23:00:44 [[32minfo[39m]: MongoDB connected: localhost
+23:00:44 [[34mdebug[39m]: MongoDB connection details: 
+      - Database: travel_agency
+      - Port: 27017
+      - Model count: 13
+23:00:44 [[32minfo[39m]: Database connected successfully
+23:00:44 [[34mdebug[39m]: Loaded model: Booking.js
+23:00:44 [[34mdebug[39m]: Loaded model: BookingService.js
+23:00:44 [[34mdebug[39m]: Loaded model: CommunicationLog.js
+23:00:44 [[34mdebug[39m]: Loaded model: Customer.js
+23:00:44 [[34mdebug[39m]: Loaded model: CustomerPortal.js
+23:00:44 [[34mdebug[39m]: Loaded model: Document.js
+23:00:44 [[34mdebug[39m]: Loaded model: Guide.js
+23:00:44 [[34mdebug[39m]: Loaded model: index.js
+23:00:44 [[34mdebug[39m]: Loaded model: Invoice.js
+23:00:44 [[34mdebug[39m]: Loaded model: Lead.js
+23:00:44 [[34mdebug[39m]: Loaded model: OptionalService.js
+23:00:44 [[34mdebug[39m]: Loaded model: Package.js
+23:00:44 [[34mdebug[39m]: Loaded model: PackageItinerary.js
+23:00:44 [[34mdebug[39m]: Loaded model: Payment.js
+23:00:44 [[34mdebug[39m]: Loaded model: Role.js
+23:00:44 [[34mdebug[39m]: Loaded model: Staff.js
+23:00:44 [[34mdebug[39m]: Loaded model: Transport.js
+23:00:44 [[32minfo[39m]: Roles already exist. Skipping seed.
+23:00:44 [[34mdebug[39m]: Database connected for staff seeding
+23:00:44 [[34mdebug[39m]: Cleared 5 existing staff records
+23:00:44 [[34mdebug[39m]: Found 5 roles for staff assignment
+23:00:44 [[34mdebug[39m]: Test hash for 'password123': $2b$10$u3dupac44Rlz/zaV4Of8V.9mOvUGxUC82vWMrIWje1y9Hr9FbKZEe
+23:00:44 [[34mdebug[39m]: Hashed password for admin: $2b$10$yGtIKihvVFCBGSGGMHAS0.p0093FnrGfb9YIw451NxC7qXkvyEGPy
+23:00:44 [[34mdebug[39m]: Hashed password for sales_agent: $2b$10$87rgnGdcU6EriRylBaQsx.yLBIFV9n6Xc.WcAd.E7HRtGqw9wmj5.
+23:00:44 [[34mdebug[39m]: Hashed password for ops_manager: $2b$10$zq2M4U64KHRGUpbYG9fRbOLIaib/vftz9dURu2Wwb.KRhnR4rdzM2
+23:00:45 [[34mdebug[39m]: Hashed password for finance_accountant: $2b$10$qGTidrmEq3dYyaWIfRnjTeAu4WSykvIvAiN5832oMO1R2xfsUe1sm
+23:00:45 [[34mdebug[39m]: Hashed password for customer_support: $2b$10$QPuQ.8ZTZcMngPTUs/vJpe1wIRjNlhUlP/4EOEF.1vgbvEc5dAFy2
+23:00:45 [[32minfo[39m]: Staff seeding completed. Inserted 5 staff members
+23:00:45 [[32minfo[39m]: Database seeding completed
+23:00:45 [[34mdebug[39m]: All routes initialized
+23:00:45 [[32minfo[39m]: Server running in development mode on port 3000
+23:03:35 [[34mdebug[39m]: Environment variables loaded from: C:\Users\Lenovo\OneDrive\Desktop\Hindu Tourism\.env
+23:03:35 [[33mwarn[39m]: Missing required environment variable: MONGODB_URI
+23:03:35 [[33mwarn[39m]: Missing required environment variable: JWT_SECRET
+23:03:35 [[33mwarn[39m]: Using default JWT secret - not recommended for production
+23:03:36 [[32minfo[39m]: MongoDB connected: localhost
+23:03:36 [[34mdebug[39m]: MongoDB connection details: 
+      - Database: travel_agency
+      - Port: 27017
+      - Model count: 13
+23:03:36 [[32minfo[39m]: Database connected successfully
+23:03:36 [[34mdebug[39m]: Loaded model: Booking.js
+23:03:36 [[34mdebug[39m]: Loaded model: BookingService.js
+23:03:36 [[34mdebug[39m]: Loaded model: CommunicationLog.js
+23:03:36 [[34mdebug[39m]: Loaded model: Customer.js
+23:03:36 [[34mdebug[39m]: Loaded model: CustomerPortal.js
+23:03:36 [[34mdebug[39m]: Loaded model: Document.js
+23:03:36 [[34mdebug[39m]: Loaded model: Guide.js
+23:03:36 [[34mdebug[39m]: Loaded model: index.js
+23:03:36 [[34mdebug[39m]: Loaded model: Invoice.js
+23:03:36 [[34mdebug[39m]: Loaded model: Lead.js
+23:03:36 [[34mdebug[39m]: Loaded model: OptionalService.js
+23:03:36 [[34mdebug[39m]: Loaded model: Package.js
+23:03:36 [[34mdebug[39m]: Loaded model: PackageItinerary.js
+23:03:36 [[34mdebug[39m]: Loaded model: Payment.js
+23:03:36 [[34mdebug[39m]: Loaded model: Role.js
+23:03:36 [[34mdebug[39m]: Loaded model: Staff.js
+23:03:36 [[34mdebug[39m]: Loaded model: Transport.js
+23:03:36 [[32minfo[39m]: Roles already exist. Skipping seed.
+23:03:36 [[34mdebug[39m]: Database connected for staff seeding
+23:03:36 [[34mdebug[39m]: Cleared 5 existing staff records
+23:03:36 [[34mdebug[39m]: Found 5 roles for staff assignment
+23:03:36 [[34mdebug[39m]: Test hash for 'password123': $2b$10$8ntl823UeboSJVKfXKc4r.o0vvEF9gbBPtojusXWGzONwn4p71EvK
+23:03:36 [[34mdebug[39m]: Hashed password for sales_agent: $2b$10$DuEIRgS3FjsunWKggL72e.E6Nx5Z/34jVseK/hsLbO5TYx9VP7ntS
+23:03:36 [[34mdebug[39m]: Hashed password for ops_manager: $2b$10$HgrycI2KwOITti.96eBCV.2yYFy4wvAqwVr.0AkpTU/NX6yTWPObO
+23:03:36 [[34mdebug[39m]: Hashed password for finance_accountant: $2b$10$.I9JbhrpGTXJkzI1MJteTeidHKOfysT8K2t/I2Rehow5I1AlqfwgC
+23:03:37 [[34mdebug[39m]: Hashed password for customer_support: $2b$10$TgwP79nV1aauoUYl/Jzhjenxp/r5X.Ek98n337lyoiZTf/FJlfgRS
+23:03:37 [[34mdebug[39m]: Hashed password for admin: $2b$10$goorRHMQkhiYZ13t0w7EKeCPxQuwAv17v.9fVpv.k9HjwRMmdr5Ka
+23:03:37 [[32minfo[39m]: Staff seeding completed. Inserted 5 staff members
+23:03:37 [[32minfo[39m]: Database seeding completed
+23:03:37 [[34mdebug[39m]: All routes initialized
+23:03:37 [[32minfo[39m]: Server running in development mode on port 3000
+23:03:40 [[32mhttp[39m]: [0mPOST /api/auth/login [32m200[0m 116.774 ms - 218[0m
+23:03:55 [[32mhttp[39m]: [0mPOST /api/communication/createlog [31m500[0m 43.157 ms - 1559[0m
+23:04:49 [[34mdebug[39m]: Environment variables loaded from: C:\Users\Lenovo\OneDrive\Desktop\Hindu Tourism\.env
+23:04:49 [[33mwarn[39m]: Missing required environment variable: MONGODB_URI
+23:04:49 [[33mwarn[39m]: Missing required environment variable: JWT_SECRET
+23:04:49 [[33mwarn[39m]: Using default JWT secret - not recommended for production
+23:04:50 [[32minfo[39m]: MongoDB connected: localhost
+23:04:50 [[34mdebug[39m]: MongoDB connection details: 
+      - Database: travel_agency
+      - Port: 27017
+      - Model count: 13
+23:04:50 [[32minfo[39m]: Database connected successfully
+23:04:50 [[34mdebug[39m]: Loaded model: Booking.js
+23:04:50 [[34mdebug[39m]: Loaded model: BookingService.js
+23:04:50 [[34mdebug[39m]: Loaded model: CommunicationLog.js
+23:04:50 [[34mdebug[39m]: Loaded model: Customer.js
+23:04:50 [[34mdebug[39m]: Loaded model: CustomerPortal.js
+23:04:50 [[34mdebug[39m]: Loaded model: Document.js
+23:04:50 [[34mdebug[39m]: Loaded model: Guide.js
+23:04:50 [[34mdebug[39m]: Loaded model: index.js
+23:04:50 [[34mdebug[39m]: Loaded model: Invoice.js
+23:04:50 [[34mdebug[39m]: Loaded model: Lead.js
+23:04:50 [[34mdebug[39m]: Loaded model: OptionalService.js
+23:04:50 [[34mdebug[39m]: Loaded model: Package.js
+23:04:50 [[34mdebug[39m]: Loaded model: PackageItinerary.js
+23:04:50 [[34mdebug[39m]: Loaded model: Payment.js
+23:04:50 [[34mdebug[39m]: Loaded model: Role.js
+23:04:50 [[34mdebug[39m]: Loaded model: Staff.js
+23:04:50 [[34mdebug[39m]: Loaded model: Transport.js
+23:04:50 [[32minfo[39m]: Roles already exist. Skipping seed.
+23:04:50 [[34mdebug[39m]: Database connected for staff seeding
+23:04:50 [[34mdebug[39m]: Cleared 5 existing staff records
+23:04:50 [[34mdebug[39m]: Found 5 roles for staff assignment
+23:04:50 [[34mdebug[39m]: Test hash for 'password123': $2b$10$D5pIJA5oftfad3STaJ2i2O1xCOsYWIB7yJNQTvuj20nOkY5QIXVL2
+23:04:50 [[34mdebug[39m]: Hashed password for sales_agent: $2b$10$6yo4G8cn41n1tX3T5BQwXusUqQ1JvlqT7IuhoshB9C/FFvQVNOqm6
+23:04:50 [[34mdebug[39m]: Hashed password for finance_accountant: $2b$10$naSmBC7u2ekwYzOz7vWD5eUOA7ubjGjPWODzC99wMFqUKSKaMJoem
+23:04:50 [[34mdebug[39m]: Hashed password for customer_support: $2b$10$tJhnkSV/oQrIcBqUXs6EFOW7itcjqsFvY/mIgrfT9tB0TcMoBlNTC
+23:04:51 [[34mdebug[39m]: Hashed password for admin: $2b$10$GJFgKXNIdaIP6JFyWerJ.eKVjtl5nZiO4nomiOUxxLj8QJhqmxzX6
+23:04:51 [[34mdebug[39m]: Hashed password for ops_manager: $2b$10$8vRzwc6/hnAX7feTBpgkAeU5ezLTo9qbd2Sleaug405YOHNlis1hq
+23:04:51 [[32minfo[39m]: Staff seeding completed. Inserted 5 staff members
+23:04:51 [[32minfo[39m]: Database seeding completed
+23:04:51 [[34mdebug[39m]: All routes initialized
+23:04:51 [[32minfo[39m]: Server running in development mode on port 3000
+23:10:15 [[34mdebug[39m]: Environment variables loaded from: C:\Users\Lenovo\OneDrive\Desktop\Hindu Tourism\.env
+23:10:15 [[33mwarn[39m]: Missing required environment variable: MONGODB_URI
+23:10:15 [[33mwarn[39m]: Missing required environment variable: JWT_SECRET
+23:10:15 [[33mwarn[39m]: Using default JWT secret - not recommended for production
+23:10:17 [[32minfo[39m]: MongoDB connected: localhost
+23:10:17 [[34mdebug[39m]: MongoDB connection details: 
+      - Database: travel_agency
+      - Port: 27017
+      - Model count: 13
+23:10:17 [[32minfo[39m]: Database connected successfully
+23:10:17 [[34mdebug[39m]: Loaded model: Booking.js
+23:10:17 [[34mdebug[39m]: Loaded model: BookingService.js
+23:10:17 [[34mdebug[39m]: Loaded model: CommunicationLog.js
+23:10:17 [[34mdebug[39m]: Loaded model: Customer.js
+23:10:17 [[34mdebug[39m]: Loaded model: CustomerPortal.js
+23:10:17 [[34mdebug[39m]: Loaded model: Document.js
+23:10:17 [[34mdebug[39m]: Loaded model: Guide.js
+23:10:17 [[34mdebug[39m]: Loaded model: index.js
+23:10:17 [[34mdebug[39m]: Loaded model: Invoice.js
+23:10:17 [[34mdebug[39m]: Loaded model: Lead.js
+23:10:17 [[34mdebug[39m]: Loaded model: OptionalService.js
+23:10:17 [[34mdebug[39m]: Loaded model: Package.js
+23:10:17 [[34mdebug[39m]: Loaded model: PackageItinerary.js
+23:10:17 [[34mdebug[39m]: Loaded model: Payment.js
+23:10:17 [[34mdebug[39m]: Loaded model: Role.js
+23:10:17 [[34mdebug[39m]: Loaded model: Staff.js
+23:10:17 [[34mdebug[39m]: Loaded model: Transport.js
+23:10:17 [[32minfo[39m]: Roles already exist. Skipping seed.
+23:10:17 [[34mdebug[39m]: Database connected for staff seeding
+23:10:17 [[34mdebug[39m]: Cleared 5 existing staff records
+23:10:17 [[34mdebug[39m]: Found 5 roles for staff assignment
+23:10:17 [[34mdebug[39m]: Test hash for 'password123': $2b$10$J7l.jBT/wR8lUPs7ea/mpeuyagneplS7r/X0E0z56gmq.ZmPybexG
+23:10:17 [[34mdebug[39m]: Hashed password for sales_agent: $2b$10$Je6Jy9usFtJvGRLXPhBtpO/r0UzbpJ5uJeoNaamaeA/kY2zv6BqX2
+23:10:17 [[34mdebug[39m]: Hashed password for ops_manager: $2b$10$w5FJwiJOXSxNs40owgRwX.cFLnhdRGNXnDz8RZi3joPns5U735QWm
+23:10:18 [[34mdebug[39m]: Hashed password for finance_accountant: $2b$10$9K.C8IuhoDKTOwcPWeGsXOBYK/mcBAnCe.XmwjQ.RNon6l0kIlxq2
+23:10:18 [[34mdebug[39m]: Hashed password for customer_support: $2b$10$DKKVI0AvUDnilM4oKkQySOhNXHHLEc/estbG1UUUSYCc5b1pQHghe
+23:10:18 [[34mdebug[39m]: Hashed password for admin: $2b$10$ye9XEqU5nnetFpJJQOC/gOog/9g.a62ho1bx8C2kA6Acu1cx2qGXu
+23:10:18 [[32minfo[39m]: Staff seeding completed. Inserted 5 staff members
+23:10:18 [[32minfo[39m]: Database seeding completed
+23:10:18 [[34mdebug[39m]: All routes initialized
+23:10:18 [[32minfo[39m]: Server running in development mode on port 3000
+23:10:22 [[32mhttp[39m]: [0mPOST /api/auth/login [32m200[0m 122.038 ms - 218[0m
+23:10:37 [[32mhttp[39m]: [0mPOST /api/communication/createlog [31m500[0m 35.836 ms - 57[0m
+23:12:02 [[34mdebug[39m]: Environment variables loaded from: C:\Users\Lenovo\OneDrive\Desktop\Hindu Tourism\.env
+23:12:02 [[33mwarn[39m]: Missing required environment variable: MONGODB_URI
+23:12:02 [[33mwarn[39m]: Missing required environment variable: JWT_SECRET
+23:12:02 [[33mwarn[39m]: Using default JWT secret - not recommended for production
+23:12:03 [[32minfo[39m]: MongoDB connected: localhost
+23:12:03 [[34mdebug[39m]: MongoDB connection details: 
+      - Database: travel_agency
+      - Port: 27017
+      - Model count: 13
+23:12:03 [[32minfo[39m]: Database connected successfully
+23:12:03 [[34mdebug[39m]: Loaded model: Booking.js
+23:12:03 [[34mdebug[39m]: Loaded model: BookingService.js
+23:12:03 [[34mdebug[39m]: Loaded model: CommunicationLog.js
+23:12:03 [[34mdebug[39m]: Loaded model: Customer.js
+23:12:03 [[34mdebug[39m]: Loaded model: CustomerPortal.js
+23:12:03 [[34mdebug[39m]: Loaded model: Document.js
+23:12:03 [[34mdebug[39m]: Loaded model: Guide.js
+23:12:03 [[34mdebug[39m]: Loaded model: index.js
+23:12:03 [[34mdebug[39m]: Loaded model: Invoice.js
+23:12:03 [[34mdebug[39m]: Loaded model: Lead.js
+23:12:03 [[34mdebug[39m]: Loaded model: OptionalService.js
+23:12:03 [[34mdebug[39m]: Loaded model: Package.js
+23:12:03 [[34mdebug[39m]: Loaded model: PackageItinerary.js
+23:12:03 [[34mdebug[39m]: Loaded model: Payment.js
+23:12:03 [[34mdebug[39m]: Loaded model: Role.js
+23:12:03 [[34mdebug[39m]: Loaded model: Staff.js
+23:12:03 [[34mdebug[39m]: Loaded model: Transport.js
+23:12:03 [[32minfo[39m]: Roles already exist. Skipping seed.
+23:12:03 [[34mdebug[39m]: Database connected for staff seeding
+23:12:03 [[34mdebug[39m]: Cleared 5 existing staff records
+23:12:03 [[34mdebug[39m]: Found 5 roles for staff assignment
+23:12:03 [[34mdebug[39m]: Test hash for 'password123': $2b$10$Rwvfr2XG0jorGztijpTmEul7n4QnPVICBMDSHh76ec4thfqnX4pyO
+23:12:04 [[34mdebug[39m]: Hashed password for admin: $2b$10$n44/j0tgIS0hngpfE4d.4.Q9v82jam.GlFiUdzlivs72OoWPgIdr.
+23:12:04 [[34mdebug[39m]: Hashed password for sales_agent: $2b$10$tXGzUoCDaQey6nymlc41h.4g5e9qu0rOg9XJspavRlai4ITHKhAHS
+23:12:04 [[34mdebug[39m]: Hashed password for finance_accountant: $2b$10$.S4xzgnSaJL1t7TSu36o6eDiS97Pg9iyrRUoSXy.oy5FKKyiA73Rq
+23:12:04 [[34mdebug[39m]: Hashed password for customer_support: $2b$10$225Vx5j/E2TxNLIr1n7vB.3May9oZ3q1vVo7bVLWSc9481ofmHdfi
+23:12:04 [[34mdebug[39m]: Hashed password for ops_manager: $2b$10$vFyvKW9/9tsjEZTDdbY.VOkYfxG/fF2wzSrBanzrSDFbegQCLCmVS
+23:12:04 [[32minfo[39m]: Staff seeding completed. Inserted 5 staff members
+23:12:04 [[32minfo[39m]: Database seeding completed
+23:12:04 [[34mdebug[39m]: All routes initialized
+23:12:04 [[32minfo[39m]: Server running in development mode on port 3000
+23:12:09 [[32mhttp[39m]: [0mPOST /api/auth/login [32m200[0m 110.960 ms - 218[0m
+23:12:21 [[32mhttp[39m]: [0mPOST /api/communication/createlog [31m500[0m 30.723 ms - 1559[0m
+23:13:13 [[34mdebug[39m]: Environment variables loaded from: C:\Users\Lenovo\OneDrive\Desktop\Hindu Tourism\.env
+23:13:13 [[33mwarn[39m]: Missing required environment variable: MONGODB_URI
+23:13:13 [[33mwarn[39m]: Missing required environment variable: JWT_SECRET
+23:13:13 [[33mwarn[39m]: Using default JWT secret - not recommended for production
+23:13:14 [[32minfo[39m]: MongoDB connected: localhost
+23:13:14 [[34mdebug[39m]: MongoDB connection details: 
+      - Database: travel_agency
+      - Port: 27017
+      - Model count: 13
+23:13:14 [[32minfo[39m]: Database connected successfully
+23:13:14 [[34mdebug[39m]: Loaded model: Booking.js
+23:13:14 [[34mdebug[39m]: Loaded model: BookingService.js
+23:13:14 [[34mdebug[39m]: Loaded model: CommunicationLog.js
+23:13:14 [[34mdebug[39m]: Loaded model: Customer.js
+23:13:14 [[34mdebug[39m]: Loaded model: CustomerPortal.js
+23:13:14 [[34mdebug[39m]: Loaded model: Document.js
+23:13:14 [[34mdebug[39m]: Loaded model: Guide.js
+23:13:14 [[34mdebug[39m]: Loaded model: index.js
+23:13:14 [[34mdebug[39m]: Loaded model: Invoice.js
+23:13:14 [[34mdebug[39m]: Loaded model: Lead.js
+23:13:14 [[34mdebug[39m]: Loaded model: OptionalService.js
+23:13:14 [[34mdebug[39m]: Loaded model: Package.js
+23:13:14 [[34mdebug[39m]: Loaded model: PackageItinerary.js
+23:13:14 [[34mdebug[39m]: Loaded model: Payment.js
+23:13:14 [[34mdebug[39m]: Loaded model: Role.js
+23:13:14 [[34mdebug[39m]: Loaded model: Staff.js
+23:13:14 [[34mdebug[39m]: Loaded model: Transport.js
+23:13:14 [[32minfo[39m]: Roles already exist. Skipping seed.
+23:13:14 [[34mdebug[39m]: Database connected for staff seeding
+23:13:14 [[34mdebug[39m]: Cleared 5 existing staff records
+23:13:14 [[34mdebug[39m]: Found 5 roles for staff assignment
+23:13:14 [[34mdebug[39m]: Test hash for 'password123': $2b$10$YXGQ9P0eggi5zil31GA9MOuSRDnufX/.pCkMbGjxAhWieqm1hrxni
+23:13:15 [[34mdebug[39m]: Hashed password for admin: $2b$10$OgbKazlXZX9FnuUkOINUZezkaXpF7FXeN0Q.Onq72BqVwgfe1432.
+23:13:15 [[34mdebug[39m]: Hashed password for sales_agent: $2b$10$UbbpBAT6NoUVhm8DRPzPZuo2lr2mdLH0nAXjkx3G3CxSpf8ZRq2m6
+23:13:15 [[34mdebug[39m]: Hashed password for ops_manager: $2b$10$ShkR0a7nTdZ2umHYwssga.xrTswmAE4GClhzPvPoMU3yNhSGuB6/a
+23:13:15 [[34mdebug[39m]: Hashed password for finance_accountant: $2b$10$4IT5nHsSv/cJy.Vec/WBO.lysWsE9byG9Rg.4YUghK90.SNsKFUX.
+23:13:15 [[34mdebug[39m]: Hashed password for customer_support: $2b$10$3qaLJfXpX2N451f1wY55FOVD3bOgNIzVCkhKNSDCjKmnrHyZAiYv6
+23:13:15 [[32minfo[39m]: Staff seeding completed. Inserted 5 staff members
+23:13:15 [[32minfo[39m]: Database seeding completed
+23:13:15 [[34mdebug[39m]: All routes initialized
+23:13:15 [[32minfo[39m]: Server running in development mode on port 3000
+23:13:35 [[32mhttp[39m]: [0mPOST /api/auth/login [32m200[0m 182.664 ms - 218[0m
+23:13:48 [[32mhttp[39m]: [0mPOST /api/communication/createlog [31m500[0m 26.319 ms - 1559[0m
+23:16:07 [[32mhttp[39m]: [0mPOST /api/auth/login [32m200[0m 189.210 ms - 218[0m
+23:16:40 [[32mhttp[39m]: [0mPOST /api/communication/createlog [31m500[0m 21.872 ms - 565[0m
+23:16:53 [[32mhttp[39m]: [0mPOST /api/communication/createlog [32m201[0m 26.005 ms - 376[0m
+23:17:06 [[34mdebug[39m]: Environment variables loaded from: C:\Users\Lenovo\OneDrive\Desktop\Hindu Tourism\.env
+23:17:06 [[33mwarn[39m]: Missing required environment variable: MONGODB_URI
+23:17:06 [[33mwarn[39m]: Missing required environment variable: JWT_SECRET
+23:17:06 [[33mwarn[39m]: Using default JWT secret - not recommended for production
+23:17:07 [[32minfo[39m]: MongoDB connected: localhost
+23:17:07 [[34mdebug[39m]: MongoDB connection details: 
+      - Database: travel_agency
+      - Port: 27017
+      - Model count: 13
+23:17:07 [[32minfo[39m]: Database connected successfully
+23:17:07 [[34mdebug[39m]: Loaded model: Booking.js
+23:17:07 [[34mdebug[39m]: Loaded model: BookingService.js
+23:17:07 [[34mdebug[39m]: Loaded model: CommunicationLog.js
+23:17:07 [[34mdebug[39m]: Loaded model: Customer.js
+23:17:07 [[34mdebug[39m]: Loaded model: CustomerPortal.js
+23:17:07 [[34mdebug[39m]: Loaded model: Document.js
+23:17:07 [[34mdebug[39m]: Loaded model: Guide.js
+23:17:07 [[34mdebug[39m]: Loaded model: index.js
+23:17:07 [[34mdebug[39m]: Loaded model: Invoice.js
+23:17:07 [[34mdebug[39m]: Loaded model: Lead.js
+23:17:07 [[34mdebug[39m]: Loaded model: OptionalService.js
+23:17:07 [[34mdebug[39m]: Loaded model: Package.js
+23:17:07 [[34mdebug[39m]: Loaded model: PackageItinerary.js
+23:17:07 [[34mdebug[39m]: Loaded model: Payment.js
+23:17:07 [[34mdebug[39m]: Loaded model: Role.js
+23:17:07 [[34mdebug[39m]: Loaded model: Staff.js
+23:17:07 [[34mdebug[39m]: Loaded model: Transport.js
+23:17:07 [[32minfo[39m]: Roles already exist. Skipping seed.
+23:17:07 [[34mdebug[39m]: Database connected for staff seeding
+23:17:07 [[34mdebug[39m]: Cleared 5 existing staff records
+23:17:07 [[34mdebug[39m]: Found 5 roles for staff assignment
+23:17:07 [[34mdebug[39m]: Test hash for 'password123': $2b$10$4vVIbGlFGKq7UzuKACmL3.RooK2K.lY5fL/I0qeSe15gwlx.gzDtm
+23:17:07 [[34mdebug[39m]: Hashed password for admin: $2b$10$DajLR.Z5c0Pg/NLewpGWaOC92yHz/bhMsH5hv.LCQBd9Bzjgbks7S
+23:17:07 [[34mdebug[39m]: Hashed password for sales_agent: $2b$10$VZbnLEfK6eefi9EuHQuhXe1gRpH9U8qnAmE7uagtr.7n.nMIqy4hm
+23:17:07 [[34mdebug[39m]: Hashed password for ops_manager: $2b$10$AxYbXEtvkpgnRPKoO/eRLuNgFjP0nTYHjKNeh8wjDLaIaT7knWOO2
+23:17:08 [[34mdebug[39m]: Hashed password for finance_accountant: $2b$10$dO4VLux69ItPT6IIhhkvv.jEfzijLL4D0ab.2iZFYlE7PA78yMWma
+23:17:08 [[34mdebug[39m]: Hashed password for customer_support: $2b$10$/.U.VLAjDO.078QRDURdMOoINnu9Iz97K3YpceGw0XdKUzENsptk6
+23:17:08 [[32minfo[39m]: Staff seeding completed. Inserted 5 staff members
+23:17:08 [[32minfo[39m]: Database seeding completed
+23:17:08 [[34mdebug[39m]: All routes initialized
+23:17:08 [[32minfo[39m]: Server running in development mode on port 3000
+10:17:10 [[34mdebug[39m]: Environment variables loaded from: C:\Users\Lenovo\OneDrive\Desktop\Hindu Tourism\.env
+10:17:10 [[33mwarn[39m]: Missing required environment variable: MONGODB_URI
+10:17:10 [[33mwarn[39m]: Missing required environment variable: JWT_SECRET
+10:17:10 [[33mwarn[39m]: Using default JWT secret - not recommended for production
+10:17:13 [[32minfo[39m]: MongoDB connected: localhost
+10:17:13 [[34mdebug[39m]: MongoDB connection details: 
+      - Database: travel_agency
+      - Port: 27017
+      - Model count: 13
+10:17:13 [[32minfo[39m]: Database connected successfully
+10:17:13 [[34mdebug[39m]: Loaded model: Booking.js
+10:17:13 [[34mdebug[39m]: Loaded model: BookingService.js
+10:17:13 [[34mdebug[39m]: Loaded model: CommunicationLog.js
+10:17:13 [[34mdebug[39m]: Loaded model: Customer.js
+10:17:13 [[34mdebug[39m]: Loaded model: CustomerPortal.js
+10:17:13 [[34mdebug[39m]: Loaded model: Document.js
+10:17:13 [[34mdebug[39m]: Loaded model: Guide.js
+10:17:13 [[34mdebug[39m]: Loaded model: index.js
+10:17:13 [[34mdebug[39m]: Loaded model: Invoice.js
+10:17:13 [[34mdebug[39m]: Loaded model: Lead.js
+10:17:13 [[34mdebug[39m]: Loaded model: OptionalService.js
+10:17:13 [[34mdebug[39m]: Loaded model: Package.js
+10:17:13 [[34mdebug[39m]: Loaded model: PackageItinerary.js
+10:17:13 [[34mdebug[39m]: Loaded model: Payment.js
+10:17:13 [[34mdebug[39m]: Loaded model: Role.js
+10:17:13 [[34mdebug[39m]: Loaded model: Staff.js
+10:17:13 [[34mdebug[39m]: Loaded model: Transport.js
+10:17:13 [[32minfo[39m]: Roles already exist. Skipping seed.
+10:17:13 [[34mdebug[39m]: Database connected for staff seeding
+10:17:13 [[34mdebug[39m]: Cleared 5 existing staff records
+10:17:13 [[34mdebug[39m]: Found 5 roles for staff assignment
+10:17:13 [[34mdebug[39m]: Test hash for 'password123': $2b$10$l5pVfKVtZxBDiJ5uHczM4ugb7LyFkuj1ZXqhu.bzAQVYHiq./2zy.
+10:17:14 [[34mdebug[39m]: Hashed password for finance_accountant: $2b$10$k.74LvycOOigN.0EUVVmFeTyUNZZtmPyAaHjPITkXS0aQU5KcVJ.u
+10:17:15 [[34mdebug[39m]: Hashed password for customer_support: $2b$10$rLo7HzsNiW5aLbvoIEFICebvuzhdpP7JLl6S17JX3iyECYnN1xgFW
+10:17:15 [[34mdebug[39m]: Hashed password for admin: $2b$10$OeFLlVO2l.5F.VJdwHfH9eXBMRox8A6xLVgo4BMlskDgj7AbfMaAW
+10:17:15 [[34mdebug[39m]: Hashed password for sales_agent: $2b$10$3ZOAUBaAJt.npow.h2PcvehC/3cKAXM8ixWODJAtwSHfp6h3IwbJe
+10:17:15 [[34mdebug[39m]: Hashed password for ops_manager: $2b$10$2CEcrB2Rn72udCd6imOh5eSWSSRoCcwMxUJR35rIdf4PRUHJlhwka
+10:17:15 [[32minfo[39m]: Staff seeding completed. Inserted 5 staff members
+10:17:15 [[32minfo[39m]: Database seeding completed
+10:17:15 [[34mdebug[39m]: All routes initialized
+10:17:15 [[32minfo[39m]: Server running in development mode on port 3000
+10:18:05 [[32mhttp[39m]: [0mPOST /api/auth/login [32m200[0m 490.558 ms - 218[0m
+10:18:33 [[32mhttp[39m]: [0mGET /api/communication/ [32m200[0m 143.561 ms - 5620[0m
+10:29:49 [[34mdebug[39m]: Environment variables loaded from: C:\Users\Lenovo\OneDrive\Desktop\Hindu Tourism\.env
+10:29:49 [[33mwarn[39m]: Missing required environment variable: MONGODB_URI
+10:29:49 [[33mwarn[39m]: Missing required environment variable: JWT_SECRET
+10:29:49 [[33mwarn[39m]: Using default JWT secret - not recommended for production
+10:29:51 [[32minfo[39m]: MongoDB connected: localhost
+10:29:51 [[34mdebug[39m]: MongoDB connection details: 
+      - Database: travel_agency
+      - Port: 27017
+      - Model count: 13
+10:29:51 [[32minfo[39m]: Database connected successfully
+10:29:51 [[34mdebug[39m]: Loaded model: Booking.js
+10:29:51 [[34mdebug[39m]: Loaded model: BookingService.js
+10:29:51 [[34mdebug[39m]: Loaded model: CommunicationLog.js
+10:29:51 [[34mdebug[39m]: Loaded model: Customer.js
+10:29:51 [[34mdebug[39m]: Loaded model: CustomerPortal.js
+10:29:51 [[34mdebug[39m]: Loaded model: Document.js
+10:29:51 [[34mdebug[39m]: Loaded model: Guide.js
+10:29:51 [[34mdebug[39m]: Loaded model: index.js
+10:29:51 [[34mdebug[39m]: Loaded model: Invoice.js
+10:29:51 [[34mdebug[39m]: Loaded model: Lead.js
+10:29:51 [[34mdebug[39m]: Loaded model: OptionalService.js
+10:29:51 [[34mdebug[39m]: Loaded model: Package.js
+10:29:51 [[34mdebug[39m]: Loaded model: PackageItinerary.js
+10:29:51 [[34mdebug[39m]: Loaded model: Payment.js
+10:29:51 [[34mdebug[39m]: Loaded model: Role.js
+10:29:51 [[34mdebug[39m]: Loaded model: Staff.js
+10:29:51 [[34mdebug[39m]: Loaded model: Transport.js
+10:29:51 [[32minfo[39m]: Roles already exist. Skipping seed.
+10:29:51 [[34mdebug[39m]: Database connected for staff seeding
+10:29:51 [[34mdebug[39m]: Cleared 5 existing staff records
+10:29:51 [[34mdebug[39m]: Found 5 roles for staff assignment
+10:29:51 [[34mdebug[39m]: Test hash for 'password123': $2b$10$6m8dzjOJeEllX2wW2Mb4cuuQPR4oeA3s2aKgp72hdY/.REvK1X9KK
+10:29:52 [[34mdebug[39m]: Hashed password for admin: $2b$10$D5jDhccqgy/oD2Ev9pOpCeUeD0YLpK6VkjtxiegJMQiYQF0JasMhq
+10:29:52 [[34mdebug[39m]: Hashed password for sales_agent: $2b$10$434dBSnePM2b8e2cl1jKqOcUFXw0WelnxClqL3Pw9.ZAEnRVasv3S
+10:29:52 [[34mdebug[39m]: Hashed password for ops_manager: $2b$10$3vNqwyrpnt7CHGWOgrH.z.wmnvdYT6LtzXmBZHxC0tG3HpyYANsGu
+10:29:52 [[34mdebug[39m]: Hashed password for finance_accountant: $2b$10$x8dwDLbViSTeWrEgSjBfkeivKdOE80GgoAw9eP5chfrzbKVjjGAWW
+10:29:52 [[34mdebug[39m]: Hashed password for customer_support: $2b$10$5J4vCVhzlvlagldOWwwMh.cwW7nB5IP56nhesHGORwTSSGYARouja
+10:29:53 [[32minfo[39m]: Staff seeding completed. Inserted 5 staff members
+10:29:53 [[32minfo[39m]: Database seeding completed
+10:29:53 [[34mdebug[39m]: All routes initialized
+10:29:53 [[32minfo[39m]: Server running in development mode on port 3000
+11:12:05 [[33mwarn[39m]: Mongoose default connection disconnected
+11:12:15 [[34mdebug[39m]: Mongoose default connection open
+11:23:37 [[32mhttp[39m]: [0mPOST /api/auth/login [32m200[0m 417.397 ms - 218[0m
+11:23:56 [[32mhttp[39m]: [0mPOST /api/communication/createlog [31m500[0m 65.427 ms - 1575[0m
+11:24:26 [[32mhttp[39m]: [0mPOST /api/communication/createlog [31m500[0m 33.439 ms - 1090[0m
+11:28:55 [[32mhttp[39m]: [0mPOST /api/communication/createlog [32m201[0m 26.008 ms - 376[0m
+12:24:33 [[33mwarn[39m]: Mongoose default connection disconnected
+12:24:43 [[34mdebug[39m]: Mongoose default connection open
+12:38:25 [[34mdebug[39m]: Environment variables loaded from: C:\Users\Lenovo\OneDrive\Desktop\Hindu Tourism\.env
+12:38:25 [[33mwarn[39m]: Missing required environment variable: MONGODB_URI
+12:38:25 [[33mwarn[39m]: Missing required environment variable: JWT_SECRET
+12:38:25 [[33mwarn[39m]: Using default JWT secret - not recommended for production
+12:38:27 [[32minfo[39m]: MongoDB connected: localhost
+12:38:27 [[34mdebug[39m]: MongoDB connection details: 
+      - Database: travel_agency
+      - Port: 27017
+      - Model count: 13
+12:38:27 [[32minfo[39m]: Database connected successfully
+12:38:27 [[34mdebug[39m]: Loaded model: Booking.js
+12:38:27 [[34mdebug[39m]: Loaded model: BookingService.js
+12:38:27 [[34mdebug[39m]: Loaded model: CommunicationLog.js
+12:38:27 [[34mdebug[39m]: Loaded model: Customer.js
+12:38:27 [[34mdebug[39m]: Loaded model: CustomerPortal.js
+12:38:27 [[34mdebug[39m]: Loaded model: Document.js
+12:38:27 [[34mdebug[39m]: Loaded model: Guide.js
+12:38:27 [[34mdebug[39m]: Loaded model: index.js
+12:38:27 [[34mdebug[39m]: Loaded model: Invoice.js
+12:38:27 [[34mdebug[39m]: Loaded model: Lead.js
+12:38:27 [[34mdebug[39m]: Loaded model: OptionalService.js
+12:38:27 [[34mdebug[39m]: Loaded model: Package.js
+12:38:27 [[34mdebug[39m]: Loaded model: PackageItinerary.js
+12:38:27 [[34mdebug[39m]: Loaded model: Payment.js
+12:38:27 [[34mdebug[39m]: Loaded model: Role.js
+12:38:27 [[34mdebug[39m]: Loaded model: Staff.js
+12:38:27 [[34mdebug[39m]: Loaded model: Transport.js
+12:38:27 [[32minfo[39m]: Roles already exist. Skipping seed.
+12:38:27 [[34mdebug[39m]: Database connected for staff seeding
+12:38:28 [[34mdebug[39m]: Cleared 5 existing staff records
+12:38:28 [[34mdebug[39m]: Found 5 roles for staff assignment
+12:38:28 [[34mdebug[39m]: Test hash for 'password123': $2b$10$m48xGpFYJmv.He0lQiuUfO8Le9DhGIuqEIn77QEDNEDzLTDME0EeK
+12:38:28 [[34mdebug[39m]: Hashed password for sales_agent: $2b$10$IKeMgj6i9Lt344sWufEw3.E8jxjad2PyoyfYi8f7lNSvvkl24faZ6
+12:38:28 [[34mdebug[39m]: Hashed password for ops_manager: $2b$10$1xbksvsYnsPoNPy6i5g/n.Ha4UtTO4rHMzVZkGCiiB2n0MOkSOGYa
+12:38:28 [[34mdebug[39m]: Hashed password for finance_accountant: $2b$10$MLZr9B2Jsl3b0T7UWlnsK.j5erdT5hqDBKo50WFL75qi.oJpQJkkq
+12:38:28 [[34mdebug[39m]: Hashed password for customer_support: $2b$10$t4uaewmtlHoQDd.EOgMyC.KZHmiOzTpCD6Rxhgwf.PELPmbVyzx5y
+12:38:29 [[34mdebug[39m]: Hashed password for admin: $2b$10$NN0lZ8sp3XkbmnrZOG2S5uQNw9JDebeEOcGzsFn4xSKhK4oAuQEB2
+12:38:29 [[32minfo[39m]: Staff seeding completed. Inserted 5 staff members
+12:38:29 [[32minfo[39m]: Database seeding completed
+12:38:29 [[34mdebug[39m]: All routes initialized
+12:38:29 [[32minfo[39m]: Server running in development mode on port 3000
+12:38:33 [[32mhttp[39m]: [0mPOST /api/auth/login [32m200[0m 147.991 ms - 218[0m
+12:38:48 [[32mhttp[39m]: [0mGET /api/communication/ [32m200[0m 57.146 ms - 922[0m
+12:54:40 [[32mhttp[39m]: [0mGET /api/communication/ [32m200[0m 104.979 ms - 922[0m
+12:59:36 [[32mhttp[39m]: [0mGET /api/communication/ [32m200[0m 57.989 ms - 300[0m
+13:00:54 [[32mhttp[39m]: [0mGET /api/communication/ [32m200[0m 34.052 ms - 387[0m
+13:01:38 [[34mdebug[39m]: Environment variables loaded from: C:\Users\Lenovo\OneDrive\Desktop\Hindu Tourism\.env
+13:01:38 [[33mwarn[39m]: Missing required environment variable: MONGODB_URI
+13:01:38 [[33mwarn[39m]: Missing required environment variable: JWT_SECRET
+13:01:38 [[33mwarn[39m]: Using default JWT secret - not recommended for production
+13:01:40 [[32minfo[39m]: MongoDB connected: localhost
+13:01:40 [[34mdebug[39m]: MongoDB connection details: 
+      - Database: travel_agency
+      - Port: 27017
+      - Model count: 13
+13:01:40 [[32minfo[39m]: Database connected successfully
+13:01:40 [[34mdebug[39m]: Loaded model: Booking.js
+13:01:40 [[34mdebug[39m]: Loaded model: BookingService.js
+13:01:40 [[34mdebug[39m]: Loaded model: CommunicationLog.js
+13:01:40 [[34mdebug[39m]: Loaded model: Customer.js
+13:01:40 [[34mdebug[39m]: Loaded model: CustomerPortal.js
+13:01:40 [[34mdebug[39m]: Loaded model: Document.js
+13:01:40 [[34mdebug[39m]: Loaded model: Guide.js
+13:01:40 [[34mdebug[39m]: Loaded model: index.js
+13:01:40 [[34mdebug[39m]: Loaded model: Invoice.js
+13:01:40 [[34mdebug[39m]: Loaded model: Lead.js
+13:01:40 [[34mdebug[39m]: Loaded model: OptionalService.js
+13:01:40 [[34mdebug[39m]: Loaded model: Package.js
+13:01:40 [[34mdebug[39m]: Loaded model: PackageItinerary.js
+13:01:40 [[34mdebug[39m]: Loaded model: Payment.js
+13:01:40 [[34mdebug[39m]: Loaded model: Role.js
+13:01:40 [[34mdebug[39m]: Loaded model: Staff.js
+13:01:40 [[34mdebug[39m]: Loaded model: Transport.js
+13:01:40 [[32minfo[39m]: Roles already exist. Skipping seed.
+13:01:40 [[34mdebug[39m]: Database connected for staff seeding
+13:01:40 [[34mdebug[39m]: Cleared 5 existing staff records
+13:01:40 [[34mdebug[39m]: Found 5 roles for staff assignment
+13:01:40 [[34mdebug[39m]: Test hash for 'password123': $2b$10$KJe.8dTFaOcEhblQRqSOwu7M1oullFu5DxlL7MDUn3hFgMgs2GAEu
+13:01:40 [[34mdebug[39m]: Hashed password for admin: $2b$10$o2fRYFNBNoVlp4z47ctzi.eZxP0wktsr1B8U1FWjp6lXd87tKivJO
+13:01:40 [[34mdebug[39m]: Hashed password for sales_agent: $2b$10$OJ7pmBAVliWiiAZYhd4K7.yYvzK9x3NcKXu/PdoDUfZsFShvhqNj.
+13:01:41 [[34mdebug[39m]: Hashed password for ops_manager: $2b$10$83yVUwNf8Pf96Ye/CQckTOvwy8IjPhnUKjdPxAzY3dNmS1.ci41ly
+13:01:41 [[34mdebug[39m]: Hashed password for finance_accountant: $2b$10$l2hWZiKMAmpwz0TsQybH6uQEwT76K0mf18R0TVNvWSWTI1d/98enm
+13:01:41 [[34mdebug[39m]: Hashed password for customer_support: $2b$10$c.cyqrcoYvOHMz2JMEIYxOZy6gHAow2b3Nhx0d0Ks//vIuLHac79K
+13:01:41 [[32minfo[39m]: Staff seeding completed. Inserted 5 staff members
+13:01:41 [[32minfo[39m]: Database seeding completed
+13:01:41 [[34mdebug[39m]: All routes initialized
+13:01:41 [[32minfo[39m]: Server running in development mode on port 3000
+13:02:04 [[34mdebug[39m]: Environment variables loaded from: C:\Users\Lenovo\OneDrive\Desktop\Hindu Tourism\.env
+13:02:04 [[33mwarn[39m]: Missing required environment variable: MONGODB_URI
+13:02:04 [[33mwarn[39m]: Missing required environment variable: JWT_SECRET
+13:02:04 [[33mwarn[39m]: Using default JWT secret - not recommended for production
+13:02:05 [[32minfo[39m]: MongoDB connected: localhost
+13:02:05 [[34mdebug[39m]: MongoDB connection details: 
+      - Database: travel_agency
+      - Port: 27017
+      - Model count: 13
+13:02:05 [[32minfo[39m]: Database connected successfully
+13:02:05 [[34mdebug[39m]: Loaded model: Booking.js
+13:02:05 [[34mdebug[39m]: Loaded model: BookingService.js
+13:02:05 [[34mdebug[39m]: Loaded model: CommunicationLog.js
+13:02:05 [[34mdebug[39m]: Loaded model: Customer.js
+13:02:05 [[34mdebug[39m]: Loaded model: CustomerPortal.js
+13:02:05 [[34mdebug[39m]: Loaded model: Document.js
+13:02:05 [[34mdebug[39m]: Loaded model: Guide.js
+13:02:05 [[34mdebug[39m]: Loaded model: index.js
+13:02:05 [[34mdebug[39m]: Loaded model: Invoice.js
+13:02:05 [[34mdebug[39m]: Loaded model: Lead.js
+13:02:05 [[34mdebug[39m]: Loaded model: OptionalService.js
+13:02:05 [[34mdebug[39m]: Loaded model: Package.js
+13:02:05 [[34mdebug[39m]: Loaded model: PackageItinerary.js
+13:02:05 [[34mdebug[39m]: Loaded model: Payment.js
+13:02:05 [[34mdebug[39m]: Loaded model: Role.js
+13:02:05 [[34mdebug[39m]: Loaded model: Staff.js
+13:02:05 [[34mdebug[39m]: Loaded model: Transport.js
+13:02:05 [[32minfo[39m]: Roles already exist. Skipping seed.
+13:02:05 [[34mdebug[39m]: Database connected for staff seeding
+13:02:05 [[34mdebug[39m]: Cleared 5 existing staff records
+13:02:05 [[34mdebug[39m]: Found 5 roles for staff assignment
+13:02:05 [[34mdebug[39m]: Test hash for 'password123': $2b$10$s7/zRR/sTJdbKQTO6H662eeBOldfAnidPj73rVKbuXAmWgqGAZNba
+13:02:06 [[34mdebug[39m]: Hashed password for admin: $2b$10$HlQQuTE2J/KOWYmvMCH2meD85N3uR5U6OxewhzKiS5pfidkZqCiGy
+13:02:06 [[34mdebug[39m]: Hashed password for sales_agent: $2b$10$sPHFcy3UROmNVTGIK6ZQeOZBafeN3jc5zTf4oWjyi0OV8PN6vzFyC
+13:02:06 [[34mdebug[39m]: Hashed password for ops_manager: $2b$10$0oYrYccK8o7nTB7dr9VPPOALhR3qCcyozjB9Yi8A1szIdSTET6cwa
+13:02:06 [[34mdebug[39m]: Hashed password for finance_accountant: $2b$10$m.SiwTv//ZF5LmlmrwdBM.rkluZLKgIIl/i.CMMzG4ZvVrQ.wpuRW
+13:02:06 [[34mdebug[39m]: Hashed password for customer_support: $2b$10$wkS2FcnzPfDe7H1S7jXzjOnDtkAcJAZDePv7tw6gsRDlLg8zHp4Oe
+13:02:06 [[32minfo[39m]: Staff seeding completed. Inserted 5 staff members
+13:02:06 [[32minfo[39m]: Database seeding completed
+13:02:06 [[34mdebug[39m]: All routes initialized
+13:02:06 [[32minfo[39m]: Server running in development mode on port 3000
+13:04:13 [[34mdebug[39m]: Environment variables loaded from: C:\Users\Lenovo\OneDrive\Desktop\Hindu Tourism\.env
+13:04:13 [[33mwarn[39m]: Missing required environment variable: MONGODB_URI
+13:04:13 [[33mwarn[39m]: Missing required environment variable: JWT_SECRET
+13:04:13 [[33mwarn[39m]: Using default JWT secret - not recommended for production
+13:04:14 [[32minfo[39m]: MongoDB connected: localhost
+13:04:14 [[34mdebug[39m]: MongoDB connection details: 
+      - Database: travel_agency
+      - Port: 27017
+      - Model count: 13
+13:04:14 [[32minfo[39m]: Database connected successfully
+13:04:14 [[34mdebug[39m]: Loaded model: Booking.js
+13:04:14 [[34mdebug[39m]: Loaded model: BookingService.js
+13:04:14 [[34mdebug[39m]: Loaded model: CommunicationLog.js
+13:04:14 [[34mdebug[39m]: Loaded model: Customer.js
+13:04:14 [[34mdebug[39m]: Loaded model: CustomerPortal.js
+13:04:14 [[34mdebug[39m]: Loaded model: Document.js
+13:04:14 [[34mdebug[39m]: Loaded model: Guide.js
+13:04:14 [[34mdebug[39m]: Loaded model: index.js
+13:04:14 [[34mdebug[39m]: Loaded model: Invoice.js
+13:04:14 [[34mdebug[39m]: Loaded model: Lead.js
+13:04:14 [[34mdebug[39m]: Loaded model: OptionalService.js
+13:04:14 [[34mdebug[39m]: Loaded model: Package.js
+13:04:14 [[34mdebug[39m]: Loaded model: PackageItinerary.js
+13:04:14 [[34mdebug[39m]: Loaded model: Payment.js
+13:04:15 [[34mdebug[39m]: Loaded model: Role.js
+13:04:15 [[34mdebug[39m]: Loaded model: Staff.js
+13:04:15 [[34mdebug[39m]: Loaded model: Transport.js
+13:04:15 [[32minfo[39m]: Roles already exist. Skipping seed.
+13:04:15 [[34mdebug[39m]: Database connected for staff seeding
+13:04:15 [[34mdebug[39m]: Cleared 5 existing staff records
+13:04:15 [[34mdebug[39m]: Found 5 roles for staff assignment
+13:04:15 [[34mdebug[39m]: Test hash for 'password123': $2b$10$kvzvRvzbrd47raFgY6TrwO.UQy2CwtxsbGphoqqfkM.gjt8u1hkRS
+13:04:15 [[34mdebug[39m]: Hashed password for admin: $2b$10$qyduUnp5/XBOInsN625B0OjZJrxk1ZgOxd.7KTicKd5LHVQ4cFTeO
+13:04:15 [[34mdebug[39m]: Hashed password for customer_support: $2b$10$6w8Jynw8OlYMdexiP5g22ug9qUpEeeYmkh8k78Gmsugm.BdcXQCoy
+13:04:15 [[34mdebug[39m]: Hashed password for sales_agent: $2b$10$RIH.Q7k0fHVaYR0TNFnnv.xXxkMxyaqlvHS6DZ1EMede9JLpB7TXe
+13:04:15 [[34mdebug[39m]: Hashed password for ops_manager: $2b$10$MO5LAlvwipyyBVYgfgAeu.Uv50TZSCRl6JHidFyY3tHXyKWb/HnW.
+13:04:16 [[34mdebug[39m]: Hashed password for finance_accountant: $2b$10$G9HuhDJ3xs0ld9QRyr7g7OJvqc9Sk.yhD8rdqNYKA7M8SiBnpTAr6
+13:04:16 [[32minfo[39m]: Staff seeding completed. Inserted 5 staff members
+13:04:16 [[32minfo[39m]: Database seeding completed
+13:04:16 [[34mdebug[39m]: All routes initialized
+13:04:16 [[32minfo[39m]: Server running in development mode on port 3000
+13:05:28 [[32mhttp[39m]: [0mPOST /api/auth/login [32m200[0m 188.214 ms - 218[0m
+13:05:50 [[32mhttp[39m]: [0mGET /api/communication/byleadorcustomer/664d24a0d7a4a54f8f9032a1 [32m200[0m 31.682 ms - 344[0m
+13:18:10 [[32mhttp[39m]: [0mPOST /api/auth/login [32m200[0m 194.433 ms - 218[0m
+13:19:18 [[32mhttp[39m]: [0mPUT /api/communication/682b665bff9d392d04eec74f [32m200[0m 42.082 ms - 364[0m
+13:21:36 [[32mhttp[39m]: [0mPUT /api/communication/682b665bff9d392d04eec74f [32m200[0m 14.881 ms - 364[0m
+13:21:47 [[32mhttp[39m]: [0mDELETE /api/communication/682b665bff9d392d04eec74f [32m200[0m 16.414 ms - 52[0m

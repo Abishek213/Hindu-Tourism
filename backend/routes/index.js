@@ -6,6 +6,7 @@ import leadRoutes from './leadRoutes.js';
 import bookingRoutes from './bookingRoutes.js';
 import guideRoutes from './guideRoutes.js';
 import transportRoutes from './transportRoutes.js';
+import communicationRoutes from './communicationRoutes.js';
 
 const router = express.Router();
 
@@ -16,6 +17,7 @@ router.use('/lead', leadRoutes)
 router.use('/booking', bookingRoutes);
 router.use('/guide', guideRoutes);
 router.use('/transport', transportRoutes);
+router.use('/communication', communicationRoutes);
 
 // Mandatory default export
 export default router;
