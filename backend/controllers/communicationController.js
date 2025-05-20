@@ -1,7 +1,7 @@
 import CommunicationLog from '../models/CommunicationLog.js';
-import Lead from '../models/Lead.js';
-import mongoose from 'mongoose'
-import Customer from '../models/Customer.js';
+// import Lead from '../models/Lead.js';
+// import mongoose from 'mongoose'
+// import Customer from '../models/Customer.js';
 
 
 
