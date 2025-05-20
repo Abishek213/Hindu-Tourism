@@ -1,3 +1,4 @@
+
 import Booking from '../models/Booking.js';
 import Lead from '../models/Lead.js';
 import Customer from '../models/Customer.js';
@@ -455,3 +456,4 @@ export const generateBookingPDF = async (req, res, next) => {
     next(error);
   }
 };
+
