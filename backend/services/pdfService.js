@@ -1,6 +1,70 @@
 import PDFDocument from 'pdfkit';
+import { PassThrough } from 'stream';
 import fs from 'fs';
 import path from 'path';
+
+export const generateBookingPDF = async (data) => {
+  const doc = new PDFDocument();
+  const stream = new PassThrough();
+
+  return new Promise((resolve, reject) => {
+    let chunks = [];
+
+    stream.on('data', chunk => chunks.push(chunk));
+    stream.on('end', () => resolve(Buffer.concat(chunks)));
+    stream.on('error', reject);
+
+    doc.pipe(stream);
+
+    doc.fontSize(20).text('Hindu Tourism Booking Summary', { align: 'center' });
+    doc.moveDown();
+
+    doc.text(`Booking ID: ${data.booking?._id || 'N/A'}`);
+    doc.text(`Customer: ${data.booking?.customer_id?.name || 'N/A'}`);
+    doc.text(`Email: ${data.booking?.customer_id?.email || 'N/A'}`);
+    doc.text(`Phone: ${data.booking?.customer_id?.phone || 'N/A'}`);
+    doc.text(`Package: ${data.booking?.package_id?.title || 'N/A'}`);
+    doc.text(`Travel Dates: ${new Date(data.booking?.travel_start_date).toDateString()} to ${new Date(data.booking?.travel_end_date).toDateString()}`);
+    doc.text(`Number of Travelers: ${data.booking?.num_travelers || 'N/A'}`);
+    doc.text(`Special Requirements: ${data.booking?.special_requirements || 'None'}`);
+    doc.text(`Status: ${data.booking?.status || 'N/A'}`);
+
+    doc.moveDown();
+
+    if (data.booking?.guide_id) {
+      doc.text(`Guide: ${data.booking.guide_id.name || 'N/A'} (${data.booking.guide_id.phone || 'N/A'})`);
+    }
+
+    if (data.booking?.transport_id) {
+      doc.text(`Transport: ${data.booking.transport_id.name || 'N/A'} (${data.booking.transport_id.type || 'N/A'})`);
+    }
+https://github.com/Abishek213/Hindu-Tourism/pull/35/conflict?name=backend%252Fservices%252FpdfService.js&ancestor_oid=e69de29bb2d1d6434b8b29ae775ad8c2e48c5391&base_oid=6a8477e368c51458b827db628a09b70f87e2e01e&head_oid=55fc13a8d53330f24f0593f4e11b7b4e707da5cc
+    if (data.services?.length) {
+      doc.moveDown().text('Optional Services:', { underline: true });
+      data.services.forEach(service => {
+        const name = service.service_id?.name || 'Unknown Service';
+        doc.text(`- ${name}: $${service.price_applied}`);
+      });
+    }
+
+    if (data.invoice) {
+      doc.moveDown().text('Invoice:', { underline: true });
+      doc.text(`Amount: $${data.invoice.amount}`);
+      doc.text(`Status: ${data.invoice.status}`);
+    }
+
+    doc.end();
+  });
+};
+
+// Helper function to format currency
+const formatCurrency = (amount) => {
+  return new Intl.NumberFormat('en-IN', {
+    style: 'currency',
+    currency: 'INR',
+    minimumFractionDigits: 2
+  }).format(amount);
+};
 
 export const generateInvoicePDF = (invoice) => {
   return new Promise((resolve, reject) => {
@@ -82,91 +146,6 @@ const exclusions = Array.isArray(pkg.exclusions) ? pkg.exclusions.map(String) : 
       // Footer
       doc.fontSize(8)
         .text('Thank you for your business!', 50, 780, { align: 'center' });
-
-      doc.end();
-    } catch (err) {
-      reject(new Error(`PDF generation failed: ${err.message}`));
-    }
-  });
-};
-
-export const generateDocumentPDF = (template, data) => {
-  return new Promise((resolve, reject) => {
-    const doc = new PDFDocument({ margin: 50 });
-    const buffers = [];
-    
-    doc.on('data', buffers.push.bind(buffers));
-    doc.on('end', () => resolve(Buffer.concat(buffers)));
-    doc.on('error', reject);
-
-    try {
-      // Common data extraction
-      const { booking, customer, documents, package: pkg } = data;
-      const bookingDate = new Date(booking.booking_date).toLocaleDateString();
-      
-      // Logo handling
-      const logoPath = path.join(process.cwd(), 'public', 'logo.png');
-      try {
-        const logo = fs.readFileSync(logoPath);
-        doc.image(logo, 50, 45, { width: 50 });
-      } catch (logoError) {
-        console.warn('Company logo not found, proceeding without it');
-      }
-
-      // Template-specific content
-      if (template === 'confirmation') {
-        // Header Section
-        doc.fontSize(20)
-          .text('BOOKING CONFIRMATION', 200, 50, { align: 'right' })
-          .fontSize(10)
-          .text(`Booking ID: ${booking.id}`, { align: 'right' })
-          .text(`Booking Date: ${bookingDate}`, { align: 'right' });
-
-        // Customer Information
-        doc.fontSize(12)
-          .text('Customer Details:', 50, 120)
-          .fontSize(10)
-          .text(`Name: ${customer.name}`, 50, 140)
-          .text(`Email: ${customer.email}`, 50, 155)
-          .text(`Phone: ${customer.phone}`, 50, 170);
-
-        // Package Details
-        let y = 220;
-        doc.fontSize(12)
-          .text('Package Information:', 50, y)
-          .fontSize(10)
-          .text(`Title: ${pkg.title || 'N/A'}`, 50, y + 20)
-          .text(`Duration: ${pkg.duration_days} days`, 50, y + 35)
-          .text(`Destination: ${pkg.destination || 'N/A'}`, 50, y + 50)
-          .text(`Travelers: ${booking.num_travelers}`, 50, y + 65);
-
-        // Uploaded Documents
-        y += 100;
-        doc.fontSize(12)
-          .text('Uploaded Documents:', 50, y);
-        
-        if (documents.length > 0) {
-          documents.forEach((docItem, index) => {
-            doc.fontSize(10)
-              .text(`• ${docItem.document_type}: ${docItem.traveler_name}`, 
-                50, y + 20 + (index * 15));
-          });
-        } else {
-          doc.fontSize(10)
-            .text('No documents uploaded yet', 50, y + 20);
-        }
-
-        // Terms and Conditions
-        y = 500;
-        doc.fontSize(10)
-          .text('Confirmation Terms:', 50, y)
-          .text('1. This document serves as official confirmation of your booking', 50, y + 15)
-          .text('2. Please review all details and contact us with any discrepancies', 50, y + 30);
-
-        // Footer
-        doc.fontSize(8)
-          .text('Thank you for choosing our travel services!', 50, 780, { align: 'center' });
-      }
 
       doc.end();
     } catch (err) {
