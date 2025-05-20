@@ -94,26 +94,6 @@ export const getBookingDocuments = async (req, res) => {
     }
 };
 
-
-export const downloadDocument = async (req, res) => {
-    try {
-        const { document_id } = req.params;
-        
-        const document = await Document.findById(document_id);
-        if (!document) {
-            return res.status(404).json({ error: 'Document not found' });
-        }
-
-        res.json({
-            message: 'Download initiated',
-            path: document.file_path
-        });
-    } catch (error) {
-        logger.error(`Error downloading document: ${error.message}`);
-        res.status(500).json({ error: 'Failed to download document' });
-    }
-};
-
 // In documentController.js
 export const deleteDocumentsByBooking = async (req, res) => {
   try {

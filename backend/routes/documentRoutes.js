@@ -28,13 +28,6 @@ router.get(
     getBookingDocuments
 );
 
-router.get(
-    '/:document_id/download',
-    protect,
-    checkRole('Admin', 'Sales Agent', 'Operation Team', 'Accountant'),
-    downloadDocument
-);
-
 router.delete(
     '/:booking_id',
     protect,
