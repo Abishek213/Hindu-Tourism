@@ -38,7 +38,6 @@ export const generateBookingPDF = async (data) => {
     if (data.booking?.transport_id) {
       doc.text(`Transport: ${data.booking.transport_id.name || 'N/A'} (${data.booking.transport_id.type || 'N/A'})`);
     }
-https://github.com/Abishek213/Hindu-Tourism/pull/35/conflict?name=backend%252Fservices%252FpdfService.js&ancestor_oid=e69de29bb2d1d6434b8b29ae775ad8c2e48c5391&base_oid=6a8477e368c51458b827db628a09b70f87e2e01e&head_oid=55fc13a8d53330f24f0593f4e11b7b4e707da5cc
     if (data.services?.length) {
       doc.moveDown().text('Optional Services:', { underline: true });
       data.services.forEach(service => {
@@ -55,15 +54,6 @@ https://github.com/Abishek213/Hindu-Tourism/pull/35/conflict?name=backend%252Fse
 
     doc.end();
   });
-};
-
-// Helper function to format currency
-const formatCurrency = (amount) => {
-  return new Intl.NumberFormat('en-IN', {
-    style: 'currency',
-    currency: 'INR',
-    minimumFractionDigits: 2
-  }).format(amount);
 };
 
 export const generateInvoicePDF = (invoice) => {
