@@ -311,32 +311,36 @@ export const seedAll = async () => {
 
     // Seed documents (depends on customers and bookings)
     const documentsData = [
-      {
-        customer_id: customers[0]._id,
-        booking_id: bookings[0]._id,
-        document_type: 'passport',
-        file_path: '/uploads/passports/john_doe.pdf'
-      },
-      {
-        customer_id: customers[0]._id,
-        booking_id: bookings[0]._id,
-        document_type: 'visa',
-        file_path: '/uploads/visas/john_doe_eu.pdf'
-      },
-      {
-        customer_id: customers[1]._id,
-        document_type: 'id_proof',
-        file_path: '/uploads/ids/jane_smith.png'
-      },
-      {
-        customer_id: customers[1]._id,
-        booking_id: bookings[1]._id,
-        document_type: 'ticket',
-        file_path: '/uploads/tickets/jane_asia.pdf'
-      }
-    ];
-    const documents = await Document.insertMany(documentsData);
-    logger.info(`Seeded ${documents.length} documents`);
+  // Main customer documents
+  {
+    customer_id: customers[0]._id,
+    booking_id: bookings[0]._id,
+    traveler_name: 'Sandesh sth',
+    document_type: 'passport',
+    file_path: '/uploads/passports/sandesh.pdf',
+    is_main_customer: true
+  },
+  // Non-main travelers (customer = null)
+  {
+    customer_id: null,
+    booking_id: bookings[0]._id,
+    traveler_name: 'Rajesh Kumar',
+    document_type: 'passport',
+    file_path: '/uploads/passports/rajesh.pdf',
+    is_main_customer: false
+  },
+  {
+    customer_id: null,
+    booking_id: bookings[0]._id,
+    traveler_name: 'Priya Sharma',
+    document_type: 'id_proof', // Use schema's enum value
+    file_path: '/uploads/ids/priya.png',
+    is_main_customer: false
+  }
+];
+
+const documents = await Document.insertMany(documentsData);
+logger.info(`Seeded ${documents.length} documents`);
 
     return {
       roles,

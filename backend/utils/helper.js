@@ -7,10 +7,11 @@ const __dirname = path.dirname(__filename);
 
 export const getCurrentDir = () => __dirname;
 
-export const formatCurrency = (amount, currency = 'USD') => {
-  return new Intl.NumberFormat('en-US', {
+export const formatCurrency = (amount, currency = 'USD', locale = 'en-US') => {
+  return new Intl.NumberFormat(locale, {
     style: 'currency',
     currency,
+    minimumFractionDigits: 2
   }).format(amount);
 };
 
