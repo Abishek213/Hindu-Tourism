@@ -12,19 +12,19 @@ import {
     updateItinerary,
     deleteItinerary
 } from '../controllers/packageController.js';
-import upload from '../services/fileUpload.js';
+import { brochureUpload } from '../services/fileUpload.js';
 import { validatePackage, validateItinerary } from '../utils/validators.js';
 
 const router = express.Router();
 
 // Admin-only routes
 router.route('/')
-    .post(protect, checkRole('Admin'), upload.single('brochure'), validatePackage, createPackage)
+    .post(protect, checkRole('Admin'), brochureUpload.single('brochure'), validatePackage, createPackage)
     .get(protect, checkRole('Admin', 'Operation Team'), getAllPackages);
 
 router.route('/:id')
     .get(protect, checkRole('Admin', 'Operation Team'), getPackageById)
-    .put(protect, checkRole('Admin'), upload.single('brochure'), validatePackage, updatePackage)
+    .put(protect, checkRole('Admin'), brochureUpload.single('brochure'), validatePackage, updatePackage)
     .patch(protect, checkRole('Admin'), togglePackageStatus);
 
 // Itinerary routes

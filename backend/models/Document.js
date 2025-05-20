@@ -4,20 +4,29 @@ const documentSchema = new mongoose.Schema({
   customer_id: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Customer',
-    required: true
+    required: function() { return this.is_main_customer; }
   },
   booking_id: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Booking'
+    ref: 'Booking',
+    required: true
   },
   document_type: {
     type: String,
     required: true,
-    enum: ['passport', 'visa', 'id_proof', 'ticket', 'other']
+    enum: ['passport', 'visa', 'id_proof', 'ticket', 'confirmation', 'other']
   },
   file_path: {
     type: String,
     required: true
+  },
+  traveler_name: {
+    type: String,
+    required: true
+  },
+  is_main_customer: {
+    type: Boolean,
+    default: false
   },
   upload_date: {
     type: Date,
