@@ -2,7 +2,6 @@ import express from 'express';
 import {
     uploadDocuments,
     getBookingDocuments,
-    downloadDocument,
     deleteDocumentsByBooking
 } from '../controllers/documentController.js';
 import { protect } from '../middleware/auth.js';
