@@ -1,14 +1,20 @@
-import { StrictMode } from 'react';
-import { createRoot } from 'react-dom/client';
-import { BrowserRouter } from 'react-router-dom';
+// main.jsx or index.jsx
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import App from './App.jsx';
 import './index.css';
-import './App.css';
-import App from './App';
+import { ThemeProvider } from './context/themeContext';
+import { SidebarProvider } from './context/sidebarContext';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-createRoot(document.getElementById('root')).render(
-  <StrictMode>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
-  </StrictMode>
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <React.StrictMode>
+    <ThemeProvider>
+      <SidebarProvider>
+        <App />
+        <ToastContainer position="top-right" autoClose={3000} />
+      </SidebarProvider>
+    </ThemeProvider>
+  </React.StrictMode>
 );

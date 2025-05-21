@@ -1,50 +1,136 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
-import Login from './pages/login/login.jsx';
-import Salesdashboard from './pages/dashboard/salesdashboard.jsx';
-import AdminDashboard from './pages/dashboard/admindashboard.jsx';
-import AddLead from './pages/leads/LeadAdd';
-import BookingAdd from './pages/bookings/BookingAdd';
-import BookingListPage from './pages/bookings/BookingListPage';
-import SidebarLayout from './components/layout/SidebarLayout';
-import ProtectedRoute from './components/protectedroute/protectedroute.jsx';
-import { BookingProvider } from './components/Bookings/BookingContext.jsx';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import MainLayout from './Components/layout/Mainlayout';
+import Login from './Pages/Login';
+import { BookingProvider } from './context/BookingContext';
+
+import {
+  salesDashboardConfig,
+  adminDashboardConfig,
+  operationDashboardConfig,
+  accountDashboardConfig,
+} from './Components/Dashboard/DashboardConfig';
+
+// Protected Route Component
+const ProtectedRoute = ({ children }) => {
+  const navigate = useNavigate();
+  const token = localStorage.getItem("token");
+  
+  React.useEffect(() => {
+    if (!token) {
+      navigate("/login", { replace: true });
+    }
+  }, [token, navigate]);
+
+  return token ? children : null;
+};
+
+// Helper to render routes including nested children if any
+const renderDashboardRoutes = (config) => {
+  return Object.entries(config.tabs).map(([key, tab]) => {
+    if (tab.children) {
+      // If tab has children, render nested routes under that tab
+      return (
+        <Route key={key} path={key}>
+          {/* Redirect from parent tab to its default child */}
+          <Route
+            index
+            element={<Navigate to={`${key}/${Object.keys(tab.children)[0]}`} replace />}
+          />
+          {Object.entries(tab.children).map(([childKey, childTab]) => (
+            <Route
+              key={childKey}
+              path={childKey}
+              element={<childTab.component />}
+            />
+          ))}
+        </Route>
+      );
+    }
+    // No children: normal route
+    return <Route key={key} path={key} element={<tab.component />} />;
+  });
+};
 
 const App = () => {
   return (
-    <BookingProvider>
+    <Router>
       <Routes>
-        {/* Public Routes */}
         <Route path="/login" element={<Login />} />
 
-        {/* Admin Dashboard (Protected for Admin role) */}
+        {/* Sales Dashboard */}
+        
         <Route
-          path="/admindashboard"
+          path="/salesdashboard/*"
           element={
-            <ProtectedRoute allowedRoles={['Admin']}>
-              <AdminDashboard />
-            </ProtectedRoute>
+            <ProtectedRoute>
+             <BookingProvider>
+        <MainLayout />
+      </BookingProvider>
+    </ProtectedRoute>
           }
-        />
+        >
+          {/* Redirect base salesdashboard to defaultTab */}
+          <Route
+            index
+            element={<Navigate to={salesDashboardConfig.defaultTab} replace />}
+          />
+          {renderDashboardRoutes(salesDashboardConfig)}
+        </Route>
 
-        {/* Sales Agent Routes (Protected for Sales Agent role) */}
+        {/* Admin Dashboard */}
         <Route
+          path="/admindashboard/*"
           element={
-            <ProtectedRoute allowedRoles={['Sales Agent']}>
-              <SidebarLayout />
+            <ProtectedRoute>
+              <MainLayout />
             </ProtectedRoute>
           }
         >
-          <Route path="/salesdashboard" element={<Salesdashboard />} />
-          <Route path="/leads/add" element={<AddLead />} />
-          <Route path="/bookings/new" element={<BookingAdd />} />
-          <Route path="/bookings/list" element={<BookingListPage />} />
+          <Route
+            index
+            element={<Navigate to={adminDashboardConfig.defaultTab} replace />}
+          />
+          {renderDashboardRoutes(adminDashboardConfig)}
         </Route>
 
-        {/* Default Routes */}
-        <Route path="/" element={<Navigate to="/login" />} />
-        <Route path="*" element={<Navigate to="/login" />} />
+        {/* Operation Dashboard */}
+        <Route
+          path="/ops/*"
+          element={
+            <ProtectedRoute>
+              <MainLayout />
+            </ProtectedRoute>
+          }
+        >
+          <Route
+            index
+            element={<Navigate to={operationDashboardConfig.defaultTab} replace />}
+          />
+          {renderDashboardRoutes(operationDashboardConfig)}
+        </Route>
+
+        {/* Accounts Dashboard */}
+        <Route
+          path="/account/*"
+          element={
+            <ProtectedRoute>
+              <MainLayout />
+            </ProtectedRoute>
+          }
+        >
+          <Route
+            index
+            element={<Navigate to={accountDashboardConfig.defaultTab} replace />}
+          />
+          {renderDashboardRoutes(accountDashboardConfig)}
+        </Route>
+
+        {/* Redirect any unknown routes to login */}
+        <Route path="/" element={<Navigate to="/login" replace />} />
+        <Route path="*" element={<Navigate to="/login" replace />} />
       </Routes>
-    </BookingProvider>
+    </Router>
   );
 };
 

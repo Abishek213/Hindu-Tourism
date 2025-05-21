@@ -611,3 +611,342 @@
 13:25:24 [[32mhttp[39m]: [0mPOST /api/auth/login [32m200[0m 104.373 ms - 226[0m
 13:26:20 [[32mhttp[39m]: [0mPOST /api/auth/login [32m200[0m 158.677 ms - 218[0m
 13:27:02 [[32mhttp[39m]: [0mPOST /api/auth/login [32m200[0m 172.498 ms - 218[0m
+14:05:14 [[34mdebug[39m]: Environment variables loaded from: C:\Users\HP\Desktop\HinduCRM\.env
+14:05:14 [[33mwarn[39m]: Missing required environment variable: MONGODB_URI
+14:05:14 [[33mwarn[39m]: Missing required environment variable: JWT_SECRET
+14:05:14 [[33mwarn[39m]: Using default JWT secret - not recommended for production
+14:05:16 [[32minfo[39m]: MongoDB connected: localhost
+14:05:16 [[34mdebug[39m]: MongoDB connection details: 
+      - Database: travel_agency
+      - Port: 27017
+      - Model count: 5
+14:05:16 [[32minfo[39m]: Database connected successfully
+14:05:16 [[34mdebug[39m]: Loaded model: Booking.js
+14:05:16 [[34mdebug[39m]: Loaded model: BookingService.js
+14:05:16 [[34mdebug[39m]: Loaded model: CommunicationLog.js
+14:05:16 [[34mdebug[39m]: Loaded model: Customer.js
+14:05:16 [[34mdebug[39m]: Loaded model: CustomerPortal.js
+14:05:16 [[34mdebug[39m]: Loaded model: Document.js
+14:05:16 [[34mdebug[39m]: Loaded model: Guide.js
+14:05:16 [[34mdebug[39m]: Loaded model: index.js
+14:05:16 [[34mdebug[39m]: Loaded model: Invoice.js
+14:05:16 [[34mdebug[39m]: Loaded model: Lead.js
+14:05:16 [[34mdebug[39m]: Loaded model: OptionalService.js
+14:05:16 [[34mdebug[39m]: Loaded model: Package.js
+14:05:16 [[34mdebug[39m]: Loaded model: PackageItinerary.js
+14:05:16 [[34mdebug[39m]: Loaded model: Payment.js
+14:05:17 [[34mdebug[39m]: Loaded model: Role.js
+14:05:17 [[34mdebug[39m]: Loaded model: Staff.js
+14:05:17 [[34mdebug[39m]: Loaded model: Transport.js
+14:05:17 [[32minfo[39m]: Seeded 5 roles: Admin, Sales Agent, Operation Team, Accountant, Customer Portal
+14:05:17 [[34mdebug[39m]: Database connected for staff seeding
+14:05:17 [[34mdebug[39m]: Cleared 0 existing staff records
+14:05:18 [[34mdebug[39m]: Found 5 roles for staff assignment
+14:05:18 [[34mdebug[39m]: Test hash for 'password123': $2b$10$M6nVtEHyoNgO0nt7WpgYmOdyYRgTHaS5cOQUrRfcSqGwXg4WLhbDK
+14:05:18 [[34mdebug[39m]: Hashed password for admin: $2b$10$lIKP2o55iX0MAd0HkeVjVOW9gnGY8IwVLuPPpdlkSirNKmXRBBT96
+14:05:18 [[34mdebug[39m]: Hashed password for sales_agent: $2b$10$S06VW.fcBnvQk6dXiuh4NeFoCMH3q0r1igi97yISILNfAvOOiX9vu
+14:05:18 [[34mdebug[39m]: Hashed password for ops_manager: $2b$10$8a2FP2sU/DURSK2X.DIXvOawGbTk99td63V7pRceDmOq2dD0GUtl6
+14:05:18 [[34mdebug[39m]: Hashed password for finance_accountant: $2b$10$wBlaRM6Dzp2LrmJ8bTgjDOJwYZRGZSgo9Aaw227jMesi6TP9X1Iye
+14:05:19 [[34mdebug[39m]: Hashed password for customer_support: $2b$10$vHhh8316islEy3x3Td1QWek6QpSkjFUnihIQhM3fMSXCpeodMRM2W
+14:05:19 [[32minfo[39m]: Staff seeding completed. Inserted 5 staff members
+14:05:19 [[32minfo[39m]: Database seeding completed
+14:05:19 [[34mdebug[39m]: All routes initialized
+14:05:19 [[32minfo[39m]: Server running in development mode on port 3000
+14:05:35 [[32mhttp[39m]: [0mPOST /api/auth/login [32m200[0m 195.427 ms - 226[0m
+14:11:06 [[32mhttp[39m]: [0mPOST /api/auth/login [32m200[0m 123.570 ms - 226[0m
+14:13:06 [[34mdebug[39m]: Environment variables loaded from: C:\Users\HP\Desktop\HinduCRM\.env
+14:13:06 [[33mwarn[39m]: Missing required environment variable: MONGODB_URI
+14:13:06 [[33mwarn[39m]: Missing required environment variable: JWT_SECRET
+14:13:06 [[33mwarn[39m]: Using default JWT secret - not recommended for production
+14:13:08 [[32minfo[39m]: MongoDB connected: localhost
+14:13:08 [[34mdebug[39m]: MongoDB connection details: 
+      - Database: travel_agency
+      - Port: 27017
+      - Model count: 5
+14:13:08 [[32minfo[39m]: Database connected successfully
+14:13:08 [[34mdebug[39m]: Loaded model: Booking.js
+14:13:08 [[34mdebug[39m]: Loaded model: BookingService.js
+14:13:08 [[34mdebug[39m]: Loaded model: CommunicationLog.js
+14:13:08 [[34mdebug[39m]: Loaded model: Customer.js
+14:13:08 [[34mdebug[39m]: Loaded model: CustomerPortal.js
+14:13:08 [[34mdebug[39m]: Loaded model: Document.js
+14:13:08 [[34mdebug[39m]: Loaded model: Guide.js
+14:13:08 [[34mdebug[39m]: Loaded model: index.js
+14:13:08 [[34mdebug[39m]: Loaded model: Invoice.js
+14:13:08 [[34mdebug[39m]: Loaded model: Lead.js
+14:13:08 [[34mdebug[39m]: Loaded model: OptionalService.js
+14:13:08 [[34mdebug[39m]: Loaded model: Package.js
+14:13:08 [[34mdebug[39m]: Loaded model: PackageItinerary.js
+14:13:08 [[34mdebug[39m]: Loaded model: Payment.js
+14:13:08 [[34mdebug[39m]: Loaded model: Role.js
+14:13:08 [[34mdebug[39m]: Loaded model: Staff.js
+14:13:08 [[34mdebug[39m]: Loaded model: Transport.js
+14:13:08 [[32minfo[39m]: Roles already exist. Skipping seed.
+14:13:08 [[34mdebug[39m]: Database connected for staff seeding
+14:13:08 [[34mdebug[39m]: Cleared 5 existing staff records
+14:13:08 [[34mdebug[39m]: Found 5 roles for staff assignment
+14:13:08 [[34mdebug[39m]: Test hash for 'password123': $2b$10$W87a1B2VsWN78rn79dlmqOvzElY3XlpXvbMRDMNYGg8wF92GTK7hu
+14:13:09 [[34mdebug[39m]: Hashed password for sales_agent: $2b$10$ApO8OdriBaIOArVeQytYtu7zqg4hKv1BrCKxxJ2LsvWBJgP0j2Dba
+14:13:09 [[34mdebug[39m]: Hashed password for ops_manager: $2b$10$5LtlbVRsJFWZLv1ioVBUMuFjMe6NfbFKd1MAGYGx2DnhvwHzDM5Km
+14:13:09 [[34mdebug[39m]: Hashed password for finance_accountant: $2b$10$PXesdtmnHAm9rFhU0WqCpOWKGSqzEqLAT22p1FIFMBGtjvYOdGfyC
+14:13:09 [[34mdebug[39m]: Hashed password for customer_support: $2b$10$PNgDgz/wSzBT1AAS6vxuWeE9UZuJqgBZ.FqYVIZ1LVa6.mfLdVY4i
+14:13:09 [[34mdebug[39m]: Hashed password for admin: $2b$10$ZVIuqwxP1NzIGtRO6bWQwO932Q6KLEs4BmHOxunHq3sr.c37XpJvO
+14:13:09 [[32minfo[39m]: Staff seeding completed. Inserted 5 staff members
+14:13:09 [[32minfo[39m]: Database seeding completed
+14:13:09 [[34mdebug[39m]: All routes initialized
+14:13:09 [[32minfo[39m]: Server running in development mode on port 3000
+14:13:17 [[32mhttp[39m]: [0mPOST /api/auth/login [32m200[0m 114.846 ms - 226[0m
+14:40:03 [[32mhttp[39m]: [0mPOST /api/auth/login [32m200[0m 288.459 ms - 226[0m
+15:12:59 [[32mhttp[39m]: [0mPOST /api/auth/login [32m200[0m 324.817 ms - 226[0m
+19:19:10 [[32mhttp[39m]: [0mPOST /api/auth/login [32m200[0m 320.675 ms - 226[0m
+19:33:55 [[32mhttp[39m]: [0mPOST /api/auth/login [32m200[0m 393.051 ms - 226[0m
+19:47:42 [[32mhttp[39m]: [0mPOST /api/auth/login [32m200[0m 182.812 ms - 226[0m
+20:30:56 [[32mhttp[39m]: [0mPOST /api/auth/login [32m200[0m 438.771 ms - 226[0m
+20:53:32 [[32mhttp[39m]: [0mPOST /api/auth/login [32m200[0m 225.173 ms - 226[0m
+10:55:47 [[32mhttp[39m]: [0mPOST /api/auth/login [32m200[0m 923.705 ms - 226[0m
+11:44:34 [[32mhttp[39m]: [0mPOST /api/auth/login [32m200[0m 148.599 ms - 226[0m
+12:13:15 [[32mhttp[39m]: [0mPOST /api/auth/login [32m200[0m 117.014 ms - 226[0m
+15:26:12 [[32mhttp[39m]: [0mPOST /api/auth/login [32m200[0m 507.877 ms - 218[0m
+17:48:57 [[32mhttp[39m]: [0mPOST /api/auth/login [32m200[0m 298.763 ms - 226[0m
+22:02:10 [[33mwarn[39m]: Mongoose default connection disconnected
+22:43:06 [[31merror[39m]: MongoServerSelectionError: connect ECONNREFUSED ::1:27017, connect ECONNREFUSED 127.0.0.1:27017
+    at Topology.selectServer (C:\Users\HP\Desktop\HinduCRM\Backend\node_modules\mongodb\lib\sdam\topology.js:321:38)
+    at async tryOperation (C:\Users\HP\Desktop\HinduCRM\Backend\node_modules\mongodb\lib\operations\execute_operation.js:145:18)
+    at async executeOperation (C:\Users\HP\Desktop\HinduCRM\Backend\node_modules\mongodb\lib\operations\execute_operation.js:75:16)
+    at async FindCursor._initialize (C:\Users\HP\Desktop\HinduCRM\Backend\node_modules\mongodb\lib\cursor\find_cursor.js:61:26)
+    at async FindCursor.cursorInit (C:\Users\HP\Desktop\HinduCRM\Backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:633:27)
+    at async FindCursor.fetchBatch (C:\Users\HP\Desktop\HinduCRM\Backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:667:13)
+    at async FindCursor.next (C:\Users\HP\Desktop\HinduCRM\Backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:347:17)
+    at async Collection.findOne (C:\Users\HP\Desktop\HinduCRM\Backend\node_modules\mongodb\lib\collection.js:277:21)
+    at async model.Query._findOne (C:\Users\HP\Desktop\HinduCRM\Backend\node_modules\mongoose\lib\query.js:2661:15)
+    at async model.Query.exec (C:\Users\HP\Desktop\HinduCRM\Backend\node_modules\mongoose\lib\query.js:4548:63)
+22:43:06 [[32mhttp[39m]: [0mPOST /api/auth/login [31m500[0m 5309.979 ms - 99[0m
+22:43:12 [[31merror[39m]: MongoServerSelectionError: connect ECONNREFUSED ::1:27017, connect ECONNREFUSED 127.0.0.1:27017
+    at Topology.selectServer (C:\Users\HP\Desktop\HinduCRM\Backend\node_modules\mongodb\lib\sdam\topology.js:321:38)
+    at async tryOperation (C:\Users\HP\Desktop\HinduCRM\Backend\node_modules\mongodb\lib\operations\execute_operation.js:145:18)
+    at async executeOperation (C:\Users\HP\Desktop\HinduCRM\Backend\node_modules\mongodb\lib\operations\execute_operation.js:75:16)
+    at async FindCursor._initialize (C:\Users\HP\Desktop\HinduCRM\Backend\node_modules\mongodb\lib\cursor\find_cursor.js:61:26)
+    at async FindCursor.cursorInit (C:\Users\HP\Desktop\HinduCRM\Backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:633:27)
+    at async FindCursor.fetchBatch (C:\Users\HP\Desktop\HinduCRM\Backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:667:13)
+    at async FindCursor.next (C:\Users\HP\Desktop\HinduCRM\Backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:347:17)
+    at async Collection.findOne (C:\Users\HP\Desktop\HinduCRM\Backend\node_modules\mongodb\lib\collection.js:277:21)
+    at async model.Query._findOne (C:\Users\HP\Desktop\HinduCRM\Backend\node_modules\mongoose\lib\query.js:2661:15)
+    at async model.Query.exec (C:\Users\HP\Desktop\HinduCRM\Backend\node_modules\mongoose\lib\query.js:4548:63)
+22:43:12 [[32mhttp[39m]: [0mPOST /api/auth/login [31m500[0m 5016.834 ms - 99[0m
+22:43:24 [[31merror[39m]: MongoServerSelectionError: connect ECONNREFUSED ::1:27017, connect ECONNREFUSED 127.0.0.1:27017
+    at Topology.selectServer (C:\Users\HP\Desktop\HinduCRM\Backend\node_modules\mongodb\lib\sdam\topology.js:321:38)
+    at async tryOperation (C:\Users\HP\Desktop\HinduCRM\Backend\node_modules\mongodb\lib\operations\execute_operation.js:145:18)
+    at async executeOperation (C:\Users\HP\Desktop\HinduCRM\Backend\node_modules\mongodb\lib\operations\execute_operation.js:75:16)
+    at async FindCursor._initialize (C:\Users\HP\Desktop\HinduCRM\Backend\node_modules\mongodb\lib\cursor\find_cursor.js:61:26)
+    at async FindCursor.cursorInit (C:\Users\HP\Desktop\HinduCRM\Backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:633:27)
+    at async FindCursor.fetchBatch (C:\Users\HP\Desktop\HinduCRM\Backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:667:13)
+    at async FindCursor.next (C:\Users\HP\Desktop\HinduCRM\Backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:347:17)
+    at async Collection.findOne (C:\Users\HP\Desktop\HinduCRM\Backend\node_modules\mongodb\lib\collection.js:277:21)
+    at async model.Query._findOne (C:\Users\HP\Desktop\HinduCRM\Backend\node_modules\mongoose\lib\query.js:2661:15)
+    at async model.Query.exec (C:\Users\HP\Desktop\HinduCRM\Backend\node_modules\mongoose\lib\query.js:4548:63)
+22:43:24 [[32mhttp[39m]: [0mPOST /api/auth/login [31m500[0m 5012.594 ms - 99[0m
+22:43:25 [[31merror[39m]: MongoServerSelectionError: connect ECONNREFUSED ::1:27017, connect ECONNREFUSED 127.0.0.1:27017
+    at Topology.selectServer (C:\Users\HP\Desktop\HinduCRM\Backend\node_modules\mongodb\lib\sdam\topology.js:321:38)
+    at async tryOperation (C:\Users\HP\Desktop\HinduCRM\Backend\node_modules\mongodb\lib\operations\execute_operation.js:145:18)
+    at async executeOperation (C:\Users\HP\Desktop\HinduCRM\Backend\node_modules\mongodb\lib\operations\execute_operation.js:75:16)
+    at async FindCursor._initialize (C:\Users\HP\Desktop\HinduCRM\Backend\node_modules\mongodb\lib\cursor\find_cursor.js:61:26)
+    at async FindCursor.cursorInit (C:\Users\HP\Desktop\HinduCRM\Backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:633:27)
+    at async FindCursor.fetchBatch (C:\Users\HP\Desktop\HinduCRM\Backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:667:13)
+    at async FindCursor.next (C:\Users\HP\Desktop\HinduCRM\Backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:347:17)
+    at async Collection.findOne (C:\Users\HP\Desktop\HinduCRM\Backend\node_modules\mongodb\lib\collection.js:277:21)
+    at async model.Query._findOne (C:\Users\HP\Desktop\HinduCRM\Backend\node_modules\mongoose\lib\query.js:2661:15)
+    at async model.Query.exec (C:\Users\HP\Desktop\HinduCRM\Backend\node_modules\mongoose\lib\query.js:4548:63)
+22:43:25 [[32mhttp[39m]: [0mPOST /api/auth/login [31m500[0m 5011.313 ms - 99[0m
+22:43:25 [[31merror[39m]: MongoServerSelectionError: connect ECONNREFUSED ::1:27017, connect ECONNREFUSED 127.0.0.1:27017
+    at Topology.selectServer (C:\Users\HP\Desktop\HinduCRM\Backend\node_modules\mongodb\lib\sdam\topology.js:321:38)
+    at async tryOperation (C:\Users\HP\Desktop\HinduCRM\Backend\node_modules\mongodb\lib\operations\execute_operation.js:145:18)
+    at async executeOperation (C:\Users\HP\Desktop\HinduCRM\Backend\node_modules\mongodb\lib\operations\execute_operation.js:75:16)
+    at async FindCursor._initialize (C:\Users\HP\Desktop\HinduCRM\Backend\node_modules\mongodb\lib\cursor\find_cursor.js:61:26)
+    at async FindCursor.cursorInit (C:\Users\HP\Desktop\HinduCRM\Backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:633:27)
+    at async FindCursor.fetchBatch (C:\Users\HP\Desktop\HinduCRM\Backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:667:13)
+    at async FindCursor.next (C:\Users\HP\Desktop\HinduCRM\Backend\node_modules\mongodb\lib\cursor\abstract_cursor.js:347:17)
+    at async Collection.findOne (C:\Users\HP\Desktop\HinduCRM\Backend\node_modules\mongodb\lib\collection.js:277:21)
+    at async model.Query._findOne (C:\Users\HP\Desktop\HinduCRM\Backend\node_modules\mongoose\lib\query.js:2661:15)
+    at async model.Query.exec (C:\Users\HP\Desktop\HinduCRM\Backend\node_modules\mongoose\lib\query.js:4548:63)
+22:43:25 [[32mhttp[39m]: [0mPOST /api/auth/login [31m500[0m 5016.014 ms - 99[0m
+22:43:40 [[34mdebug[39m]: Environment variables loaded from: C:\Users\HP\Desktop\HinduCRM\.env
+22:43:40 [[33mwarn[39m]: Missing required environment variable: MONGODB_URI
+22:43:40 [[33mwarn[39m]: Missing required environment variable: JWT_SECRET
+22:43:40 [[33mwarn[39m]: Using default JWT secret - not recommended for production
+22:43:48 [[31merror[39m]: MongoDB connection failed: connect ECONNREFUSED ::1:27017, connect ECONNREFUSED 127.0.0.1:27017
+22:44:43 [[34mdebug[39m]: Environment variables loaded from: C:\Users\HP\Desktop\HinduCRM\.env
+22:44:43 [[33mwarn[39m]: Missing required environment variable: MONGODB_URI
+22:44:43 [[33mwarn[39m]: Missing required environment variable: JWT_SECRET
+22:44:43 [[33mwarn[39m]: Using default JWT secret - not recommended for production
+22:44:49 [[31merror[39m]: MongoDB connection failed: connect ECONNREFUSED ::1:27017, connect ECONNREFUSED 127.0.0.1:27017
+22:48:51 [[34mdebug[39m]: Environment variables loaded from: C:\Users\HP\Desktop\HinduCRM\.env
+22:48:51 [[33mwarn[39m]: Missing required environment variable: MONGODB_URI
+22:48:51 [[33mwarn[39m]: Missing required environment variable: JWT_SECRET
+22:48:51 [[33mwarn[39m]: Using default JWT secret - not recommended for production
+22:49:18 [[34mdebug[39m]: Environment variables loaded from: C:\Users\HP\Desktop\HinduCRM\.env
+22:49:18 [[33mwarn[39m]: Missing required environment variable: MONGODB_URI
+22:49:18 [[33mwarn[39m]: Missing required environment variable: JWT_SECRET
+22:49:18 [[33mwarn[39m]: Using default JWT secret - not recommended for production
+22:49:24 [[31merror[39m]: MongoDB connection failed: connect ECONNREFUSED ::1:27017, connect ECONNREFUSED 127.0.0.1:27017
+06:50:13 [[34mdebug[39m]: Environment variables loaded from: C:\Users\HP\Desktop\HinduCRM\.env
+06:50:13 [[33mwarn[39m]: Missing required environment variable: MONGODB_URI
+06:50:13 [[33mwarn[39m]: Missing required environment variable: JWT_SECRET
+06:50:13 [[33mwarn[39m]: Using default JWT secret - not recommended for production
+06:50:21 [[31merror[39m]: MongoDB connection failed: connect ECONNREFUSED ::1:27017, connect ECONNREFUSED 127.0.0.1:27017
+06:52:05 [[34mdebug[39m]: Environment variables loaded from: C:\Users\HP\Desktop\HinduCRM\.env
+06:52:05 [[33mwarn[39m]: Missing required environment variable: MONGODB_URI
+06:52:05 [[33mwarn[39m]: Missing required environment variable: JWT_SECRET
+06:52:05 [[33mwarn[39m]: Using default JWT secret - not recommended for production
+06:52:11 [[31merror[39m]: MongoDB connection failed: connect ECONNREFUSED ::1:27017, connect ECONNREFUSED 127.0.0.1:27017
+10:21:40 [[34mdebug[39m]: Environment variables loaded from: C:\Users\HP\Desktop\HinduCRM\.env
+10:21:40 [[33mwarn[39m]: Missing required environment variable: MONGODB_URI
+10:21:40 [[33mwarn[39m]: Missing required environment variable: JWT_SECRET
+10:21:40 [[33mwarn[39m]: Using default JWT secret - not recommended for production
+10:21:50 [[31merror[39m]: MongoDB connection failed: connect ECONNREFUSED ::1:27017, connect ECONNREFUSED 127.0.0.1:27017
+10:29:11 [[34mdebug[39m]: Environment variables loaded from: C:\Users\HP\Desktop\HinduCRM\.env
+10:29:11 [[33mwarn[39m]: Missing required environment variable: MONGODB_URI
+10:29:11 [[33mwarn[39m]: Missing required environment variable: JWT_SECRET
+10:29:11 [[33mwarn[39m]: Using default JWT secret - not recommended for production
+10:29:13 [[32minfo[39m]: MongoDB connected: localhost
+10:29:13 [[34mdebug[39m]: MongoDB connection details: 
+      - Database: travel_agency
+      - Port: 27017
+      - Model count: 5
+10:29:13 [[32minfo[39m]: Database connected successfully
+10:29:13 [[34mdebug[39m]: Loaded model: Booking.js
+10:29:13 [[34mdebug[39m]: Loaded model: BookingService.js
+10:29:13 [[34mdebug[39m]: Loaded model: CommunicationLog.js
+10:29:13 [[34mdebug[39m]: Loaded model: Customer.js
+10:29:13 [[34mdebug[39m]: Loaded model: CustomerPortal.js
+10:29:13 [[34mdebug[39m]: Loaded model: Document.js
+10:29:13 [[34mdebug[39m]: Loaded model: Guide.js
+10:29:13 [[34mdebug[39m]: Loaded model: index.js
+10:29:13 [[34mdebug[39m]: Loaded model: Invoice.js
+10:29:13 [[34mdebug[39m]: Loaded model: Lead.js
+10:29:13 [[34mdebug[39m]: Loaded model: OptionalService.js
+10:29:13 [[34mdebug[39m]: Loaded model: Package.js
+10:29:13 [[34mdebug[39m]: Loaded model: PackageItinerary.js
+10:29:13 [[34mdebug[39m]: Loaded model: Payment.js
+10:29:13 [[34mdebug[39m]: Loaded model: Role.js
+10:29:13 [[34mdebug[39m]: Loaded model: Staff.js
+10:29:13 [[34mdebug[39m]: Loaded model: Transport.js
+10:29:13 [[32minfo[39m]: Roles already exist. Skipping seed.
+10:29:13 [[34mdebug[39m]: Database connected for staff seeding
+10:29:13 [[34mdebug[39m]: Cleared 5 existing staff records
+10:29:13 [[34mdebug[39m]: Found 5 roles for staff assignment
+10:29:13 [[34mdebug[39m]: Test hash for 'password123': $2b$10$ccE9XSjf3DNJf7cvA147t.ygJBvP9okQPeB.oX0JcyrLOCxzeJ7Hi
+10:29:14 [[34mdebug[39m]: Hashed password for admin: $2b$10$HftYgMJEdc2HkreieV1SMOT5wxrNm5aEdvHxXixeCu6jNWE2wNyOy
+10:29:14 [[34mdebug[39m]: Hashed password for sales_agent: $2b$10$rEBNQRKS2GQeVd0nhsGBe.ZQO/FkOQUFv2rVaqC.4SFcOhXwFw/r.
+10:29:14 [[34mdebug[39m]: Hashed password for finance_accountant: $2b$10$BIT8jIwiTiMRX3zU.fJxreJ9w5nMy0qP2K43liCN2RticrlVQz3AO
+10:29:14 [[34mdebug[39m]: Hashed password for ops_manager: $2b$10$S9e4jw4Fe6HXoCLFlB0RhO9EEKj5YJ7sAn9EmMLQ.jrxwWY9.Cu9.
+10:29:14 [[34mdebug[39m]: Hashed password for customer_support: $2b$10$dKyeAvpDWkM1.lutNO5IKuFzWFy24vu1XRz2l3ZqxlVd2uofYbCTu
+10:29:14 [[32minfo[39m]: Staff seeding completed. Inserted 5 staff members
+10:29:14 [[32minfo[39m]: Database seeding completed
+10:29:14 [[34mdebug[39m]: All routes initialized
+10:29:14 [[32minfo[39m]: Server running in development mode on port 3000
+10:29:36 [[32mhttp[39m]: [0mPOST /api/auth/login [32m200[0m 214.096 ms - 226[0m
+12:28:41 [[31merror[39m]: Error: Invalid credentials
+    at login (file:///C:/Users/HP/Desktop/HinduCRM/backend/controllers/authController.js:31:19)
+12:28:41 [[32mhttp[39m]: [0mPOST /api/auth/login [31m500[0m 328.015 ms - 50[0m
+12:28:45 [[31merror[39m]: Error: Invalid credentials
+    at login (file:///C:/Users/HP/Desktop/HinduCRM/backend/controllers/authController.js:31:19)
+12:28:45 [[32mhttp[39m]: [0mPOST /api/auth/login [31m500[0m 107.787 ms - 50[0m
+12:28:47 [[31merror[39m]: Error: Invalid credentials
+    at login (file:///C:/Users/HP/Desktop/HinduCRM/backend/controllers/authController.js:31:19)
+12:28:47 [[32mhttp[39m]: [0mPOST /api/auth/login [31m500[0m 113.690 ms - 50[0m
+12:28:47 [[31merror[39m]: Error: Invalid credentials
+    at login (file:///C:/Users/HP/Desktop/HinduCRM/backend/controllers/authController.js:31:19)
+12:28:47 [[32mhttp[39m]: [0mPOST /api/auth/login [31m500[0m 113.909 ms - 50[0m
+12:28:47 [[31merror[39m]: Error: Invalid credentials
+    at login (file:///C:/Users/HP/Desktop/HinduCRM/backend/controllers/authController.js:31:19)
+12:28:47 [[32mhttp[39m]: [0mPOST /api/auth/login [31m500[0m 106.581 ms - 50[0m
+13:59:32 [[32mhttp[39m]: [0mPOST /api/auth/login [32m200[0m 729.611 ms - 226[0m
+15:34:40 [[33mwarn[39m]: Mongoose default connection disconnected
+16:32:01 [[34mdebug[39m]: Environment variables loaded from: C:\Users\HP\Desktop\HinduCRM\.env
+16:32:01 [[33mwarn[39m]: Missing required environment variable: MONGODB_URI
+16:32:01 [[33mwarn[39m]: Missing required environment variable: JWT_SECRET
+16:32:01 [[33mwarn[39m]: Using default JWT secret - not recommended for production
+16:32:12 [[31merror[39m]: MongoDB connection failed: connect ECONNREFUSED ::1:27017, connect ECONNREFUSED 127.0.0.1:27017
+21:51:05 [[34mdebug[39m]: Environment variables loaded from: C:\Users\HP\Desktop\HinduCRM\.env
+21:51:05 [[33mwarn[39m]: Missing required environment variable: MONGODB_URI
+21:51:05 [[33mwarn[39m]: Missing required environment variable: JWT_SECRET
+21:51:05 [[33mwarn[39m]: Using default JWT secret - not recommended for production
+21:51:09 [[32minfo[39m]: MongoDB connected: localhost
+21:51:09 [[34mdebug[39m]: MongoDB connection details: 
+      - Database: travel_agency
+      - Port: 27017
+      - Model count: 5
+21:51:09 [[32minfo[39m]: Database connected successfully
+21:51:09 [[34mdebug[39m]: Loaded model: Booking.js
+21:51:09 [[34mdebug[39m]: Loaded model: BookingService.js
+21:51:09 [[34mdebug[39m]: Loaded model: CommunicationLog.js
+21:51:09 [[34mdebug[39m]: Loaded model: Customer.js
+21:51:09 [[34mdebug[39m]: Loaded model: CustomerPortal.js
+21:51:09 [[34mdebug[39m]: Loaded model: Document.js
+21:51:09 [[34mdebug[39m]: Loaded model: Guide.js
+21:51:09 [[34mdebug[39m]: Loaded model: index.js
+21:51:09 [[34mdebug[39m]: Loaded model: Invoice.js
+21:51:09 [[34mdebug[39m]: Loaded model: Lead.js
+21:51:09 [[34mdebug[39m]: Loaded model: OptionalService.js
+21:51:09 [[34mdebug[39m]: Loaded model: Package.js
+21:51:09 [[34mdebug[39m]: Loaded model: PackageItinerary.js
+21:51:10 [[34mdebug[39m]: Loaded model: Payment.js
+21:51:10 [[34mdebug[39m]: Loaded model: Role.js
+21:51:10 [[34mdebug[39m]: Loaded model: Staff.js
+21:51:10 [[34mdebug[39m]: Loaded model: Transport.js
+21:51:10 [[32minfo[39m]: Roles already exist. Skipping seed.
+21:51:10 [[34mdebug[39m]: Database connected for staff seeding
+21:51:10 [[34mdebug[39m]: Cleared 5 existing staff records
+21:51:11 [[34mdebug[39m]: Found 5 roles for staff assignment
+21:51:11 [[34mdebug[39m]: Test hash for 'password123': $2b$10$zM0fE4cZ7ccln7QFWlO1J.RNHFdY5Smqb8qKOETljMmBFT7cvtOeu
+21:51:11 [[34mdebug[39m]: Hashed password for admin: $2b$10$rrEV8Bh3PfTZcIxkrMrZ7eSLmjoVYyYZK0XqkfbjU2ZTCh1U9SJX.
+21:51:12 [[34mdebug[39m]: Hashed password for sales_agent: $2b$10$BGaP/AOpIGW2MMgfOIbNYeSoDj/ip9xBL0/pf0/gsg6nQ.iGRAwiC
+21:51:12 [[34mdebug[39m]: Hashed password for ops_manager: $2b$10$zItHM1AjEVUR5l6oq1ueI.yx2KGH1fhxxxyBUo6pokiF7L0WgNCNe
+21:51:12 [[34mdebug[39m]: Hashed password for finance_accountant: $2b$10$YlWsuOgnamKqzkQRAsHVkeOWdaLi5ZxvwR4mLrQQIY1w5Jv6Bbgh.
+21:51:13 [[34mdebug[39m]: Hashed password for customer_support: $2b$10$AIvhpuG7MuBqdb9irHQsYOnAIAle3c6uhjpV0eTm5uuxdJz68YyV6
+21:51:13 [[32minfo[39m]: Staff seeding completed. Inserted 5 staff members
+21:51:13 [[32minfo[39m]: Database seeding completed
+21:51:13 [[34mdebug[39m]: All routes initialized
+21:51:13 [[32minfo[39m]: Server running in development mode on port 3000
+21:51:54 [[32mhttp[39m]: [0mPOST /api/auth/login [32m200[0m 204.355 ms - 226[0m
+00:38:51 [[34mdebug[39m]: Environment variables loaded from: C:\Users\HP\Desktop\HinduCRM\.env
+00:38:51 [[33mwarn[39m]: Missing required environment variable: MONGODB_URI
+00:38:51 [[33mwarn[39m]: Missing required environment variable: JWT_SECRET
+00:38:51 [[33mwarn[39m]: Using default JWT secret - not recommended for production
+00:38:53 [[32minfo[39m]: MongoDB connected: localhost
+00:38:53 [[34mdebug[39m]: MongoDB connection details: 
+      - Database: travel_agency
+      - Port: 27017
+      - Model count: 5
+00:38:53 [[32minfo[39m]: Database connected successfully
+00:38:53 [[34mdebug[39m]: Loaded model: Booking.js
+00:38:53 [[34mdebug[39m]: Loaded model: BookingService.js
+00:38:53 [[34mdebug[39m]: Loaded model: CommunicationLog.js
+00:38:53 [[34mdebug[39m]: Loaded model: Customer.js
+00:38:53 [[34mdebug[39m]: Loaded model: CustomerPortal.js
+00:38:53 [[34mdebug[39m]: Loaded model: Document.js
+00:38:53 [[34mdebug[39m]: Loaded model: Guide.js
+00:38:53 [[34mdebug[39m]: Loaded model: index.js
+00:38:54 [[34mdebug[39m]: Loaded model: Invoice.js
+00:38:54 [[34mdebug[39m]: Loaded model: Lead.js
+00:38:54 [[34mdebug[39m]: Loaded model: OptionalService.js
+00:38:54 [[34mdebug[39m]: Loaded model: Package.js
+00:38:54 [[34mdebug[39m]: Loaded model: PackageItinerary.js
+00:38:54 [[34mdebug[39m]: Loaded model: Payment.js
+00:38:54 [[34mdebug[39m]: Loaded model: Role.js
+00:38:54 [[34mdebug[39m]: Loaded model: Staff.js
+00:38:54 [[34mdebug[39m]: Loaded model: Transport.js
+00:38:54 [[32minfo[39m]: Roles already exist. Skipping seed.
+00:38:54 [[34mdebug[39m]: Database connected for staff seeding
+00:38:54 [[34mdebug[39m]: Cleared 5 existing staff records
+00:38:54 [[34mdebug[39m]: Found 5 roles for staff assignment
+00:38:54 [[34mdebug[39m]: Test hash for 'password123': $2b$10$UrCsMQFTf.eBB4l8P2ZEaebD4zFRJM/NiSzSzyIp67uA/qo6S5E5i
+00:38:54 [[34mdebug[39m]: Hashed password for admin: $2b$10$wpPOOY3I4HWb45zE5AYsB.hAUiQ7KmKxEhYfjl2QaeG.6gw0yu8Iu
+00:38:54 [[34mdebug[39m]: Hashed password for sales_agent: $2b$10$Lsy4iK2QDSrYu1BzVHoivuU9XCRZ8caLIs.flxLEFGBnQPDZaqxI6
+00:38:54 [[34mdebug[39m]: Hashed password for ops_manager: $2b$10$TCL1V2iiMWbcygG51.R/Ru9R0GO1lmhJJMlhXXXTVpQj5h.rOqj0C
+00:38:54 [[34mdebug[39m]: Hashed password for finance_accountant: $2b$10$kKUdsIe8aRpZ/da0wiRswuaNN3ymfx5UG3xfSc9l7K.bxnf231Nwi
+00:38:55 [[34mdebug[39m]: Hashed password for customer_support: $2b$10$fdlexJOWdpwpZt5INJaqUu5UASSU.8jKm46ejxNragU6PBVtFUx..
+00:38:55 [[32minfo[39m]: Staff seeding completed. Inserted 5 staff members
+00:38:55 [[32minfo[39m]: Database seeding completed
+00:38:55 [[34mdebug[39m]: All routes initialized
+00:38:55 [[32minfo[39m]: Server running in development mode on port 3000
