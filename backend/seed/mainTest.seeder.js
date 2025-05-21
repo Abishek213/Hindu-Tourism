@@ -9,6 +9,7 @@ import logger from '../utils/logger.js';
 import { seedRoles } from './roles.seeder.js';
 import { seedStaff } from './staff.seeder.js';
 import { seedOptionalServices } from './optionalService.seeder.js';
+import  connectDB  from '../config/db.js';
 
 // Import all models
 import Customer from '../models/Customer.js';
@@ -104,14 +105,17 @@ export const seedAll = async () => {
   let connection;
   try {
     // Database connection setup
-    connection = await mongoose.connect(
-      process.env.MONGODB_URI || 'mongodb://localhost:27017/travel_agency',
-      {
-        serverSelectionTimeoutMS: 5000,
-        maxPoolSize: 10,
-      }
-    );
+    // connection = await mongoose.connect(
+    //   process.env.MONGODB_URI || 'mongodb://localhost:27017/travel_agency',
+    //   {
+    //     serverSelectionTimeoutMS: 5000,
+    //     maxPoolSize: 10,
+    //   }
+    // );
+    // logger.info('Database connected for full seeding');
+    await connectDB();
     logger.info('Database connected for full seeding');
+
 
     // Check for existing data
     const customerCount = await Customer.countDocuments();
@@ -311,36 +315,36 @@ export const seedAll = async () => {
 
     // Seed documents (depends on customers and bookings)
     const documentsData = [
-  // Main customer documents
-  {
-    customer_id: customers[0]._id,
-    booking_id: bookings[0]._id,
-    traveler_name: 'Sandesh sth',
-    document_type: 'passport',
-    file_path: '/uploads/passports/sandesh.pdf',
-    is_main_customer: true
-  },
-  // Non-main travelers (customer = null)
-  {
-    customer_id: null,
-    booking_id: bookings[0]._id,
-    traveler_name: 'Rajesh Kumar',
-    document_type: 'passport',
-    file_path: '/uploads/passports/rajesh.pdf',
-    is_main_customer: false
-  },
-  {
-    customer_id: null,
-    booking_id: bookings[0]._id,
-    traveler_name: 'Priya Sharma',
-    document_type: 'id_proof', // Use schema's enum value
-    file_path: '/uploads/ids/priya.png',
-    is_main_customer: false
-  }
-];
+      // Main customer documents
+      {
+        customer_id: customers[0]._id,
+        booking_id: bookings[0]._id,
+        traveler_name: 'Sandesh sth',
+        document_type: 'passport',
+        file_path: '/uploads/passports/sandesh.pdf',
+        is_main_customer: true
+      },
+      // Non-main travelers (customer = null)
+      {
+        customer_id: null,
+        booking_id: bookings[0]._id,
+        traveler_name: 'Rajesh Kumar',
+        document_type: 'passport',
+        file_path: '/uploads/passports/rajesh.pdf',
+        is_main_customer: false
+      },
+      {
+        customer_id: null,
+        booking_id: bookings[0]._id,
+        traveler_name: 'Priya Sharma',
+        document_type: 'id_proof', // Use schema's enum value
+        file_path: '/uploads/ids/priya.png',
+        is_main_customer: false
+      }
+    ];
 
-const documents = await Document.insertMany(documentsData);
-logger.info(`Seeded ${documents.length} documents`);
+    const documents = await Document.insertMany(documentsData);
+    logger.info(`Seeded ${documents.length} documents`);
 
     return {
       roles,

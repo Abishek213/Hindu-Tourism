@@ -79,13 +79,19 @@ const app = express();
     if (process.env.NODE_ENV !== 'production') {
       app.use(morgan('dev', { stream: { write: message => logger.http(message.trim()) } }));
     }
-//hello
+
+
+   app.get('/test', (req, res) => {
+  res.send('Hindu Tourism API is running...');
+});
     // Routes
     app.use('/api', mainRouter);
     logger.debug('All routes initialized');
 
     // Error handling
     app.use(errorHandler);
+
+ 
 
     // Start server
     const PORT = config.PORT || 3000;
