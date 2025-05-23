@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { useBookings } from '../../Components/SalesBooking/BookingContext';
+// Fix: Import from the correct context file that matches your App.jsx
+import { useBookings } from '../../context/BookingContext';
 import { formatDistanceToNow } from 'date-fns';
 import { 
   FileText, Calendar, Users, Download, Check, X, 
@@ -8,9 +9,6 @@ import {
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { generateBookingPDF } from '../../Components/SalesBooking/Pdf';
-
-
-
 
 export default function BookingList() {
   const { bookings, deleteBooking } = useBookings();

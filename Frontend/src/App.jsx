@@ -59,15 +59,14 @@ const App = () => {
         <Route path="/login" element={<Login />} />
 
         {/* Sales Dashboard */}
-        
         <Route
           path="/salesdashboard/*"
           element={
             <ProtectedRoute>
-             <BookingProvider>
-        <MainLayout />
-      </BookingProvider>
-    </ProtectedRoute>
+              <BookingProvider>
+                <MainLayout />
+              </BookingProvider>
+            </ProtectedRoute>
           }
         >
           {/* Redirect base salesdashboard to defaultTab */}
@@ -83,7 +82,9 @@ const App = () => {
           path="/admindashboard/*"
           element={
             <ProtectedRoute>
-              <MainLayout />
+              <BookingProvider>
+                <MainLayout />
+              </BookingProvider>
             </ProtectedRoute>
           }
         >
@@ -99,7 +100,9 @@ const App = () => {
           path="/ops/*"
           element={
             <ProtectedRoute>
-              <MainLayout />
+              <BookingProvider>
+                <MainLayout />
+              </BookingProvider>
             </ProtectedRoute>
           }
         >
@@ -115,7 +118,9 @@ const App = () => {
           path="/account/*"
           element={
             <ProtectedRoute>
-              <MainLayout />
+              <BookingProvider>
+                <MainLayout />
+              </BookingProvider>
             </ProtectedRoute>
           }
         >
