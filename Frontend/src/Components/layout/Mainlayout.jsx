@@ -14,7 +14,7 @@ const getDashboardConfig = (pathname) => {
   if (pathname.startsWith('/salesdashboard')) return salesDashboardConfig;
   if (pathname.startsWith('/admindashboard')) return adminDashboardConfig;
   if (pathname.startsWith('/ops')) return operationDashboardConfig;
-  if (pathname.startsWith('/accounts')) return accountDashboardConfig;
+  if (pathname.startsWith('/account')) return accountDashboardConfig; // FIXED: was '/accounts'
   return adminDashboardConfig; // Default fallback
 };
 
@@ -47,8 +47,9 @@ const MainLayout = () => {
   //Mock user for demo; replace with real user data from auth context/state
   const mockUser = {
     role: pathname.startsWith('/admindashboard') ? 'Admin' :
-          pathname.startsWith('/salesdashboard') ? 'Sales Agent' :
-          pathname.startsWith('/ops') ? 'Operation Team' : 'Accounts',
+          pathname.startsWith('/salesdashboard') ? 'Sales Agent' : // FIXED: was '/Salesdashboard'
+          pathname.startsWith('/ops') ? 'Operation Team' : 
+          pathname.startsWith('/account') ? 'Accounts' : 'Admin', // FIXED: added account check
     fullname: 'Demo User',
   };
 
