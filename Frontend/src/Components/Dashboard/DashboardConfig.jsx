@@ -15,7 +15,10 @@ import {
   BadgeCheck,
   ReceiptPoundSterling,
   ListChecks,
-  Dock
+  Dock,
+  Package,
+  Compass,
+  LucideCompass
 } from 'lucide-react';
 
 // Admin Dashboard Components
@@ -36,8 +39,12 @@ import DocumentViewer from '../../Pages/Sales/DocumentViewer';
 import TripSchedule from '../../Pages/Sales/TripSchedule';
 
 // Operation Dashboard Components
-//import AssignGuidePage from '../../Pages/Operation/AssignGuide';
-//import UpdateProgressPage from '../../Pages/Operation/UpdateProgress';
+import AssignGuidePage from '../../Pages/Operation/AssignTeam';
+import PackageForm from '../../Pages/Operation/PackageForm';
+import TravelProgressUpdater from '../../Pages/Operation/TravelProgressUpdater';
+import OperationDashboardOverview from '../../Pages/Operation/OperationOverview';
+import ViewBookingStatus from '../../Pages/Operation/ViewBookingStatus';
+
 
 //Accounts Dashboard components
 import InvoicesPage from "../../Pages/Account/Invoices";
@@ -138,9 +145,13 @@ export const operationDashboardConfig = {
   basePath: '/ops',
   defaultTab: 'assign',
   tabs: {
-    // Add your operation components here when ready
-    // assign: { title: 'Assign Guide/Transport', component: AssignGuidePage, icon: Truck },
-    // progress: { title: 'Progress Updates', component: UpdateProgressPage, icon: Map }
+     overview:{title:'Overview', component:OperationDashboardOverview, icon:BarChart3},
+     assign: { title: 'Assign Guide/Transport', component: AssignGuidePage, icon: Truck },
+     package: {title:'Packages', component:PackageForm, icon:Package},
+     travelprogress :{title:'TravelProgress',component:TravelProgressUpdater,icon:LucideCompass},
+     bookingstatus:{title:'BokingStatus',component:ViewBookingStatus,icon:BarChart3},
+     
+    
   }
 };
 
