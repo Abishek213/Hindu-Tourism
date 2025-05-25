@@ -1,74 +1,69 @@
 import { useState, useEffect } from 'react';
 import { Eye, EyeOff, User, Lock, Sun, Moon } from 'lucide-react';
 import { useNavigate } from "react-router-dom";
-// import { toast } from "react-toastify";
-// import { jwtDecode } from "jwt-decode";
+import { login } from '../api/auth';
+import { toast } from "react-toastify";
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [darkMode, setDarkMode] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   // Check if user is already logged in
-  //   const token = localStorage.getItem("token");
-  //   const userRole = localStorage.getItem("userRole");
+  useEffect(() => {
+    // Check if user is already logged in
+    const token = localStorage.getItem("token");
+    const userRole = localStorage.getItem("userRole");
     
-  //   if (token && userRole) {
-  //     // Redirect based on role
-  //     redirectToDashboard(userRole);
-  //   }
-  // }, []);
+    if (token && userRole) {
+      // Redirect based on role
+      redirectToDashboard(userRole);
+    }
+  }, []);
 
-  // const redirectToDashboard = (role) => {
-  //   if (role === "Admin") {
-  //     navigate("/admindashboard");
-  //   } else if (role === "Sales Agent") {
-  //     navigate("/salesdashboard");
-  //   } else if (role === "Operation Team") {
-  //     navigate("/ops");
-  //   } else if (role === "Accounts") {
-  //     navigate("/accounts");
-  //   } else {
-  //     navigate("/salesdashboard"); // Default fallback
-  //   }
-  // };
+  const redirectToDashboard = (role) => {
+    if (role === "Admin") {
+      navigate("/admindashboard");
+    } else if (role === "Sales Agent") {
+      navigate("/salesdashboard");
+    } else if (role === "Operation Team") {
+      navigate("/ops");
+    } else if (role === "Accounts") {
+      navigate("/accounts");
+    } else {
+      navigate("/salesdashboard"); // Default fallback
+    }
+  };
 
-  // const handleLogin = () => {
-  //   // Basic validation
-  //   if (!username || !password) {
-  //     alert("Please enter both username and password");
-  //     return;
-  //   }
+  const handleLogin = async () => {
+    // Basic validation
+    if (!username || !password) {
+      toast.error("Please enter both username and password");
+      return;
+    }
 
-  //   // Mock authentication - in a real app, this would call your API
-  //   let userRole;
-  //   if (username === "admin") {
-  //     userRole = "Admin";
-  //   } else if (username === "sales") {
-  //     userRole = "Sales Agent";
-  //   } else if (username === "ops") {
-  //     userRole = "Operation Team";
-  //   } else if (username === "accounts") {
-  //     userRole = "Accounts";
-  //   } else {
-  //     // For demo purposes, default to Sales Agent
-  //     userRole = "Sales Agent";
-  //   }
+    setIsLoading(true);
+    try {
+      const { success, role } = await login({ username, password });
+      
+      if (success) {
+        toast.success("Login successful!");
+        redirectToDashboard(role);
+      }
+    } catch (error) {
+      toast.error(error.message || "Login failed");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-  //   // Store authentication data in localStorage
-  //   localStorage.setItem("token", "mock-jwt-token");
-  //   localStorage.setItem("userRole", userRole);
-  //   localStorage.setItem("userName", username);
-
-  //   console.log('Logged in as:', userRole);
-  //   // alert("Login successful!");
-
-  //   // Redirect based on role
-  //   redirectToDashboard(userRole);
-  // };
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      handleLogin();
+    }
+  };
 
   const backgroundImages = [
     '/assets/images/pashupati1.jpg.jpg',
@@ -116,7 +111,6 @@ export default function LoginPage() {
       <div className={`md:w-1/2 flex items-center justify-center ${darkMode ? 'bg-gradient-to-br from-orange-800 to-orange-900' : 'bg-gradient-to-br from-orange-500 to-orange-600'} p-8 md:p-16`}>
         <div className="text-center md:text-left">
           <div className="flex items-center justify-center mb-6 md:justify-start">
-           
             <h1 className="ml-4 text-3xl font-bold text-white md:text-4xl">
               TheHinduTourism
             </h1>
@@ -177,8 +171,10 @@ export default function LoginPage() {
                     id="username"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
+                    onKeyPress={handleKeyPress}
                     className={`pl-7 block w-full rounded border-gray-300 shadow-sm focus:border-orange-500 focus:ring focus:ring-orange-200 focus:ring-opacity-50 ${darkMode ? 'bg-gray-700 text-white' : 'bg-orange-50 text-gray-900'} text-xs py-1.5`}
                     placeholder="Enter your username"
+                    disabled={isLoading}
                   />
                 </div>
               </div>
@@ -196,14 +192,17 @@ export default function LoginPage() {
                     id="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
+                    onKeyPress={handleKeyPress}
                     className={`pl-7 block w-full rounded border-gray-300 shadow-sm focus:border-orange-500 focus:ring focus:ring-orange-200 focus:ring-opacity-50 ${darkMode ? 'bg-gray-700 text-white' : 'bg-orange-50 text-gray-900'} text-xs py-1.5`}
                     placeholder="Enter your password"
+                    disabled={isLoading}
                   />
                   <div className="absolute inset-y-0 right-0 flex items-center pr-2">
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
                       className="text-gray-400 hover:text-gray-600 focus:outline-none"
+                      disabled={isLoading}
                     >
                       {showPassword ? <EyeOff size={14} /> : <Eye size={14} />}
                     </button>
@@ -217,6 +216,7 @@ export default function LoginPage() {
                     id="remember-me"
                     type="checkbox"
                     className="w-3 h-3 text-orange-600 border-gray-300 rounded focus:ring-orange-500"
+                    disabled={isLoading}
                   />
                   <label htmlFor="remember-me" className={`ml-1 block ${darkMode ? 'text-gray-300' : 'text-gray-700'} text-xs`}>
                     Remember me
@@ -228,10 +228,11 @@ export default function LoginPage() {
               </div>
 
               <button
-                // onClick={handleLogin}
-                className="w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-medium py-1.5 px-3 rounded shadow transition duration-200 focus:outline-none focus:ring-2 focus:ring-orange-300 text-xs"
+                onClick={handleLogin}
+                disabled={isLoading}
+                className={`w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-medium py-1.5 px-3 rounded shadow transition duration-200 focus:outline-none focus:ring-2 focus:ring-orange-300 text-xs ${isLoading ? 'opacity-70 cursor-not-allowed' : ''}`}
               >
-                Log In 
+                {isLoading ? 'Logging in...' : 'Log In'}
               </button>
             </div>
 

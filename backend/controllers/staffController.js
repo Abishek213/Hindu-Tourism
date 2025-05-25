@@ -1,6 +1,7 @@
 import Staff from '../models/Staff.js';
 import Role from '../models/Role.js';
 import { validationResult } from 'express-validator';
+import bcrypt from 'bcryptjs';
 
 // (Admin only)
 // @route   POST /api/staff

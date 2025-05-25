@@ -24,6 +24,8 @@ import PackageItinerary from '../models/PackageItinerary.js';
 import CommunicationLog from '../models/CommunicationLog.js';
 import Payment from '../models/Payment.js';
 import Document from '../models/Document.js';
+import Role from '../models/Role.js';
+import Staff from '../models/Staff.js';
 
 // Configure ES modules __dirname
 const __filename = fileURLToPath(import.meta.url);
@@ -102,27 +104,25 @@ const transportsData = [
 ];
 
 export const seedAll = async () => {
-  let connection;
   try {
-    // Database connection setup
-    // connection = await mongoose.connect(
-    //   process.env.MONGODB_URI || 'mongodb://localhost:27017/travel_agency',
-    //   {
-    //     serverSelectionTimeoutMS: 5000,
-    //     maxPoolSize: 10,
-    //   }
-    // );
-    // logger.info('Database connected for full seeding');
-    await connectDB();
-    logger.info('Database connected for full seeding');
+    // Check for existing connection (replaces connectDB() call)
+    // Replace the connection check with:
+if (mongoose.connection.readyState !== 1) {
+  await connectDB();
+}
+logger.info('Using database connection for seeding');
 
+// Update the existing data check to:
+const [customerCount, roleCount, staffCount] = await Promise.all([
+  Customer.countDocuments(),
+  Role.countDocuments(),
+  Staff.countDocuments()
+]);
 
-    // Check for existing data
-    const customerCount = await Customer.countDocuments();
-    if (customerCount > 0) {
-      logger.info('Database already populated. Seeding skipped.');
-      return;
-    }
+if (customerCount > 0 || roleCount > 0 || staffCount > 0) {
+  logger.info('Database already contains data. Seeding skipped.');
+  return;
+}
 
     // Core seeding sequence
     const roles = await seedRoles();
@@ -368,7 +368,7 @@ export const seedAll = async () => {
     logger.error('Seeding failed:', {
       error: error.message,
       stack: error.stack,
-      connectionStatus: connection ? 'Connected' : 'Connection failed'
+      connectionStatus: mongoose.connection.readyState === 1 ? 'Connected' : 'Disconnected'
     });
     throw error;
   }
