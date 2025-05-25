@@ -1,8 +1,10 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import MainLayout from './Components/layout/Mainlayout';
 import Login from './Pages/Login';
 import { BookingProvider } from './context/BookingContext';
+
+import ProtectedRoute from './Components/protected/protectedRoute'; // Import the new ProtectedRoute component
 
 import {
   salesDashboardConfig,
@@ -10,20 +12,6 @@ import {
   operationDashboardConfig,
   accountDashboardConfig,
 } from './Components/Dashboard/DashboardConfig';
-
-// Protected Route Component
-const ProtectedRoute = ({ children }) => {
-  const navigate = useNavigate();
-  const token = localStorage.getItem("token");
-  
-  React.useEffect(() => {
-    if (!token) {
-      navigate("/login", { replace: true });
-    }
-  }, [token, navigate]);
-
-  return token ? children : null;
-};
 
 // Helper to render routes including nested children if any
 const renderDashboardRoutes = (config) => {
@@ -69,7 +57,6 @@ const App = () => {
             </ProtectedRoute>
           }
         >
-          {/* Redirect base salesdashboard to defaultTab */}
           <Route
             index
             element={<Navigate to={salesDashboardConfig.defaultTab} replace />}
