@@ -51,15 +51,7 @@ const staffSeedData = [
 ];
 
 export const seedStaff = async () => {
-  let connection;
   try {
-    // Connect to database
-    connection = await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/travel_agency', {
-      serverSelectionTimeoutMS: 5000,
-      maxPoolSize: 10,
-    });
-    logger.debug('Database connected for staff seeding');
-
     // Clear existing staff entries
     const deleteResult = await Staff.deleteMany({});
     logger.debug(`Cleared ${deleteResult.deletedCount} existing staff records`);

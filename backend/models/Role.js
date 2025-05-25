@@ -5,7 +5,7 @@ const roleSchema = new mongoose.Schema({
     type: String,
     required: true,
     unique: true,
-    enum: ['Admin', 'Sales Agent', 'Operation Team', 'Accountant', 'Customer Portal']
+    enum: ['Admin', 'Sales Agent', 'Operation Team', 'Accountant']
   },
   manage_users_access: {
     type: Boolean,
