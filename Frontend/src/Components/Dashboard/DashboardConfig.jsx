@@ -143,7 +143,7 @@ export const adminDashboardConfig = {
 
 export const operationDashboardConfig = {
   basePath: '/ops',
-  defaultTab: 'assign',
+  defaultTab: 'overview',
   tabs: {
      overview:{title:'Overview', component:OperationDashboardOverview, icon:BarChart3},
      assign: { title: 'Assign Guide/Transport', component: AssignGuidePage, icon: Truck },
