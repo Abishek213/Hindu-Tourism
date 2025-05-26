@@ -101,22 +101,22 @@ const App = () => {
         </Route>
 
         {/* Accounts Dashboard */}
-        <Route
-          path="/account/*"
-          element={
-            <ProtectedRoute>
-              <BookingProvider>
-                <MainLayout />
-              </BookingProvider>
-            </ProtectedRoute>
-          }
-        >
-          <Route
-            index
-            element={<Navigate to={accountDashboardConfig.defaultTab} replace />}
-          />
-          {renderDashboardRoutes(accountDashboardConfig)}
-        </Route>
+       <Route
+  path="/accounts/*"
+  element={
+    <ProtectedRoute>
+      <BookingProvider>
+        <MainLayout />
+      </BookingProvider>
+    </ProtectedRoute>
+  }
+>
+  <Route
+    index
+    element={<Navigate to={accountDashboardConfig.defaultTab} replace />}
+  />
+  {renderDashboardRoutes(accountDashboardConfig)}
+</Route>
 
         {/* Redirect any unknown routes to login */}
         <Route path="/" element={<Navigate to="/login" replace />} />

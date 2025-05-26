@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export default function AssignTeamForm() {
+export default function ManageTeamForm(){ 
   const [showGuideForm, setShowGuideForm] = useState(false);
   const [showTransportForm, setShowTransportForm] = useState(false);
 
