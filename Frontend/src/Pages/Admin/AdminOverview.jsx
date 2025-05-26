@@ -6,19 +6,15 @@ import {
   FileText,
   Banknote,
   ClipboardList,
+  Truck,
+  Folder,
+  BusIcon
 } from 'lucide-react';
+
+import DashboardSection from '../../Components/Dashboard/DashboardSection';
 
 const AdminOverview = () => {
   const [activeTab, setActiveTab] = useState('reports');
-
-  const stats = {
-    totalReports: 12,
-    bookings: 34,
-    leads: 50,
-    packages: 8,
-    payments: 75,
-    staff: 6,
-  };
 
   const tabs = [
     { id: 'reports', label: 'Reports', icon: BarChart3 },
@@ -27,40 +23,68 @@ const AdminOverview = () => {
     { id: 'packages', label: 'Packages', icon: FileText },
     { id: 'payments', label: 'Payments', icon: Banknote },
     { id: 'staff', label: 'Staff', icon: ClipboardList },
+    { id: 'documents', label: 'Documents', icon: ClipboardList },
+    { id: 'tripschedule', label: 'TripSchedule', icon: ClipboardList },
+    { id: 'travel', label: 'TravelProgress', icon: ClipboardList },
+    { id: 'guideandtransport', label: 'Guide/Transport', icon: Users },
   ];
 
-  const statCards = [
-    { label: 'Reports', value: stats.totalReports, icon: <BarChart3 size={20} className="text-orange-500" /> },
-    { label: 'Bookings', value: stats.bookings, icon: <CalendarCheck2 size={20} className="text-blue-500" /> },
-    { label: 'Leads', value: stats.leads, icon: <Users size={20} className="text-green-500" /> },
-    { label: 'Packages', value: stats.packages, icon: <FileText size={20} className="text-yellow-500" /> },
-    { label: 'Payments', value: stats.payments, icon: <Banknote size={20} className="text-pink-500" /> },
-    { label: 'Staff', value: stats.staff, icon: <ClipboardList size={20} className="text-purple-500" /> },
+  // Sample stats for each section
+   const adminStats= [
+
+
+    { label: 'Booking', value: 22, icon: <CalendarCheck2 size={20} className="text-yellow-500" /> },
+    { label: 'Guide/Transport', value: 11, icon: <Users size={20} className="text-purple-500" /> },
+    { label: 'Leads', value: 56, icon: <Users size={20} className="text-green-500" /> },
+    { label: 'Packages', value: 34, icon: <FileText size={20} className="text-orange-500" /> },
+    { label: 'Payments', value: 45, icon: <Banknote size={20} className="text-blue-500" /> },
+    { label: 'Report', value: 11, icon: <ClipboardList size={20} className="text-green-500" /> },
+    { label: 'Staff Management', value: 22, icon: <Users size={20} className="text-yellow-500" /> },
+
+  ];
+
+  const salesStats = [
+   { label: 'Booking', value: 22, icon: <CalendarCheck2 size={20} className="text-yellow-500" /> },
+    { label: 'Document', value: 34, icon: <FileText size={20} className="text-pink-500" /> },
+    { label: 'Leads', value: 56, icon: <Users size={20} className="text-green-500" /> },
+    { label: 'Report', value: 11, icon: <ClipboardList size={20} className="text-green-500" /> },
+    { label: 'Trip Schedule', value: 11, icon: <Truck size={20} className="text-purple-500" /> },
+  ];
+
+  const accountStats = [
+    { label: 'Booking', value: 22, icon: <CalendarCheck2 size={20} className="text-yellow-500" /> },
+    { label: 'Document', value: 34, icon: <FileText size={20} className="text-pink-500" /> },
+    { label: 'Guide/Transport', value: 11, icon: <Users size={20} className="text-purple-500" /> },
+    { label: 'Leads', value: 56, icon: <Users size={20} className="text-green-500" /> },
+    { label: 'Packages', value: 34, icon: <FileText size={20} className="text-orange-500" /> },
+    { label: 'Payments', value: 45, icon: <Banknote size={20} className="text-blue-500" /> },
+    { label: 'Report', value: 11, icon: <ClipboardList size={20} className="text-green-500" /> },
+    { label: 'Staff Management', value: 22, icon: <Users size={20} className="text-yellow-500" /> },
+    { label: 'Travel', value: 34, icon: <BusIcon size={20} className="text-pink-500" /> },
+    { label: 'Trip Schedule', value: 11, icon: <Truck size={20} className="text-purple-500" /> },
+  
+  ];
+
+  const operationStats = [
+     { label: 'Booking', value: 22, icon: <CalendarCheck2 size={20} className="text-yellow-500" /> },
+    { label: 'Guide/Transport', value: 11, icon: <Users size={20} className="text-purple-500" /> },
+    { label: 'Packages', value: 34, icon: <FileText size={20} className="text-orange-500" /> },
+    { label: 'Travel', value: 34, icon: <BusIcon size={20} className="text-pink-500" /> },
+
   ];
 
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
-      {/* Header */}
+      {/* Admin Dashboard Header */}
       <header className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-800">Admin Dashboard</h1>
-        <p className="text-sm text-gray-600 mt-1">Overview & quick actions</p>
+        <h1 className=" flex justify-center text-2xl font-bold text-gray-800">Admin Dashboard</h1>
       </header>
 
-      {/* Stat Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-8">
-        {statCards.map((card, index) => (
-          <div
-            key={index}
-            className="flex items-center justify-between p-4 bg-white rounded-xl shadow border border-gray-100"
-          >
-            <div className="flex flex-col">
-              <span className="text-sm text-gray-500">{card.label}</span>
-              <span className="text-xl font-semibold text-gray-800">{card.value}</span>
-            </div>
-            <div className="bg-gray-100 p-2 rounded-lg">{card.icon}</div>
-          </div>
-        ))}
-      </div>
+      {/* Dashboard Sections */}
+      <DashboardSection title=" Overview" stats={adminStats} />
+      <DashboardSection title="Sales Overview" stats={salesStats} />
+      <DashboardSection title="Account Overview" stats={accountStats} />
+      <DashboardSection title="Operation Overview" stats={operationStats} />
 
       {/* Tabs */}
       <div className="mb-6 border-b border-gray-200">
@@ -85,40 +109,31 @@ const AdminOverview = () => {
       {/* Tab Content */}
       <div className="bg-white p-6 rounded-xl shadow border border-gray-100">
         {activeTab === 'reports' && (
-          <div>
-            <h3 className="text-lg font-semibold text-gray-800 mb-2">Reports Overview</h3>
-            <p className="text-gray-600 text-sm">View and generate performance or financial reports.</p>
-          </div>
+          <p className="text-sm text-gray-600">View and generate performance or financial reports.</p>
         )}
         {activeTab === 'bookings' && (
-          <div>
-            <h3 className="text-lg font-semibold text-gray-800 mb-2">Bookings Overview</h3>
-            <p className="text-gray-600 text-sm">Manage and review all customer bookings.</p>
-          </div>
+          <p className="text-sm text-gray-600">Manage and review all customer bookings.</p>
         )}
         {activeTab === 'leads' && (
-          <div>
-            <h3 className="text-lg font-semibold text-gray-800 mb-2">Leads Overview</h3>
-            <p className="text-gray-600 text-sm">Track and handle sales leads for better conversion.</p>
-          </div>
+          <p className="text-sm text-gray-600">Track and handle sales leads for better conversion.</p>
         )}
         {activeTab === 'packages' && (
-          <div>
-            <h3 className="text-lg font-semibold text-gray-800 mb-2">Packages Management</h3>
-            <p className="text-gray-600 text-sm">Update and maintain travel packages.</p>
-          </div>
+          <p className="text-sm text-gray-600">Update and maintain travel packages.</p>
         )}
         {activeTab === 'payments' && (
-          <div>
-            <h3 className="text-lg font-semibold text-gray-800 mb-2">Payments Overview</h3>
-            <p className="text-gray-600 text-sm">Monitor incoming and outgoing payments.</p>
-          </div>
+          <p className="text-sm text-gray-600">Monitor incoming and outgoing payments.</p>
         )}
         {activeTab === 'staff' && (
-          <div>
-            <h3 className="text-lg font-semibold text-gray-800 mb-2">Staff Management</h3>
-            <p className="text-gray-600 text-sm">View and manage staff records and assignments.</p>
-          </div>
+          <p className="text-sm text-gray-600">View and manage staff records and assignments.</p>
+        )}
+        {activeTab === 'document' && (
+          <p className="text-sm text-gray-600">Manage document record.</p>
+        )}
+        {activeTab === 'travel' && (
+          <p className="text-sm text-gray-600">Manage travel and tripschedule.</p>
+        )}
+        {activeTab === 'guideandtransport' && (
+          <p className="text-sm text-gray-600">Manage guide and transport assignments.</p>
         )}
       </div>
     </div>
@@ -126,3 +141,10 @@ const AdminOverview = () => {
 };
 
 export default AdminOverview;
+
+
+
+
+
+
+
