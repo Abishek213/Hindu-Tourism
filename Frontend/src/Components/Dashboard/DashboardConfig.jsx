@@ -1,17 +1,17 @@
-import { 
-  BarChart3, 
-  Users, 
+import {
+  BarChart3,
+  Users,
   Bus,
-  Plus, 
-  List, 
-  Truck, 
-  Map, 
+  Plus,
+  List,
+  Truck,
+  Map,
   PlaneTakeoff,
-  Banknote, 
+  Banknote,
   BanknoteIcon,
-  FileText, 
-  ClipboardList, 
-  CalendarCheck2, 
+  FileText,
+  ClipboardList,
+  CalendarCheck2,
   BadgeCheck,
   ReceiptPoundSterling,
   ListChecks,
@@ -21,13 +21,17 @@ import {
   LucideCompass
 } from 'lucide-react';
 
+
 // Admin Dashboard Components
+import AdminOverview from '../../Pages/Admin/AdminOverview';
 import AdminBooking from '../../Pages/Admin/AdminBooking';
 import AdminLead from '../../Pages/Admin/AdminLead';
 import AdminPackages from '../../Pages/Admin/AdminPackages';
 import AdminPayment from '../../Pages/Admin/AdminPayment';
 import AdminReports from '../../Pages/Admin/AdminReports';
 import AdminStaffManagement from '../../Pages/Admin/AdminStaffManagement';
+import GuideAndTransportManagement from '../../Pages/Admin/GuideAndTransportManagement';
+
 
 // Sales Dashboard Components
 import SalesOverview from '../../Pages/Sales/OverView';
@@ -38,12 +42,15 @@ import BookingStatusViewer from '../../Pages/Sales/BookingStatusViewer';
 import DocumentViewer from '../../Pages/Sales/DocumentViewer';
 import TripSchedule from '../../Pages/Sales/TripSchedule';
 
+
 // Operation Dashboard Components
 import AssignGuidePage from '../../Pages/Operation/AssignTeam';
 import PackageForm from '../../Pages/Operation/PackageForm';
 import TravelProgressUpdater from '../../Pages/Operation/TravelProgressUpdater';
 import OperationDashboardOverview from '../../Pages/Operation/OperationOverview';
 import ViewBookingStatus from '../../Pages/Operation/ViewBookingStatus';
+
+
 
 
 //Accounts Dashboard components
@@ -56,25 +63,28 @@ import BookingStats from '../../Pages/Account/BookingStats';
 import DocumentView from '../../Pages/Account/DocumentsView';
 import TripScheduleViewer from '../../Pages/Account/Trip';
 
+
 // Define wrapped components for the different tabs:
 const AddBooking = () => <BookingsPage defaultTab="add" />;
 const AllBooking = () => <BookingsPage defaultTab="all" />;
+
 
 // Define wrapped components for Leads
 const AddLead = () => <LeadsPage defaultTab="add" />;
 const AllLeads = () => <LeadsPage defaultTab="all" />;
 
+
 export const salesDashboardConfig = {
   basePath: '/salesdashboard',
   defaultTab: 'overview',
   tabs: {
-    overview: { 
+    overview: {
       title: 'Overview',    
-      component: SalesOverview, 
+      component: SalesOverview,
       icon: BarChart3 // FIXED: Added missing icon
     },
-    leads: { 
-      title: 'Leads', 
+    leads: {
+      title: 'Leads',
       icon: Users,
       children: {
         add: {
@@ -105,9 +115,9 @@ export const salesDashboardConfig = {
         }
       }
     },
-    GenerateReports: { 
-      title: 'Report', 
-      component: GenerateReport, 
+    GenerateReports: {
+      title: 'Report',
+      component: GenerateReport,
       icon: BarChart3
     },
     BookingStatusViewer: {
@@ -128,22 +138,28 @@ export const salesDashboardConfig = {
   }
 };
 
+
 export const adminDashboardConfig = {
   basePath: '/admindashboard',
   defaultTab: 'reports',
   tabs: {
+    overview:{title:'Overview', component:AdminOverview, icon:BarChart3},
     reports: { title: 'Reports', component: AdminReports, icon: BarChart3 },
     booking: { title: 'Booking', component: AdminBooking, icon: CalendarCheck2 },
     lead: { title: 'Leads', component: AdminLead, icon: Users },
     packages: { title: 'Packages', component: AdminPackages, icon: FileText },
     payment: { title: 'Payments', component: AdminPayment, icon: Banknote },
     staffmanagement: { title: 'Staff Management', component: AdminStaffManagement, icon: Users },
+    guideandtransportmanagement: { title: 'Guide/Transport Management', component: GuideAndTransportManagement, icon: Users },
+
+
   },
 };
 
+
 export const operationDashboardConfig = {
   basePath: '/ops',
-  defaultTab: 'overview',
+  defaultTab: 'assign',
   tabs: {
      overview:{title:'Overview', component:OperationDashboardOverview, icon:BarChart3},
      assign: { title: 'Assign Guide/Transport', component: AssignGuidePage, icon: Truck },
@@ -151,9 +167,10 @@ export const operationDashboardConfig = {
      travelprogress :{title:'TravelProgress',component:TravelProgressUpdater,icon:LucideCompass},
      bookingstatus:{title:'BokingStatus',component:ViewBookingStatus,icon:BarChart3},
      
-    
+   
   }
 };
+
 
 export const accountDashboardConfig = {
   basePath: '/account',
