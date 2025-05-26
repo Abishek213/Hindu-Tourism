@@ -3,7 +3,7 @@ import { UserPlus, Edit, Trash2, X, Bus } from 'lucide-react';
 import api from '../../api/auth'; // Adjust API import path
 import { toast } from 'react-toastify';
 
-export default function GuideAndTransportManagement() {
+export default function AdminGuideAndTransportManagement() {
   const [guides, setGuides] = useState([]);
   const [transports, setTransports] = useState([]);
 
