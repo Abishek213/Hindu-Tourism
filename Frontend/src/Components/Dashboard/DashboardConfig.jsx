@@ -82,6 +82,20 @@ export const salesDashboardConfig = {
   tabs: {
 
     overview:{title:'Overview', component:SalesOverview, icon:BarChart3},
+     leads: {title: 'Leads',icon: Users,
+        children: {
+          add: {
+            title: 'Add Lead',
+            path: 'add',
+            component: AddLead,
+          },
+          all: {
+            title: 'All Leads',
+            path: 'all',
+            component: AllLeads,
+          }
+        }
+      },  
      bookings: {
       title: 'Bookings',
       icon: CalendarCheck2,
@@ -99,21 +113,7 @@ export const salesDashboardConfig = {
       }
     },
     bookingStats: { title: 'Boking Status', component: BookingStats, icon: ClipboardList },
-    document:{title : 'Document', component: DocumentViewer, icon :FileText},
-    leads: {title: 'Leads',icon: Users,
-        children: {
-          add: {
-            title: 'Add Lead',
-            path: 'add',
-            component: AddLead,
-          },
-          all: {
-            title: 'All Leads',
-            path: 'all',
-            component: AllLeads,
-          }
-        }
-      },    
+    document:{title : 'Document', component: DocumentViewer, icon :FileText},  
     reports: { title: 'Reports', component: AdminReports, icon: ClipboardList },
     travelschedule: { title: 'Travel Schedule', component: TripSchedule, icon: Truck },
   }
@@ -125,13 +125,13 @@ export const adminDashboardConfig = {
   defaultTab: 'reports',
   tabs: {
     overview:{title:'Overview', component:AdminOverview, icon:BarChart3},
+    lead: { title: 'Leads', component: AdminLead, icon: Users },
     booking: { title: 'Booking', component: AdminBooking, icon: CalendarCheck2 },
     guideandtransportmanagement: { title: 'Guide/Transport Management', component: AdminGuideAndTransportManagement, icon: Users },
-    lead: { title: 'Leads', component: AdminLead, icon: Users },
     packages: { title: 'Packages', component: AdminPackages, icon: FileText },
     payment: { title: 'Payments', component: AdminPayment, icon: Banknote },
-   reports: { title: 'Reports', component: AdminReports, icon: ClipboardList },
-   staffmanagement: { title: 'Staff Management', component: AdminStaffManagement, icon: Users },
+    reports: { title: 'Reports', component: AdminReports, icon: ClipboardList },
+    staffmanagement: { title: 'Staff Management', component: AdminStaffManagement, icon: Users },
   },
 };
 
@@ -154,13 +154,13 @@ export const accountDashboardConfig = {
   basePath: '/account',
   defaultTab: 'AccountOverview',
   tabs: {
-       Overview: { title: 'Overview', component: AccountOverview, icon: BarChart3 },
-    BookingStats: { title: 'BokingStatus', component: BookingStats, icon: ClipboardList },
-    DocumentView: { title: 'Document', component: DocumentView, icon: FileText }, // FIXED: changed from File to FileText
-    FinancialReports: { title: 'Financial Reports', component: FinancialReports, icon: ReceiptPoundSterling },
+    Overview: { title: 'Overview', component: AccountOverview, icon: BarChart3 },
+    bookingStats: { title: 'BokingStatus', component: BookingStats, icon: ClipboardList },
+    documentView: { title: 'Document', component: DocumentView, icon: FileText }, // FIXED: changed from File to FileText
+    financialReports: { title: 'Financial Reports', component: FinancialReports, icon: ReceiptPoundSterling },
     invoices: { title: 'Invoices', component: InvoicesPage, icon: FileText },
-    ManagePayments: { title: 'Payments', component: ManagePayments, icon: Banknote },
-    ProcessRefunds: { title: 'Refunds', component: ProcessRefunds, icon: BanknoteIcon }, // FIXED: changed from BanknoteArrowDown to BanknoteIcon
-    Trip: { title: 'TripSchedule', component: TripScheduleViewer, icon: PlaneTakeoff }, // FIXED: changed component from TripSchedule to TripScheduleViewer
+    managePayments: { title: 'Payments', component: ManagePayments, icon: Banknote },
+    processRefunds: { title: 'Refunds', component: ProcessRefunds, icon: BanknoteIcon }, // FIXED: changed from BanknoteArrowDown to BanknoteIcon
+    trip: { title: 'TripSchedule', component: TripScheduleViewer, icon: PlaneTakeoff }, // FIXED: changed component from TripSchedule to TripScheduleViewer
   }
 };
