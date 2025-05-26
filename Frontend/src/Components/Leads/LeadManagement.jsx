@@ -37,8 +37,8 @@ export default function LeadManagementForm({ form, handleChange, showFollowUpFie
 
   return (
     <div className="space-y-4 lg:col-span-1">
-      <h3 className="font-semibold text-gray-700 flex items-center gap-2">
-        <Tag className="h-5 w-5 text-orange-500" />
+      <h3 className="flex items-center gap-2 font-semibold text-gray-700">
+        <Tag className="w-5 h-5 text-orange-500" />
         Lead Management
       </h3>
       
@@ -52,7 +52,7 @@ export default function LeadManagementForm({ form, handleChange, showFollowUpFie
           required
           value={form.source}
           onChange={handleChange}
-          className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500"
+          className="block w-full p-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500"
         >
           {sources.map((source) => (
             <option key={source.value} value={source.value}>
@@ -72,7 +72,7 @@ export default function LeadManagementForm({ form, handleChange, showFollowUpFie
           required
           value={form.assignedTo}
           onChange={handleChange}
-          className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500"
+          className="block w-full p-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500"
         >
           <option value="">Select Staff</option>
           {staff.map((person) => (
@@ -93,7 +93,7 @@ export default function LeadManagementForm({ form, handleChange, showFollowUpFie
           required
           value={form.status}
           onChange={handleChange}
-          className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500"
+          className="block w-full p-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500"
         >
           {statusOptions.map((status) => (
             <option key={status.value} value={status.value}>
@@ -106,7 +106,7 @@ export default function LeadManagementForm({ form, handleChange, showFollowUpFie
       {showFollowUpFields && (
         <div>
           <label htmlFor="followUpDate" className="block text-sm font-medium text-gray-700">
-            Follow-up Date <Bell className="inline h-4 w-4 text-gray-500" />
+            Follow-up Date <Bell className="inline w-4 h-4 text-gray-500" />
           </label>
           <input
             type="date"
@@ -114,7 +114,7 @@ export default function LeadManagementForm({ form, handleChange, showFollowUpFie
             name="followUpDate"
             value={form.followUpDate}
             onChange={handleChange}
-            className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500"
+            className="block w-full p-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500"
           />
         </div>
       )}
