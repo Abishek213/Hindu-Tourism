@@ -8,7 +8,8 @@ import {
   ClipboardList,
   Truck,
   Folder,
-  BusIcon
+  BusIcon,
+  ReceiptIndianRupee
 } from 'lucide-react';
 
 import DashboardSection from '../../Components/Dashboard/DashboardSection';
@@ -17,25 +18,25 @@ const AdminOverview = () => {
   const [activeTab, setActiveTab] = useState('reports');
 
   const tabs = [
-    { id: 'reports', label: 'Reports', icon: BarChart3 },
-    { id: 'bookings', label: 'Bookings', icon: CalendarCheck2 },
     { id: 'leads', label: 'Leads', icon: Users },
+    { id: 'bookings', label: 'Bookings', icon: CalendarCheck2 },
+    { id: 'documents', label: 'Documents', icon: ClipboardList },
+    { id: 'guideandtransport', label: 'Guide/Transport', icon: Users },
     { id: 'packages', label: 'Packages', icon: FileText },
     { id: 'payments', label: 'Payments', icon: Banknote },
+    { id: 'reports', label: 'Reports', icon: BarChart3 },
     { id: 'staff', label: 'Staff', icon: ClipboardList },
-    { id: 'documents', label: 'Documents', icon: ClipboardList },
-    { id: 'tripschedule', label: 'TripSchedule', icon: ClipboardList },
     { id: 'travel', label: 'TravelProgress', icon: ClipboardList },
-    { id: 'guideandtransport', label: 'Guide/Transport', icon: Users },
+    { id: 'tripschedule', label: 'TripSchedule', icon: ClipboardList },
+
   ];
 
   // Sample stats for each section
    const adminStats= [
 
-
+    { label: 'Leads', value: 56, icon: <Users size={20} className="text-green-500" /> },
     { label: 'Booking', value: 22, icon: <CalendarCheck2 size={20} className="text-yellow-500" /> },
     { label: 'Guide/Transport', value: 11, icon: <Users size={20} className="text-purple-500" /> },
-    { label: 'Leads', value: 56, icon: <Users size={20} className="text-green-500" /> },
     { label: 'Packages', value: 34, icon: <FileText size={20} className="text-orange-500" /> },
     { label: 'Payments', value: 45, icon: <Banknote size={20} className="text-blue-500" /> },
     { label: 'Report', value: 11, icon: <ClipboardList size={20} className="text-green-500" /> },
@@ -44,9 +45,9 @@ const AdminOverview = () => {
   ];
 
   const salesStats = [
+    { label: 'Leads', value: 56, icon: <Users size={20} className="text-green-500" /> },
    { label: 'Booking', value: 22, icon: <CalendarCheck2 size={20} className="text-yellow-500" /> },
     { label: 'Document', value: 34, icon: <FileText size={20} className="text-pink-500" /> },
-    { label: 'Leads', value: 56, icon: <Users size={20} className="text-green-500" /> },
     { label: 'Report', value: 11, icon: <ClipboardList size={20} className="text-green-500" /> },
     { label: 'Trip Schedule', value: 11, icon: <Truck size={20} className="text-purple-500" /> },
   ];
@@ -54,13 +55,10 @@ const AdminOverview = () => {
   const accountStats = [
     { label: 'Booking', value: 22, icon: <CalendarCheck2 size={20} className="text-yellow-500" /> },
     { label: 'Document', value: 34, icon: <FileText size={20} className="text-pink-500" /> },
-    { label: 'Guide/Transport', value: 11, icon: <Users size={20} className="text-purple-500" /> },
-    { label: 'Leads', value: 56, icon: <Users size={20} className="text-green-500" /> },
-    { label: 'Packages', value: 34, icon: <FileText size={20} className="text-orange-500" /> },
-    { label: 'Payments', value: 45, icon: <Banknote size={20} className="text-blue-500" /> },
-    { label: 'Report', value: 11, icon: <ClipboardList size={20} className="text-green-500" /> },
-    { label: 'Staff Management', value: 22, icon: <Users size={20} className="text-yellow-500" /> },
-    { label: 'Travel', value: 34, icon: <BusIcon size={20} className="text-pink-500" /> },
+    { label: 'Finance Report', value: 34, icon: <ReceiptIndianRupee size={20} className="text-orange-500" /> },
+    { label: 'Invoices', value: 45, icon: <FileText size={20} className="text-blue-500" /> },
+    { label: 'Payments', value: 11, icon: <Banknote size={20} className="text-green-500" /> },
+    { label: 'Refunds', value: 34, icon: <Banknote size={20} className="text-pink-500" /> },
     { label: 'Trip Schedule', value: 11, icon: <Truck size={20} className="text-purple-500" /> },
   
   ];

@@ -20,7 +20,8 @@ import {
   Compass,
   LucideCompass,
   BusIcon,
-  BusFrontIcon
+  BusFrontIcon,
+  ReceiptIndianRupee
 } from 'lucide-react';
 
 
@@ -138,7 +139,7 @@ export const adminDashboardConfig = {
 
 export const operationDashboardConfig = {
   basePath: '/ops',
-  defaultTab: 'assign',
+  defaultTab: 'overview',
   tabs: {
     overview:{title:'Overview', component:OperationDashboardOverview, icon:BarChart3},
     bookingstatus:{title:'BokingStatus', component: ViewBookingStatus, icon:ClipboardList},
@@ -157,7 +158,7 @@ export const accountDashboardConfig = {
     Overview: { title: 'Overview', component: AccountOverview, icon: BarChart3 },
     bookingStats: { title: 'BokingStatus', component: BookingStats, icon: ClipboardList },
     documentView: { title: 'Document', component: DocumentView, icon: FileText }, // FIXED: changed from File to FileText
-    financialReports: { title: 'Financial Reports', component: FinancialReports, icon: ReceiptPoundSterling },
+    financialReports: { title: 'Financial Reports', component: FinancialReports, icon: ReceiptIndianRupee },
     invoices: { title: 'Invoices', component: InvoicesPage, icon: FileText },
     managePayments: { title: 'Payments', component: ManagePayments, icon: Banknote },
     processRefunds: { title: 'Refunds', component: ProcessRefunds, icon: BanknoteIcon }, // FIXED: changed from BanknoteArrowDown to BanknoteIcon
