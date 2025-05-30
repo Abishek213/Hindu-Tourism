@@ -1,60 +1,226 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { format } from 'date-fns';
+import api from '../../api/auth';
+import { toast } from 'react-toastify';
 
 const AdminBooking = () => {
   const [bookings, setBookings] = useState([]);
+  const [leads, setLeads] = useState([]);
+  const [packages, setPackages] = useState([]);
+  const [guides, setGuides] = useState([]);
+  const [transports, setTransports] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
-    leadName: '',
-    package: '',
-    travelers: 1,
-    travelDate: '',
-    guide: '',
-    transportTeam: '',
-    kycDocs: [],
-    optionalServices: {
+    lead_id: '',
+    package_id: '',
+    num_travelers: 1,
+    travel_start_date: '',
+    travel_end_date: '',
+    guide_id: '',
+    transport_id: '',
+    special_requirements: '',
+    services: {
       helicopter: false,
-      hotelUpgrade: false,
-      nurseSupport: false,
+      hotel_upgrade: false,
+      nurse_support: false,
     },
   });
 
-  const handleFileUpload = (e) => {
-    setFormData({
-      ...formData,
-      kycDocs: Array.from(e.target.files),
-    });
-  };
+  // Fetch all necessary data on component mount
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true);
+      try {
+        // Fetch converted leads (potential customers)
+        const leadsResponse = await api.get('/lead?status=converted');
+        setLeads(leadsResponse.data);
 
-  const handleCheckboxChange = (field) => {
-    setFormData((prev) => ({
-      ...prev,
-      optionalServices: {
-        ...prev.optionalServices,
-        [field]: !prev.optionalServices[field],
-      },
-    }));
-  };
+        // Fetch active packages
+        const packagesResponse = await api.get('/package?is_active=true');
+        setPackages(packagesResponse.data);
 
-  const handleSubmit = () => {
-    const newBooking = {
-      id: `BK${bookings.length + 1}`.padStart(5, '0'),
-      ...formData,
+        // Fetch active guides
+        const guidesResponse = await api.get('/guide?is_active=true');
+        setGuides(guidesResponse.data);
+
+        // Fetch active transports
+        const transportsResponse = await api.get('/transport?is_active=true');
+        setTransports(transportsResponse.data);
+
+        // Fetch all bookings
+        const bookingsResponse = await api.get('/booking');
+        setBookings(bookingsResponse.data);
+      } catch (error) {
+        toast.error('Failed to fetch data');
+        console.error('Error fetching data:', error);
+      } finally {
+        setIsLoading(false);
+      }
     };
-    setBookings([...bookings, newBooking]);
+
+    fetchData();
+  }, []);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
     setFormData({
-      leadName: '',
-      package: '',
-      travelers: 1,
-      travelDate: '',
-      guide: '',
-      transportTeam: '',
-      kycDocs: [],
-      optionalServices: {
-        helicopter: false,
-        hotelUpgrade: false,
-        nurseSupport: false,
+      ...formData,
+      [name]: value,
+    });
+  };
+
+  const handleServiceChange = (service) => {
+    setFormData({
+      ...formData,
+      services: {
+        ...formData.services,
+        [service]: !formData.services[service],
       },
     });
+  };
+
+  const handleDateChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+
+    // If package is selected and start date changes, calculate end date
+    if (name === 'travel_start_date' && formData.package_id) {
+      const selectedPackage = packages.find(pkg => pkg._id === formData.package_id);
+      if (selectedPackage) {
+        const startDate = new Date(value);
+        const endDate = new Date(startDate);
+        endDate.setDate(startDate.getDate() + selectedPackage.duration_days);
+        
+        setFormData(prev => ({
+          ...prev,
+          travel_end_date: endDate.toISOString().split('T')[0],
+        }));
+      }
+    }
+
+    // If package changes, calculate end date based on start date
+    if (name === 'package_id' && formData.travel_start_date) {
+      const selectedPackage = packages.find(pkg => pkg._id === value);
+      if (selectedPackage) {
+        const startDate = new Date(formData.travel_start_date);
+        const endDate = new Date(startDate);
+        endDate.setDate(startDate.getDate() + selectedPackage.duration_days);
+        
+        setFormData(prev => ({
+          ...prev,
+          travel_end_date: endDate.toISOString().split('T')[0],
+        }));
+      }
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+
+    try {
+      // Prepare services array for backend
+      const selectedServices = Object.entries(formData.services)
+        .filter(([_, value]) => value)
+        .map(([key]) => ({
+          service_id: key,
+          price: 0 // You might want to set actual prices here
+        }));
+
+      // Create booking payload
+      const bookingData = {
+        ...formData,
+        services: selectedServices,
+        customer_id: leads.find(lead => lead._id === formData.lead_id)?.customer_id?._id
+      };
+
+      // Send to backend
+      const response = await api.post('/booking', bookingData);
+      
+      // Update local state
+      setBookings([...bookings, response.data.booking]);
+      
+      // Reset form
+      setFormData({
+        lead_id: '',
+        package_id: '',
+        num_travelers: 1,
+        travel_start_date: '',
+        travel_end_date: '',
+        guide_id: '',
+        transport_id: '',
+        special_requirements: '',
+        services: {
+          helicopter: false,
+          hotel_upgrade: false,
+          nurse_support: false,
+        },
+      });
+
+      toast.success('Booking created successfully!');
+    } catch (error) {
+      toast.error(error.response?.data?.error || 'Failed to create booking');
+      console.error('Booking creation error:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleStatusChange = async (bookingId, newStatus) => {
+    try {
+      await api.put(`/booking/${bookingId}/status`, { status: newStatus });
+      setBookings(bookings.map(booking => 
+        booking._id === bookingId ? { ...booking, status: newStatus } : booking
+      ));
+      toast.success('Booking status updated');
+    } catch (error) {
+      toast.error('Failed to update booking status');
+    }
+  };
+
+  const handleAssignGuide = async (bookingId, guideId) => {
+    try {
+      await api.put(`/booking/${bookingId}/assignguide`, { guide_id: guideId });
+      setBookings(bookings.map(booking => 
+        booking._id === bookingId ? { ...booking, guide_id: guideId } : booking
+      ));
+      toast.success('Guide assigned successfully');
+    } catch (error) {
+      toast.error('Failed to assign guide');
+    }
+  };
+
+  const handleAssignTransport = async (bookingId, transportId) => {
+    try {
+      await api.put(`/booking/${bookingId}/assigntransport`, { transport_id: transportId });
+      setBookings(bookings.map(booking => 
+        booking._id === bookingId ? { ...booking, transport_id: transportId } : booking
+      ));
+      toast.success('Transport assigned successfully');
+    } catch (error) {
+      toast.error('Failed to assign transport');
+    }
+  };
+
+  const generateBookingPDF = async (bookingId) => {
+    try {
+      const response = await api.get(`/booking/${bookingId}/generatepdf`, {
+        responseType: 'blob'
+      });
+      
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `booking_${bookingId}.pdf`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    } catch (error) {
+      toast.error('Failed to generate PDF');
+    }
   };
 
   return (

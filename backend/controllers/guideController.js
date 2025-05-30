@@ -1,10 +1,6 @@
 import Guide from '../models/Guide.js';
+import Booking from '../models/Booking.js';
 
-/**
- * @desc Create a new guide
- * @route POST /api/guides
- * @access Private (Sales Agent, Admin)
- */
 export const createGuide = async (req, res, next) => {
   try {
     const { name, phone, email, is_active } = req.body;
@@ -26,11 +22,6 @@ export const createGuide = async (req, res, next) => {
   }
 };
 
-/**
- * @desc Get all guides
- * @route GET /api/guides
- * @access Private
- */
 export const getGuides = async (req, res, next) => {
   try {
     const guides = await Guide.find().sort({ createdAt: -1 });
@@ -40,11 +31,6 @@ export const getGuides = async (req, res, next) => {
   }
 };
 
-/**
- * @desc Update guide's active status
- * @route PUT /api/guides/:id/status
- * @access Private (Admin)
- */
 export const updateGuideStatus = async (req, res, next) => {
   try {
     const { is_active } = req.body;
@@ -63,11 +49,6 @@ export const updateGuideStatus = async (req, res, next) => {
   }
 };
 
-/**
- * @desc Check if a guide is active
- * @route POST /api/guides/check-status
- * @access Private
- */
 export const checkGuideStatus = async (req, res, next) => {
   try {
     const { guide_id } = req.body;
@@ -88,6 +69,36 @@ export const checkGuideStatus = async (req, res, next) => {
       return res.status(200).json({ message: 'Guide is inactive and cannot be assigned.' });
     }
   } catch (error) {
+    next(error);
+  }
+};
+
+export const assignGuide = async (req, res, next) => {
+  try {
+    const { guide_id } = req.body;
+
+    const booking = await Booking.findById(req.params.id);
+    if (!booking) {
+      return res.status(404).json({ error: 'Booking not found' });
+    }
+
+    const guide = await Guide.findById(guide_id);
+
+    if (!guide) {
+      return res.status(404).json({ error: 'Guide not found' });
+    }
+
+    if (guide.is_active === false) {
+      return res.status(400).json({ error: 'Guide is inactive and cannot be assigned' });
+    }
+
+    booking.guide_id = guide_id;
+    await booking.save();
+
+    res.json({ message: 'Guide assigned successfully', booking });
+
+  } catch (error) {
+    console.error('Assign guide error:', error);
     next(error);
   }
 };

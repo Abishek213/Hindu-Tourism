@@ -2,7 +2,6 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import config from '../config/config.js';
 import Staff from '../models/Staff.js'; // Assuming Staff is in the same directory
-import Role from '../models/Role.js'; // Assuming Role is in the same directory
 
 export const login = async (req, res, next) => {
   try {
@@ -21,6 +20,11 @@ export const login = async (req, res, next) => {
     // If the staff is not found, return an error
     if (!staff) {
       return next(new Error('Invalid credentials'));
+    }
+
+    // Check if user is active
+    if (!staff.is_active) {
+      return next(new Error('Your account is inactive. Please contact administrator.'));
     }
 
     // Compare the provided password with the stored hashed password

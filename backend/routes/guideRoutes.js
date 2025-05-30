@@ -3,42 +3,38 @@ import {
   createGuide,
   getGuides,
   updateGuideStatus,
-  checkGuideStatus
+  checkGuideStatus,
+  assignGuide
 } from '../controllers/guideController.js';
 
 import { protect } from '../middleware/auth.js';
 import { checkRole } from '../middleware/roleCheck.js';
 const router = express.Router();
 router.use(protect);
-/**
- * @route   POST /api/guides/create
- * @access  Private (Sales Agent, Admin)
- */
+
 router.post(
   '/create',
-  checkRole('Sales Agent', 'Admin'),
+  checkRole('Operation Team', 'Admin'),
   createGuide
 );
 
-/**
- * @route   GET /api/guides
- * @access  Private (All roles)
- */
-router.get('/', protect, getGuides);
+router.get('/', getGuides);
 
-/**
- * @route   PUT /api/guides/:id/status
- * @access  Private (Admin only)
- */
 router.put(
   '/:id/status',
-  checkRole('Admin'),
+  checkRole('Operation Team','Admin'),
   updateGuideStatus
 );
+
 router.post(
     '/checkstatus',
-    checkRole('Admin'),
+    checkRole('Operation Team','Admin'),
     checkGuideStatus
 )
+
+router.put('/:id/assignguide',
+    checkRole('Admin', 'Operation Team'),
+    assignGuide
+);
 
 export default router;
