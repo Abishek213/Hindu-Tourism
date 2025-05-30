@@ -1,24 +1,17 @@
 import {
   BarChart3,
   Users,
-  Bus,
-  Plus,
-  List,
   Truck,
-  Map,
   PlaneTakeoff,
   Banknote,
   BanknoteIcon,
   FileText,
   ClipboardList,
   CalendarCheck2,
-  BadgeCheck,
-  ReceiptPoundSterling,
-  ListChecks,
-  Dock,
+  ReceiptIndianRupee,
   Package,
-  Compass,
-  LucideCompass
+  LucideCompass,
+  GroupIcon
 } from 'lucide-react';
 
 
@@ -49,7 +42,6 @@ import ManageTeamForm from '../../Pages/Operation/ManageTeam';
 import PackageForm from '../../Pages/Operation/PackageForm';
 import TravelProgressUpdater from '../../Pages/Operation/TravelProgressUpdater';
 import OperationDashboardOverview from '../../Pages/Operation/OperationOverview';
-import ViewBookingStatus from '../../Pages/Operation/ViewBookingStatus';
 
 
 //Accounts Dashboard components
@@ -109,9 +101,9 @@ export const salesDashboardConfig = {
         }
       }
     },
-    bookingStats: { title: 'Boking Status', component: BookingStats, icon: ClipboardList },
+    bookingStats: { title: 'Boking Status', component: BookingStatusViewer, icon: ClipboardList },
     document:{title : 'Document', component: DocumentViewer, icon :FileText},  
-    reports: { title: 'Reports', component: AdminReports, icon: ClipboardList },
+    reports: { title: 'Reports', component: GenerateReport, icon: ClipboardList },
     travelschedule: { title: 'Travel Schedule', component: TripSchedule, icon: Truck },
   }
 };
@@ -137,13 +129,11 @@ export const operationDashboardConfig = {
   basePath: '/ops',
   defaultTab: 'overview',
   tabs: {
-     overview:{title:'Overview', component:OperationDashboardOverview, icon:BarChart3},
-     assign: { title: 'Assign Guide/Transport', component: AssignGuidePage, icon: Truck },
-     package: {title:'Packages', component:PackageForm, icon:Package},
-     travelprogress :{title:'TravelProgress',component:TravelProgressUpdater,icon:LucideCompass},
-     bookingstatus:{title:'BokingStatus',component:ViewBookingStatus,icon:BarChart3},
-     
-    
+    overview:{title:'Overview', component:OperationDashboardOverview, icon:BarChart3},
+    manage:{title:'ManageTeam',component:ManageTeamForm, icon:GroupIcon},
+    assign: { title: 'AssignTeam', component: AssignTeamForm, icon: Truck },
+    travelprogress :{title:'TravelProgress',component:TravelProgressUpdater,icon:LucideCompass},
+    package: {title:'Packages', component:PackageForm, icon:Package}
   }
 };
 
