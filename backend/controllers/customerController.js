@@ -2,9 +2,6 @@ import mongoose from 'mongoose';
 import Customer from '../models/Customer.js';
 import Booking from '../models/Booking.js';
 
-// @desc    Create new customer (manual entry)
-// @route   POST /api/customers
-// @access  Admin
 export const createCustomer = async (req, res) => {
   try {
     const { name, email, phone, address, nationality, is_vip } = req.body;
@@ -33,9 +30,6 @@ export const createCustomer = async (req, res) => {
   }
 };
 
-// @desc    Get all customers with filters
-// @route   GET /api/customers
-// @access  Admin, Sales
 export const getCustomers = async (req, res) => {
   try {
     const { page = 1, limit = 10, search, is_vip } = req.query;
@@ -71,9 +65,6 @@ export const getCustomers = async (req, res) => {
   }
 };
 
-// @desc    Get customer with full details
-// @route   GET /api/customers/:id
-// @access  Admin, Sales
 export const getCustomer = async (req, res) => {
   try {
     if (!mongoose.Types.ObjectId.isValid(req.params.id)) {

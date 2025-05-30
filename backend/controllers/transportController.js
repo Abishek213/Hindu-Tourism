@@ -1,10 +1,6 @@
 import Transport from '../models/Transport.js';
+import Booking from '../models/Booking.js';
 
-/**
- * @desc Create a new transport
- * @route POST /api/transports
- * @access Private (Sales Agent, Admin)
- */
 export const createTransport = async (req, res, next) => {
   try {
     const { name, type, contact_info, is_active } = req.body;
@@ -26,11 +22,6 @@ export const createTransport = async (req, res, next) => {
   }
 };
 
-/**
- * @desc Get all transports
- * @route GET /api/transports
- * @access Private
- */
 export const getTransports = async (req, res, next) => {
   try {
     const transports = await Transport.find().sort({ createdAt: -1 });
@@ -40,11 +31,6 @@ export const getTransports = async (req, res, next) => {
   }
 };
 
-/**
- * @desc Update transport's active status
- * @route PUT /api/transports/:id/status
- * @access Private (Admin)
- */
 export const updateTransportStatus = async (req, res, next) => {
   try {
     const { is_active } = req.body;
@@ -63,12 +49,6 @@ export const updateTransportStatus = async (req, res, next) => {
   }
 };
 
-
-/**
- * @desc Check if a transport is active
- * @route POST /api/transports/check-status
- * @access Private
- */
 export const checkTransportStatus = async (req, res, next) => {
   try {
     const { transport_id } = req.body;
@@ -88,6 +68,31 @@ export const checkTransportStatus = async (req, res, next) => {
       return res.json({ message: 'Transport is inactive' });
     }
 
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const assignTransport = async (req, res, next) => {
+  try {
+    const { transport_id } = req.body;
+
+    // Find booking by ID
+    const booking = await Booking.findById(req.params.id);
+    if (!booking) {
+      return res.status(404).json({ error: 'Booking not found' });
+    }
+
+    // Find transport and check if active
+    const transport = await Transport.findById(transport_id);
+    if (!transport || !transport.is_active) {
+      return res.status(400).json({ error: 'Invalid or inactive transport' });
+    }
+
+    booking.transport_id = transport_id;
+    await booking.save();
+
+    res.json({ message: 'Transport assigned successfully', booking });
   } catch (error) {
     next(error);
   }

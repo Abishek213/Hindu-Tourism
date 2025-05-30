@@ -30,8 +30,8 @@ const bookingSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ['pending', 'confirmed', 'completed', 'cancelled'],
-    default: 'pending'
+    enum: ['confirmed', 'completed', 'cancelled'],
+    default: 'confirmed'
   },
   guide_id: {
     type: mongoose.Schema.Types.ObjectId,
@@ -47,6 +47,11 @@ const bookingSchema = new mongoose.Schema({
   },
   special_requirements: {
     type: String
+  },
+  travelStatus: {
+    type: String,
+    enum: ['Not Started', 'On the Way', 'At Destination', 'Return Journey', 'Completed', 'Delayed', 'Cancelled'],
+    default: 'Not Started'
   }
 }, { timestamps: true });
 
