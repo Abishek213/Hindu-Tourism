@@ -8,7 +8,7 @@ export default function LeadForm() {
     name: '',
     email: '',
     phone: '',
-    source: 'website',
+    source: 'website', 
     // status: 'new',
     notes: '',
   });
@@ -117,7 +117,7 @@ export default function LeadForm() {
             <option value="contacted">Contacted</option>
             <option value="qualified">Qualified</option>
             <option value="converted">Converted</option>
-            <option value="lost">Lost</option>
+            <option value="lost">Lost</option> 
           </select>
         </div> */}
 

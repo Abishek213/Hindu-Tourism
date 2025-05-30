@@ -18,7 +18,8 @@ import {
   Dock,
   Package,
   Compass,
-  LucideCompass
+  LucideCompass,
+  PlusIcon
 } from 'lucide-react';
 
 // Admin Dashboard Components
@@ -32,7 +33,7 @@ import AdminStaffManagement from '../../Pages/Admin/AdminStaffManagement';
 // Sales Dashboard Components
 import SalesOverview from '../../Pages/Sales/OverView';
 import LeadsPage from '../../Pages/Sales/Leads';
-import BookingsPage from '../../Pages/Sales/Booking';
+import Bookings from '../../Pages/Sales/Booking';
 import GenerateReport from '../../Pages/Sales/GenerateReports';
 import BookingStatusViewer from '../../Pages/Sales/BookingStatusViewer';
 import DocumentViewer from '../../Pages/Sales/DocumentViewer';
@@ -56,13 +57,6 @@ import BookingStats from '../../Pages/Account/BookingStats';
 import DocumentView from '../../Pages/Account/DocumentsView';
 import TripScheduleViewer from '../../Pages/Account/Trip';
 
-// Define wrapped components for the different tabs:
-const AddBooking = () => <BookingsPage defaultTab="add" />;
-const AllBooking = () => <BookingsPage defaultTab="all" />;
-
-// Define wrapped components for Leads
-const AddLead = () => <LeadsPage defaultTab="add" />;
-const AllLeads = () => <LeadsPage defaultTab="all" />;
 
 export const salesDashboardConfig = {
   basePath: '/salesdashboard',
@@ -73,38 +67,9 @@ export const salesDashboardConfig = {
       component: SalesOverview, 
       icon: BarChart3 // FIXED: Added missing icon
     },
-    leads: { 
-      title: 'Leads', 
-      icon: Users,
-      children: {
-        add: {
-          title: 'Add Lead',
-          path: 'add',
-          component: AddLead,
-        },
-        all: {
-          title: 'All Leads',
-          path: 'all',
-          component: AllLeads,
-        }
-      }
-    },
-    bookings: {
-      title: 'Bookings',
-      icon: BadgeCheck,
-      children: {
-        add: {
-          title: 'Add Booking',
-          path: 'add',
-          component: AddBooking,
-        },
-        all: {
-          title: 'All Bookings',
-          path: 'all',
-          component: AllBooking,
-        }
-      }
-    },
+     leads:{title:'Leads', component:LeadsPage, icon:Users},
+     booking:{title:'Booking',component:Bookings ,icon:PlusIcon},
+
     GenerateReports: { 
       title: 'Report', 
       component: GenerateReport, 
@@ -124,9 +89,10 @@ export const salesDashboardConfig = {
       title: 'TripSchedule',
       component: TripSchedule,
       icon: Bus,
-    }
+    },
   }
 };
+
 
 export const adminDashboardConfig = {
   basePath: '/admindashboard',

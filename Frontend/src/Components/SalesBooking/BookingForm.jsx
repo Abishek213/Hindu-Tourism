@@ -1,50 +1,20 @@
-// BookingForm.jsx 
 import { useState } from 'react';
-import { useBookings } from '../../context/BookingContext';
-import { useNavigate } from 'react-router-dom';
 import { X, CheckCircle } from 'lucide-react';
+import AdditionalServices from './AdditionalServices';
 import BookingDetails from './Bookingdetails';
 import TravelersInformation from './TravellerInfo';
-import AdditionalServices from './AdditionalServices';
-import SuccessScreen from './SuccessScreen';
+import { useBookings} from '../../context/BookingContext';
 
-
-
-export default function BookingForm() {
-  const navigate = useNavigate();
+export default function BookingFormOverlay({ isOpen = true, onClose, onSubmitted }) {
+  // Use the actual context hook instead of the mock
   const { addBooking } = useBookings();
   
-  // Company guide options
-  const guideOptions = [
-    "Rajesh Sharma",
-    "Priya Patel",
-    "Amit Singh",
-    "Neha Verma",
-    "Vikram Desai",
-    "Deepika Gupta"
-  ];
-  
-  // Transport team options
-  const transportTeamOptions = [
-    "Team Alpha",
-    "Team Bravo",
-    "Team Delta",
-    "Team Echo",
-    "Team Foxtrot",
-    "Team Kilo"
-  ];
-  
   const [form, setForm] = useState({
-    leadId: '',
     package: '',
     travelers: 1,
-    contactNumber: '',
-    emailAddress: '',
     advanceAmount: '',
     startDate: '',
     endDate: '',
-    guide: '',
-    transportTeam: '',
     destination: '',
     helicopter: false,
     hotelUpgrade: false,
@@ -56,6 +26,7 @@ export default function BookingForm() {
     {
       name: '', // Lead traveler
       isLead: true,
+      documentType: '', // 'passport' or 'aadhaar'
       documents: {
         passportFile: null,
         aadhaarFrontFile: null,
@@ -65,7 +36,7 @@ export default function BookingForm() {
   ]);
 
   const [submitted, setSubmitted] = useState(false);
-  const [showForm, setShowForm] = useState(true);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState({});
 
   // Update number of travelers
@@ -84,6 +55,7 @@ export default function BookingForm() {
         newTravelers.push({
           name: '',
           isLead: false,
+          documentType: '',
           documents: {
             passportFile: null,
             aadhaarFrontFile: null,
@@ -102,24 +74,15 @@ export default function BookingForm() {
     const newErrors = {};
     
     // Required field validation
-    if (!form.leadId.trim()) newErrors.leadId = "Lead ID/Name is required";
     if (!form.package) newErrors.package = "Package is required";
-    if (!form.emailAddress) newErrors.emailAddress = "Email is required";
-    if (!form.contactNumber.trim()) newErrors.contactNumber = "Contact number is required";
     if (!form.advanceAmount.trim()) newErrors.advanceAmount = "Advance amount is required";
     if (!form.startDate) newErrors.startDate = "Start date is required";
     if (!form.endDate) newErrors.endDate = "End date is required";
-    if (!form.guide.trim()) newErrors.guide = "Guide name is required";
-    if (!form.transportTeam.trim()) newErrors.transportTeam = "Transport team is required";
-    
-    // Contact number validation
-    if (form.contactNumber && !/^\d{10}$/.test(form.contactNumber.trim())) {
-      newErrors.contactNumber = "Please enter a valid 10-digit contact number";
-    }
+    if (!form.destination) newErrors.destination = "Destination is required";
     
     // Advance amount validation
-    if (form.advanceAmount && isNaN(parseFloat(form.advanceAmount))) {
-      newErrors.advanceAmount = "Please enter a valid amount";
+    if (form.advanceAmount && (isNaN(parseFloat(form.advanceAmount)) || parseFloat(form.advanceAmount) <= 0)) {
+      newErrors.advanceAmount = "Please enter a valid positive amount";
     }
     
     // Date validation
@@ -129,24 +92,38 @@ export default function BookingForm() {
       if (end < start) {
         newErrors.endDate = "End date cannot be before start date";
       }
+      // Check if start date is in the past
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      if (start < today) {
+        newErrors.startDate = "Start date cannot be in the past";
+      }
     }
     
     // Validate traveler info
     travelersInfo.forEach((traveler, index) => {
       // Name validation for each traveler
       if (!traveler.name.trim()) {
-        newErrors[`travelerName_${index}`] = "Traveler name is required";
+        newErrors[`travelerName_${index}`] = `Traveler ${index + 1} name is required`;
       }
-
-      // Document validation for each traveler
-      if (!traveler.documents.passportFile) {
-        newErrors[`passport_${index}`] = "Passport file is required";
+      
+      // Document type validation
+      if (!traveler.documentType) {
+        newErrors[`documentType_${index}`] = `Document type is required for traveler ${index + 1}`;
       }
-      if (!traveler.documents.aadhaarFrontFile) {
-        newErrors[`aadhaarFront_${index}`] = "Aadhaar front file is required";
-      }
-      if (!traveler.documents.aadhaarBackFile) {
-        newErrors[`aadhaarBack_${index}`] = "Aadhaar back file is required";
+      
+      // Document file validation based on selected type
+      if (traveler.documentType === 'passport') {
+        if (!traveler.documents.passportFile) {
+          newErrors[`passport_${index}`] = `Passport document is required for traveler ${index + 1}`;
+        }
+      } else if (traveler.documentType === 'aadhaar') {
+        if (!traveler.documents.aadhaarFrontFile) {
+          newErrors[`aadhaarFront_${index}`] = `Aadhaar front is required for traveler ${index + 1}`;
+        }
+        if (!traveler.documents.aadhaarBackFile) {
+          newErrors[`aadhaarBack_${index}`] = `Aadhaar back is required for traveler ${index + 1}`;
+        }
       }
     });
     
@@ -161,168 +138,225 @@ export default function BookingForm() {
       [name]: type === 'checkbox' ? checked : value
     });
     
-    // Clear error for this field when user changes it
+    // Clear error when user starts typing
     if (errors[name]) {
       setErrors({
         ...errors,
-        [name]: undefined
+        [name]: ''
       });
     }
   };
 
-  // Handle traveler name change
-  const handleTravelerNameChange = (index, value) => {
+  const handleTravelerInfoChange = (index, field, value) => {
     const updatedTravelers = [...travelersInfo];
-    updatedTravelers[index].name = value;
+    
+    if (field === 'documents') {
+      // Handle complete documents object replacement
+      updatedTravelers[index].documents = value;
+    } else if (field.includes('documents.')) {
+      const docField = field.split('.')[1];
+      updatedTravelers[index].documents[docField] = value;
+    } else {
+      updatedTravelers[index][field] = value;
+    }
+    
     setTravelersInfo(updatedTravelers);
     
-    // Clear error
-    if (errors[`travelerName_${index}`]) {
+    // Clear related errors
+    const errorKey = field === 'name' ? `travelerName_${index}` : 
+                    field === 'documentType' ? `documentType_${index}` :
+                    field === 'documents.passportFile' ? `passport_${index}` :
+                    field === 'documents.aadhaarFrontFile' ? `aadhaarFront_${index}` :
+                    field === 'documents.aadhaarBackFile' ? `aadhaarBack_${index}` : null;
+    
+    if (errorKey && errors[errorKey]) {
       setErrors({
         ...errors,
-        [`travelerName_${index}`]: undefined
+        [errorKey]: ''
       });
     }
   };
 
-  const handleFileChange = (travelerIndex, documentType, e) => {
-    const { files } = e.target;
-    if (files[0]) {
-      // Store both file name and a data URL for preview
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        const updatedTravelers = [...travelersInfo];
-        updatedTravelers[travelerIndex].documents[documentType] = {
-          name: files[0].name,
-          type: files[0].type,
-          dataUrl: event.target.result
-        };
-        setTravelersInfo(updatedTravelers);
-        
-        // Clear error for this field
-        let errorKey;
-        switch (documentType) {
-          case 'passportFile':
-            errorKey = `passport_${travelerIndex}`;
-            break;
-          case 'aadhaarFrontFile':
-            errorKey = `aadhaarFront_${travelerIndex}`;
-            break;
-          case 'aadhaarBackFile':
-            errorKey = `aadhaarBack_${travelerIndex}`;
-            break;
-        }
-        
-        if (errorKey && errors[errorKey]) {
-          setErrors({
-            ...errors,
-            [errorKey]: undefined
-          });
-        }
-      };
-      reader.readAsDataURL(files[0]);
-    }
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmit = async (e) => {
+    e?.preventDefault();
     
-    // Validate form
     if (!validateForm()) {
-      // Scroll to the first error
-      const firstErrorField = document.querySelector('[aria-invalid="true"]');
-      if (firstErrorField) {
-        firstErrorField.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        firstErrorField.focus();
+      // Scroll to first error
+      const firstErrorElement = document.querySelector('.border-red-300, .text-red-600');
+      if (firstErrorElement) {
+        firstErrorElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
       }
       return;
     }
+
+    setIsSubmitting(true);
     
-    // Create a booking object for storage with all form data
-    const bookingData = {
-      leadId: form.leadId,
-      email: form.emailAddress,
-      package: form.package,
-      travelers: form.travelers,
-      contactNumber: form.contactNumber,
-      advanceAmount: form.advanceAmount,
-      startDate: form.startDate,
-      endDate: form.endDate,
-      guide: form.guide,
-      transportTeam: form.transportTeam,
-      destination: form.destination,
-      travelersInfo: travelersInfo,
-      helicopter: form.helicopter,
-      hotelUpgrade: form.hotelUpgrade,
-      nurseSupport: form.nurseSupport
-    };
-    
-    // Add the booking to our context
-    addBooking(bookingData);
-    setSubmitted(true);
-    
-    // Navigate to booking list after short delay
-    navigate('');
+    try {
+      // Create booking object with all necessary fields
+      const bookingData = {
+        id: Date.now().toString(),
+        package: form.package,
+        travelers: form.travelers,
+        advanceAmount: parseFloat(form.advanceAmount),
+        startDate: form.startDate,
+        endDate: form.endDate,
+        destination: form.destination.trim(),
+        helicopter: form.helicopter,
+        hotelUpgrade: form.hotelUpgrade,
+        nurseSupport: form.nurseSupport,
+        travelersInfo: travelersInfo,
+        bookingDate: new Date().toISOString(),
+        createdAt: new Date().toISOString(),
+        status: 'confirmed'
+      };
+      
+      console.log('Creating booking:', bookingData);
+      
+      // Add booking to context - this should now work properly
+      addBooking(bookingData);
+      
+      setSubmitted(true);
+      
+      // Call onSubmitted callback and close form after delay
+      setTimeout(() => {
+        if (onSubmitted) {
+          onSubmitted(bookingData);
+        }
+        resetForm();
+        if (onClose) {
+          onClose();
+        }
+      }, 2000);
+      
+    } catch (error) {
+      console.error('Error creating booking:', error);
+      alert('Failed to create booking. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
-  if (!showForm) {
-    return <SuccessScreen onNewBooking={() => setShowForm(true)} />;
+  const resetForm = () => {
+    setForm({
+      package: '',
+      travelers: 1,
+      advanceAmount: '',
+      startDate: '',
+      endDate: '',
+      destination: '',
+      helicopter: false,
+      hotelUpgrade: false,
+      nurseSupport: false
+    });
+    
+    setTravelersInfo([
+      {
+        name: '',
+        isLead: true,
+        documentType: '',
+        documents: {
+          passportFile: null,
+          aadhaarFrontFile: null,
+          aadhaarBackFile: null
+        }
+      }
+    ]);
+    
+    setSubmitted(false);
+    setErrors({});
+  };
+
+  const handleClose = () => {
+    if (!isSubmitting) {
+      resetForm();
+      if (onClose) onClose();
+    }
+  };
+
+  if (!isOpen) return null;
+
+  if (submitted) {
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50">
+        <div className="w-full max-w-md p-8 text-center bg-white rounded-lg shadow-lg">
+          <CheckCircle className="w-16 h-16 mx-auto mb-4 text-green-500" />
+          <h2 className="mb-2 text-2xl font-bold text-gray-900">Booking Confirmed!</h2>
+          <p className="mb-6 text-gray-600">
+            Your booking has been successfully created and confirmed.
+          </p>
+          <div className="text-sm text-gray-500">
+            Closing automatically...
+          </div>
+        </div>
+      </div>
+    );
   }
 
   return (
-    <div className="bg-white rounded-lg shadow-md overflow-hidden">
-      <div className="bg-gradient-to-r from-orange-500 to-red-600 px-6 py-4 flex justify-between items-center">
-        <h2 className="text-xl font-bold text-white">New Booking</h2>
-        <button 
-          onClick={() => navigate('/salesdashboard')}
-          className="text-white hover:bg-red-700 rounded-full p-1"
-        >
-          <X size={20} />
-        </button>
-      </div>
-
-      <form onSubmit={handleSubmit} className="p-6 grid gap-4">
-        <BookingDetails 
-          form={form}
-          errors={errors}
-          handleChange={handleChange}
-          handleTravelersChange={handleTravelersChange}
-          guideOptions={guideOptions}
-          transportTeamOptions={transportTeamOptions}
-        />
-
-        <TravelersInformation 
-          travelersInfo={travelersInfo}
-          handleTravelerNameChange={handleTravelerNameChange}
-          handleFileChange={handleFileChange}
-          errors={errors}
-        />
-
-        <AdditionalServices 
-          form={form}
-          handleChange={handleChange}
-        />
-
-        <div className="mt-4 flex justify-end">
-          <button 
-            type="submit" 
-            className="px-4 py-2 bg-gradient-to-r from-orange-500 to-red-600 text-white rounded-md hover:from-orange-600 hover:to-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500"
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50">
+      <div className="bg-white rounded-lg shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden">
+        {/* Header */}
+        <div className="flex items-center justify-between px-6 py-4 bg-gradient-to-r from-orange-500 to-red-500">
+          <h1 className="text-xl font-bold text-white">New Booking</h1>
+          <button
+            onClick={handleClose}
+            disabled={isSubmitting}
+            className="text-white transition-colors hover:text-gray-200 disabled:opacity-50"
           >
-            Submit Booking
+            <X className="w-6 h-6" />
           </button>
         </div>
 
-        {submitted && (
-          <div className="mt-4 p-4 bg-green-50 border border-green-200 rounded-md">
-            <div className="flex items-center gap-2">
-              <CheckCircle size={20} className="text-green-500" />
-              <p className="text-sm text-green-700">
-                Booking submitted successfully! Redirecting to booking list...
-              </p>
-            </div>
+        {/* Form Content */}
+        <div className="flex flex-col h-full max-h-[calc(90vh-80px)]">
+          <div className="flex-1 p-6 space-y-6 overflow-y-auto">
+            {/* Show errors summary if any */}
+            {Object.keys(errors).length > 0 && (
+              <div className="p-4 border border-red-200 rounded-lg bg-red-50">
+                <h3 className="mb-2 font-medium text-red-800">Please fix the following errors:</h3>
+                <ul className="space-y-1 text-sm text-red-600">
+                  {Object.values(errors).map((error, index) => (
+                    <li key={index}>• {error}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {/* Booking Details Section */}
+            <BookingDetails
+              form={form}
+              errors={errors}
+              onChange={handleChange}
+              onTravelersChange={handleTravelersChange}
+            />
+
+            {/* Travelers Information Section */}
+            <TravelersInformation
+              travelersInfo={travelersInfo}
+              errors={errors}
+              onChange={handleTravelerInfoChange}
+            />
+
+            {/* Additional Services Section */}
+            <AdditionalServices
+              form={form}
+              onChange={handleChange}
+            />
           </div>
-        )}
-      </form>
+
+          {/* Submit Button - Fixed at bottom */}
+          <div className="sticky bottom-0 px-6 py-4 bg-white border-t">
+            <button
+              type="button"
+              onClick={handleSubmit}
+              disabled={isSubmitting}
+              className="w-full px-6 py-3 text-lg font-medium text-white transition-colors rounded-lg bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isSubmitting ? 'Creating Booking...' : 'Submit Booking'}
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
