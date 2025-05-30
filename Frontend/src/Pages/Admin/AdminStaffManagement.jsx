@@ -112,17 +112,24 @@ export default function AdminStaffManagement() {
     }
   };
 
-  const handleDelete = async (id) => {
-    try {
-      await api.delete(`/staff/${id}`);
-      setStaffData(prev => prev.map(s => 
-        s.id === id ? { ...s, status: 'Inactive' } : s
-      ));
-      toast.success('Staff deactivated');
-    } catch (error) {
-      toast.error(error.response?.data?.error || 'Deactivation failed');
-    }
-  };
+  const handleToggleStatus = async (id) => {
+  try {
+    const staff = staffData.find(s => s.id === id);
+    const newStatus = staff.status === 'Active' ? 'Inactive' : 'Active';
+    
+    await api.put(`/staff/${id}`, { 
+      is_active: newStatus === 'Active' 
+    });
+    
+    setStaffData(prev => prev.map(s => 
+      s.id === id ? { ...s, status: newStatus } : s
+    ));
+    
+    toast.success(`Staff status set to ${newStatus}`);
+  } catch (error) {
+    toast.error(error.response?.data?.error || 'Status update failed');
+  }
+};
 
   return (
     <div className="p-6 bg-white rounded-lg shadow">
@@ -184,11 +191,19 @@ export default function AdminStaffManagement() {
                     <Edit size={18} />
                   </button>
                   <button
-                    onClick={() => handleDelete(staff.id)}
-                    className="text-red-600 hover:text-red-800 p-1 rounded"
-                  >
-                    <Trash2 size={18} />
-                  </button>
+    onClick={() => handleToggleStatus(staff.id)}
+    className={`p-1 rounded ${
+      staff.status === 'Active' 
+        ? 'text-red-600 hover:text-red-800'
+        : 'text-green-600 hover:text-green-800'
+    }`}
+  >
+    {staff.status === 'Active' ? (
+      <Trash2 size={18} />
+    ) : (
+      <UserPlus size={18} />
+    )}
+  </button>
                 </td>
               </tr>
             ))}

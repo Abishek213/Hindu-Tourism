@@ -18,7 +18,8 @@ import {
   Dock,
   Package,
   Compass,
-  LucideCompass
+  LucideCompass,
+  GroupIcon
 } from 'lucide-react';
 
 // Admin Dashboard Components
@@ -39,12 +40,11 @@ import DocumentViewer from '../../Pages/Sales/DocumentViewer';
 import TripSchedule from '../../Pages/Sales/TripSchedule';
 
 // Operation Dashboard Components
-import AssignGuidePage from '../../Pages/Operation/AssignTeam';
+import AssignTeamForm from '../../Pages/Operation/AssignTeam';
+import ManageTeamForm from '../../Pages/Operation/ManageTeam';
 import PackageForm from '../../Pages/Operation/PackageForm';
 import TravelProgressUpdater from '../../Pages/Operation/TravelProgressUpdater';
 import OperationDashboardOverview from '../../Pages/Operation/OperationOverview';
-import ViewBookingStatus from '../../Pages/Operation/ViewBookingStatus';
-
 
 //Accounts Dashboard components
 import InvoicesPage from "../../Pages/Account/Invoices";
@@ -146,11 +146,10 @@ export const operationDashboardConfig = {
   defaultTab: 'overview',
   tabs: {
      overview:{title:'Overview', component:OperationDashboardOverview, icon:BarChart3},
-     assign: { title: 'Assign Guide/Transport', component: AssignGuidePage, icon: Truck },
+     manage:{title:'Manage Guide/Transport', component:ManageTeamForm,icon:GroupIcon},
+     assign: { title: 'Assign Guide/Transport', component: AssignTeamForm,icon:Truck},
      package: {title:'Packages', component:PackageForm, icon:Package},
      travelprogress :{title:'TravelProgress',component:TravelProgressUpdater,icon:LucideCompass},
-     bookingstatus:{title:'BokingStatus',component:ViewBookingStatus,icon:BarChart3},
-     
     
   }
 };

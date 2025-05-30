@@ -7,7 +7,7 @@ import {
     updatePackage,
     getAllPackages,
     getPackageById,
-    togglePackageStatus,
+    updatePackageStatus,
     addItinerary,
     updateItinerary,
     deleteItinerary
@@ -19,13 +19,17 @@ const router = express.Router();
 
 // Admin-only routes
 router.route('/')
-    .post(protect, checkRole('Admin'), brochureUpload.single('brochure'), validatePackage, createPackage)
+    .post(protect, checkRole('Admin', 'Operation Team'), brochureUpload.single('brochure'), validatePackage, createPackage)
     .get(protect, checkRole('Admin', 'Operation Team'), getAllPackages);
 
+// Status route MUST come before /:id route to avoid conflicts
+router.route('/:id/status')
+    .patch(protect, checkRole('Admin', 'Operation Team'), updatePackageStatus);
+
+// Individual package routes
 router.route('/:id')
     .get(protect, checkRole('Admin', 'Operation Team'), getPackageById)
-    .put(protect, checkRole('Admin'), brochureUpload.single('brochure'), validatePackage, updatePackage)
-    .patch(protect, checkRole('Admin'), togglePackageStatus);
+    .put(protect, checkRole('Admin', 'Operation Team'), updatePackage);
 
 // Itinerary routes
 router.route('/:packageId/itineraries')
