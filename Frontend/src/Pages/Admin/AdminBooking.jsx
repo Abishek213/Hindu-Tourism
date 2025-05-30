@@ -225,148 +225,82 @@ const AdminBooking = () => {
 
   return (
     <div className="p-6 max-w-6xl mx-auto space-y-6">
-      <h2 className="text-2xl font-bold">✍️ Booking Management</h2>
+      <h2 className="text-2xl font-bold">✍️ New Booking</h2>
 
-      {/* Create Booking Form */}
       <div className="bg-white p-6 rounded shadow">
-        <h3 className="text-xl font-semibold mb-4">Create New Booking</h3>
+        <h3 className="text-xl font-semibold mb-4">Create Booking from Lead</h3>
 
-        <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-          {/* Lead Selection */}
-          <div>
-            <label className="block mb-1 font-medium">Select Converted Lead</label>
-            <select
-              name="lead_id"
-              value={formData.lead_id}
-              onChange={handleInputChange}
-              className="border rounded px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
-            >
-              <option value="">Select Lead</option>
-              {leads.map(lead => (
-                <option key={lead._id} value={lead._id}>
-                  {lead.name} ({lead.email})
-                </option>
-              ))}
-            </select>
-          </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+          <input
+            type="text"
+            placeholder="Lead Name"
+            value={formData.leadName}
+            onChange={(e) => setFormData({ ...formData, leadName: e.target.value })}
+            className="border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
 
-          {/* Package Selection */}
-          <div>
-            <label className="block mb-1 font-medium">Select Package</label>
-            <select
-              name="package_id"
-              value={formData.package_id}
-              onChange={handleDateChange}
-              className="border rounded px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
-            >
-              <option value="">Select Package</option>
-              {packages.map(pkg => (
-                <option key={pkg._id} value={pkg._id}>
-                  {pkg.title} ({pkg.duration_days} days)
-                </option>
-              ))}
-            </select>
-          </div>
+          <select
+            value={formData.package}
+            onChange={(e) => setFormData({ ...formData, package: e.target.value })}
+            className="border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            <option value="">Select Package</option>
+            <option value="Pashupatinath">Pashupatinath</option>
+            <option value="Muktinath">Muktinath</option>
+            <option value="Both">Both</option>
+          </select>
 
-          {/* Travel Dates */}
-          <div>
-            <label className="block mb-1 font-medium">Start Date</label>
+          <input
+            type="number"
+            min="1"
+            placeholder="Number of Travelers"
+            value={formData.travelers}
+            onChange={(e) => setFormData({ ...formData, travelers: e.target.value })}
+            className="border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+
+          <input
+            type="date"
+            value={formData.travelDate}
+            onChange={(e) => setFormData({ ...formData, travelDate: e.target.value })}
+            className="border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+
+          <input
+            type="text"
+            placeholder="Assign Guide"
+            value={formData.guide}
+            onChange={(e) => setFormData({ ...formData, guide: e.target.value })}
+            className="border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+
+          <input
+            type="text"
+            placeholder="Transport Team"
+            value={formData.transportTeam}
+            onChange={(e) => setFormData({ ...formData, transportTeam: e.target.value })}
+            className="border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+
+          <div className="col-span-1 md:col-span-2">
+            <label className="block mb-1 font-medium">Upload KYC Docs</label>
             <input
-              type="date"
-              name="travel_start_date"
-              value={formData.travel_start_date}
-              onChange={handleDateChange}
-              className="border rounded px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
+              type="file"
+              multiple
+              accept=".pdf,.jpg,.png"
+              onChange={handleFileUpload}
+              className="border rounded px-3 py-2 w-full"
             />
           </div>
 
-          <div>
-            <label className="block mb-1 font-medium">End Date</label>
-            <input
-              type="date"
-              name="travel_end_date"
-              value={formData.travel_end_date}
-              onChange={handleDateChange}
-              className="border rounded px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
-              readOnly
-            />
-          </div>
-
-          {/* Number of Travelers */}
-          <div>
-            <label className="block mb-1 font-medium">Number of Travelers</label>
-            <input
-              type="number"
-              name="num_travelers"
-              min="1"
-              value={formData.num_travelers}
-              onChange={handleInputChange}
-              className="border rounded px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
-            />
-          </div>
-
-          {/* Guide Selection */}
-          <div>
-            <label className="block mb-1 font-medium">Assign Guide (Optional)</label>
-            <select
-              name="guide_id"
-              value={formData.guide_id}
-              onChange={handleInputChange}
-              className="border rounded px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="">Select Guide</option>
-              {guides.map(guide => (
-                <option key={guide._id} value={guide._id}>
-                  {guide.name} ({guide.phone})
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* Transport Selection */}
-          <div>
-            <label className="block mb-1 font-medium">Assign Transport (Optional)</label>
-            <select
-              name="transport_id"
-              value={formData.transport_id}
-              onChange={handleInputChange}
-              className="border rounded px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="">Select Transport</option>
-              {transports.map(transport => (
-                <option key={transport._id} value={transport._id}>
-                  {transport.name} ({transport.type})
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* Special Requirements */}
-          <div className="col-span-full">
-            <label className="block mb-1 font-medium">Special Requirements</label>
-            <textarea
-              name="special_requirements"
-              value={formData.special_requirements}
-              onChange={handleInputChange}
-              className="border rounded px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-              rows="3"
-            />
-          </div>
-
-          {/* Optional Services */}
-          <div className="col-span-full space-y-2">
+          <div className="col-span-1 md:col-span-2 space-y-2">
             <p className="font-medium">Optional Services:</p>
-            <div className="flex flex-wrap gap-6">
+            <div className="flex items-center gap-6">
               <label className="flex items-center gap-2 cursor-pointer">
                 <input
                   type="checkbox"
-                  checked={formData.services.helicopter}
-                  onChange={() => handleServiceChange('helicopter')}
+                  checked={formData.optionalServices.helicopter}
+                  onChange={() => handleCheckboxChange('helicopter')}
                   className="cursor-pointer"
                 />
                 Helicopter Ride
@@ -375,8 +309,8 @@ const AdminBooking = () => {
               <label className="flex items-center gap-2 cursor-pointer">
                 <input
                   type="checkbox"
-                  checked={formData.services.hotel_upgrade}
-                  onChange={() => handleServiceChange('hotel_upgrade')}
+                  checked={formData.optionalServices.hotelUpgrade}
+                  onChange={() => handleCheckboxChange('hotelUpgrade')}
                   className="cursor-pointer"
                 />
                 Hotel Upgrade
@@ -385,8 +319,8 @@ const AdminBooking = () => {
               <label className="flex items-center gap-2 cursor-pointer">
                 <input
                   type="checkbox"
-                  checked={formData.services.nurse_support}
-                  onChange={() => handleServiceChange('nurse_support')}
+                  checked={formData.optionalServices.nurseSupport}
+                  onChange={() => handleCheckboxChange('nurseSupport')}
                   className="cursor-pointer"
                 />
                 Nurse Support
@@ -394,113 +328,60 @@ const AdminBooking = () => {
             </div>
           </div>
 
-          {/* Submit Button */}
-          <div className="col-span-full">
+          <div className="col-span-1 md:col-span-2">
             <button
-              type="submit"
-              disabled={isLoading}
-              className="bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700 transition disabled:opacity-50"
+              onClick={handleSubmit}
+              className="bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700 transition"
             >
-              {isLoading ? 'Creating...' : '✅ Create Booking'}
+              ✅ Create Booking
             </button>
           </div>
-        </form>
+        </div>
       </div>
 
-      {/* Bookings List */}
+      <h2 className="text-xl font-semibold mt-10">📋 All Bookings</h2>
       <div className="bg-white rounded shadow overflow-auto">
-        <h2 className="text-xl font-semibold p-4">📋 All Bookings</h2>
         <table className="min-w-full border-collapse border border-gray-300 text-left">
           <thead className="bg-gray-100">
             <tr>
-              <th className="border border-gray-300 px-4 py-2">Booking ID</th>
-              <th className="border border-gray-300 px-4 py-2">Customer</th>
+              <th className="border border-gray-300 px-4 py-2">ID</th>
+              <th className="border border-gray-300 px-4 py-2">Lead</th>
               <th className="border border-gray-300 px-4 py-2">Package</th>
-              <th className="border border-gray-300 px-4 py-2">Dates</th>
               <th className="border border-gray-300 px-4 py-2">Travelers</th>
-              <th className="border border-gray-300 px-4 py-2">Status</th>
+              <th className="border border-gray-300 px-4 py-2">Date</th>
               <th className="border border-gray-300 px-4 py-2">Guide</th>
               <th className="border border-gray-300 px-4 py-2">Transport</th>
-              <th className="border border-gray-300 px-4 py-2">Actions</th>
+              <th className="border border-gray-300 px-4 py-2">Services</th>
             </tr>
           </thead>
           <tbody>
-            {isLoading && bookings.length === 0 ? (
-              <tr>
-                <td colSpan={9} className="text-center py-4">
-                  Loading bookings...
-                </td>
-              </tr>
-            ) : bookings.length > 0 ? (
-              bookings.map((booking) => (
-                <tr key={booking._id} className="hover:bg-gray-50">
-                  <td className="border border-gray-300 px-4 py-2">{booking._id.slice(-6)}</td>
+            {bookings.length > 0 ? (
+              bookings.map((b, index) => (
+                <tr key={index} className="hover:bg-gray-50">
+                  <td className="border border-gray-300 px-4 py-2">{b.id}</td>
+                  <td className="border border-gray-300 px-4 py-2">{b.leadName}</td>
+                  <td className="border border-gray-300 px-4 py-2">{b.package}</td>
+                  <td className="border border-gray-300 px-4 py-2">{b.travelers}</td>
                   <td className="border border-gray-300 px-4 py-2">
-                    {booking.customer_id?.name || 'N/A'}
+                    {b.travelDate ? format(new Date(b.travelDate), 'dd MMM yyyy') : '-'}
                   </td>
+                  <td className="border border-gray-300 px-4 py-2">{b.guide}</td>
+                  <td className="border border-gray-300 px-4 py-2">{b.transportTeam}</td>
                   <td className="border border-gray-300 px-4 py-2">
-                    {booking.package_id?.title || 'N/A'}
-                  </td>
-                  <td className="border border-gray-300 px-4 py-2">
-                    {format(new Date(booking.travel_start_date), 'dd MMM yyyy')} - {' '}
-                    {format(new Date(booking.travel_end_date), 'dd MMM yyyy')}
-                  </td>
-                  <td className="border border-gray-300 px-4 py-2">{booking.num_travelers}</td>
-                  <td className="border border-gray-300 px-4 py-2">
-                    <select
-                      value={booking.status}
-                      onChange={(e) => handleStatusChange(booking._id, e.target.value)}
-                      className="border rounded px-2 py-1 capitalize"
-                    >
-                      {['pending', 'confirmed', 'completed', 'cancelled'].map((status) => (
-                        <option key={status} value={status}>
-                          {status}
-                        </option>
-                      ))}
-                    </select>
-                  </td>
-                  <td className="border border-gray-300 px-4 py-2">
-                    <select
-                      value={booking.guide_id || ''}
-                      onChange={(e) => handleAssignGuide(booking._id, e.target.value)}
-                      className="border rounded px-2 py-1"
-                    >
-                      <option value="">None</option>
-                      {guides.map((guide) => (
-                        <option key={guide._id} value={guide._id}>
-                          {guide.name}
-                        </option>
-                      ))}
-                    </select>
-                  </td>
-                  <td className="border border-gray-300 px-4 py-2">
-                    <select
-                      value={booking.transport_id || ''}
-                      onChange={(e) => handleAssignTransport(booking._id, e.target.value)}
-                      className="border rounded px-2 py-1"
-                    >
-                      <option value="">None</option>
-                      {transports.map((transport) => (
-                        <option key={transport._id} value={transport._id}>
-                          {transport.name} ({transport.type})
-                        </option>
-                      ))}
-                    </select>
-                  </td>
-                  <td className="border border-gray-300 px-4 py-2">
-                    <button
-                      onClick={() => generateBookingPDF(booking._id)}
-                      className="text-blue-600 hover:text-blue-800 mr-2"
-                      title="Generate PDF"
-                    >
-                      PDF
-                    </button>
+                    {Object.entries(b.optionalServices)
+                      .filter(([_, value]) => value)
+                      .map(([key]) =>
+                        key
+                          .replace(/([A-Z])/g, ' $1')
+                          .replace(/^./, (str) => str.toUpperCase())
+                      )
+                      .join(', ') || 'None'}
                   </td>
                 </tr>
               ))
             ) : (
               <tr>
-                <td colSpan={9} className="text-center text-gray-500 py-6">
+                <td colSpan={8} className="text-center text-gray-500 py-6">
                   No bookings found.
                 </td>
               </tr>
