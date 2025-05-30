@@ -8,7 +8,9 @@ export default function LeadForm() {
     name: '',
     email: '',
     phone: '',
-    source: 'website',
+
+    source: 'website', 
+    // status: 'new',
     notes: '',
   });
   const [submitted, setSubmitted] = useState(false);
@@ -98,6 +100,25 @@ export default function LeadForm() {
             <option value="other">Other</option>
           </select>
         </div>
+
+
+        {/* Status */}
+        {/* <div>
+          <label className="block mb-1 font-medium text-gray-700">Status</label>
+          <select
+            name="status"
+            value={form.status}
+            onChange={handleChange}
+            className="w-full p-2 border border-gray-300 rounded"
+          >
+            <option value="new">New</option>
+            <option value="contacted">Contacted</option>
+            <option value="qualified">Qualified</option>
+            <option value="converted">Converted</option>
+            <option value="lost">Lost</option> 
+          </select>
+        </div> */}
+
 
         {/* Notes */}
         <div>

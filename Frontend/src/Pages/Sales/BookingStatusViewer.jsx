@@ -83,33 +83,40 @@ export default function ViewBookingStatus() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50">
       {/* Header Section */}
-      <div className="bg-gradient-to-r from-orange-400 via-amber-500 to-yellow-500 shadow-2xl">
+      <div className="shadow-2xl bg-gradient-to-r from-orange-400 via-amber-500 to-yellow-500">
         <div className="px-6 py-8">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-4xl font-bold text-white mb-2 drop-shadow-lg">
+              <h1 className="mb-2 text-4xl font-bold text-white drop-shadow-lg">
                 Booking Management
               </h1>
-              <p className="text-orange-100 text-lg">
+              <p className="text-lg text-orange-100">
                 Monitor and manage all your pilgrimage bookings
               </p>
             </div>
-           
+
+            <div className="hidden space-x-4 md:flex">
+              <button className="flex items-center px-6 py-3 space-x-2 text-white transition-all duration-300 shadow-lg bg-white/20 backdrop-blur-sm rounded-xl hover:bg-white/30">
+                <Download size={20} />
+                <span>Export</span>
+              </button>
+            </div>
+
           </div>
         </div>
       </div>
 
       {/* Stats Cards */}
-      <div className="px-6 -mt-4 mb-8">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+      <div className="px-6 mb-8 -mt-4">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-4">
           {['Confirmed', 'Pending', 'Completed', 'Cancelled'].map((status, index) => (
             <div
               key={status}
-              className="bg-white rounded-2xl shadow-xl p-6 border border-orange-100 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1"
+              className="p-6 transition-all duration-300 transform bg-white border border-orange-100 shadow-xl rounded-2xl hover:shadow-2xl hover:-translate-y-1"
             >
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-gray-600 text-sm font-medium">{status}</p>
+                  <p className="text-sm font-medium text-gray-600">{status}</p>
                   <p className="text-3xl font-bold text-gray-800">{getStatusCount(status)}</p>
                 </div>
                 <div className={`w-12 h-12 rounded-full ${getStatusStyle(status)} flex items-center justify-center`}>
@@ -123,25 +130,25 @@ export default function ViewBookingStatus() {
 
       <div className="px-6 pb-8">
         {/* Search and Filter Section */}
-        <div className="bg-white rounded-2xl shadow-xl p-6 mb-8 border border-orange-100">
-          <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
+        <div className="p-6 mb-8 bg-white border border-orange-100 shadow-xl rounded-2xl">
+          <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
             <div className="relative flex-1 max-w-md">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+              <Search className="absolute text-gray-400 transform -translate-y-1/2 left-3 top-1/2" size={20} />
               <input
                 type="text"
                 placeholder="Search customers or packages..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 border border-orange-200 rounded-xl focus:ring-2 focus:ring-orange-400 focus:border-transparent transition-all duration-300"
+                className="w-full py-3 pl-10 pr-4 transition-all duration-300 border border-orange-200 rounded-xl focus:ring-2 focus:ring-orange-400 focus:border-transparent"
               />
             </div>
             <div className="flex items-center space-x-4">
               <div className="relative">
-                <Filter className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+                <Filter className="absolute text-gray-400 transform -translate-y-1/2 left-3 top-1/2" size={20} />
                 <select
                   value={statusFilter}
                   onChange={(e) => setStatusFilter(e.target.value)}
-                  className="pl-10 pr-8 py-3 border border-orange-200 rounded-xl focus:ring-2 focus:ring-orange-400 focus:border-transparent transition-all duration-300 bg-white"
+                  className="py-3 pl-10 pr-8 transition-all duration-300 bg-white border border-orange-200 rounded-xl focus:ring-2 focus:ring-orange-400 focus:border-transparent"
                 >
                   <option value="All">All Status</option>
                   <option value="Confirmed">Confirmed</option>
@@ -155,7 +162,7 @@ export default function ViewBookingStatus() {
         </div>
 
         {/* Bookings Table */}
-        <div className="bg-white rounded-2xl shadow-2xl overflow-hidden border border-orange-100">
+        <div className="overflow-hidden bg-white border border-orange-100 shadow-2xl rounded-2xl">
           <div className="px-6 py-4 bg-gradient-to-r from-orange-400 to-amber-500">
             <h2 className="text-xl font-semibold text-white">Booking Details</h2>
           </div>
@@ -164,27 +171,27 @@ export default function ViewBookingStatus() {
             <table className="min-w-full">
               <thead className="bg-gradient-to-r from-orange-50 to-amber-50">
                 <tr>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700 border-b border-orange-100">
+                  <th className="px-6 py-4 text-sm font-semibold text-left text-gray-700 border-b border-orange-100">
                     <div className="flex items-center space-x-2">
                       <User size={16} />
                       <span>Customer Details</span>
                     </div>
                   </th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700 border-b border-orange-100">
+                  <th className="px-6 py-4 text-sm font-semibold text-left text-gray-700 border-b border-orange-100">
                     <div className="flex items-center space-x-2">
                       <Package size={16} />
                       <span>Package</span>
                     </div>
                   </th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700 border-b border-orange-100">
+                  <th className="px-6 py-4 text-sm font-semibold text-left text-gray-700 border-b border-orange-100">
                     <div className="flex items-center space-x-2">
                       <Calendar size={16} />
                       <span>Travel Date</span>
                     </div>
                   </th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700 border-b border-orange-100">Amount</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700 border-b border-orange-100">Status</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-gray-700 border-b border-orange-100">Actions</th>
+                  <th className="px-6 py-4 text-sm font-semibold text-left text-gray-700 border-b border-orange-100">Amount</th>
+                  <th className="px-6 py-4 text-sm font-semibold text-left text-gray-700 border-b border-orange-100">Status</th>
+                  <th className="px-6 py-4 text-sm font-semibold text-left text-gray-700 border-b border-orange-100">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-orange-100">
@@ -199,7 +206,7 @@ export default function ViewBookingStatus() {
                   >
                     <td className="px-6 py-6">
                       <div className="flex items-center space-x-3">
-                        <div className="w-12 h-12 bg-gradient-to-r from-orange-400 to-amber-500 rounded-full flex items-center justify-center text-white font-semibold text-lg shadow-lg">
+                        <div className="flex items-center justify-center w-12 h-12 text-lg font-semibold text-white rounded-full shadow-lg bg-gradient-to-r from-orange-400 to-amber-500">
                           {booking.customer.charAt(0)}
                         </div>
                         <div>
@@ -209,7 +216,7 @@ export default function ViewBookingStatus() {
                       </div>
                     </td>
                     <td className="px-6 py-6">
-                      <div className="bg-gradient-to-r from-orange-100 to-amber-100 rounded-lg px-3 py-2 inline-block">
+                      <div className="inline-block px-3 py-2 rounded-lg bg-gradient-to-r from-orange-100 to-amber-100">
                         <span className="font-medium text-orange-800">{booking.package}</span>
                       </div>
                     </td>
@@ -220,7 +227,7 @@ export default function ViewBookingStatus() {
                       </div>
                     </td>
                     <td className="px-6 py-6">
-                      <span className="font-bold text-green-600 text-lg">{booking.amount}</span>
+                      <span className="text-lg font-bold text-green-600">{booking.amount}</span>
                     </td>
                     <td className="px-6 py-6">
                       <span
@@ -230,7 +237,7 @@ export default function ViewBookingStatus() {
                       </span>
                     </td>
                     <td className="px-6 py-6">
-                      <button className="bg-gradient-to-r from-orange-400 to-amber-500 text-white p-2 rounded-lg hover:from-orange-500 hover:to-amber-600 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105">
+                      <button className="p-2 text-white transition-all duration-300 transform rounded-lg shadow-lg bg-gradient-to-r from-orange-400 to-amber-500 hover:from-orange-500 hover:to-amber-600 hover:shadow-xl hover:scale-105">
                         <Eye size={16} />
                       </button>
                     </td>
@@ -241,20 +248,20 @@ export default function ViewBookingStatus() {
           </div>
           
           {filteredBookings.length === 0 && (
-            <div className="text-center py-12">
-              <div className="w-24 h-24 bg-gradient-to-r from-orange-200 to-amber-200 rounded-full flex items-center justify-center mx-auto mb-4">
+            <div className="py-12 text-center">
+              <div className="flex items-center justify-center w-24 h-24 mx-auto mb-4 rounded-full bg-gradient-to-r from-orange-200 to-amber-200">
                 <Search size={32} className="text-orange-600" />
               </div>
-              <h3 className="text-xl font-semibold text-gray-700 mb-2">No bookings found</h3>
+              <h3 className="mb-2 text-xl font-semibold text-gray-700">No bookings found</h3>
               <p className="text-gray-500">Try adjusting your search or filter criteria</p>
             </div>
           )}
         </div>
 
         {/* Footer Summary */}
-        <div className="mt-8 bg-white rounded-2xl shadow-xl p-6 border border-orange-100">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <div className="text-gray-600 mb-4 md:mb-0">
+        <div className="p-6 mt-8 bg-white border border-orange-100 shadow-xl rounded-2xl">
+          <div className="flex flex-col items-center justify-between md:flex-row">
+            <div className="mb-4 text-gray-600 md:mb-0">
               Showing {filteredBookings.length} of {dummyBookings.length} bookings
             </div>
             <div className="flex items-center space-x-2">

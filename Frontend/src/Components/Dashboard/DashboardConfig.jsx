@@ -10,8 +10,14 @@ import {
   CalendarCheck2,
   ReceiptIndianRupee,
   Package,
+
+  Compass,
+
+  PlusIcon,
+
   LucideCompass,
   GroupIcon
+
 } from 'lucide-react';
 
 
@@ -29,7 +35,7 @@ import AdminGuideAndTransportManagement from '../../Pages/Admin/AdminGuideAndTra
 // Sales Dashboard Components
 import SalesOverview from '../../Pages/Sales/OverView';
 import LeadsPage from '../../Pages/Sales/Leads';
-import BookingsPage from '../../Pages/Sales/Booking';
+import Bookings from '../../Pages/Sales/Booking';
 import GenerateReport from '../../Pages/Sales/GenerateReports';
 import BookingStatusViewer from '../../Pages/Sales/BookingStatusViewer';
 import DocumentViewer from '../../Pages/Sales/DocumentViewer';
@@ -55,56 +61,41 @@ import DocumentView from '../../Pages/Account/DocumentsView';
 import TripScheduleViewer from '../../Pages/Account/Trip';
 
 
-// Define wrapped components for the different tabs:
-const AddBooking = () => <BookingsPage defaultTab="add" />;
-const AllBooking = () => <BookingsPage defaultTab="all" />;
-
-
-// Define wrapped components for Leads
-const AddLead = () => <LeadsPage defaultTab="add" />;
-const AllLeads = () => <LeadsPage defaultTab="all" />;
-
 
 export const salesDashboardConfig = {
   basePath: '/salesdashboard',
   defaultTab: 'overview',
   tabs: {
 
-    overview:{title:'Overview', component:SalesOverview, icon:BarChart3},
-     leads: {title: 'Leads',icon: Users,
-        children: {
-          add: {
-            title: 'Add Lead',
-            path: 'add',
-            component: AddLead,
-          },
-          all: {
-            title: 'All Leads',
-            path: 'all',
-            component: AllLeads,
-          }
-        }
-      },  
-     bookings: {
-      title: 'Bookings',
-      icon: CalendarCheck2,
-      children: {
-        add: {
-          title: 'Add Booking',
-          path: 'add',
-          component: AddBooking,
-        },
-        all: {
-          title: 'All Bookings',
-          path: 'all',
-          component: AllBooking,
-        }
-      }
+    overview: { 
+      title: 'Overview',    
+      component: SalesOverview, 
+      icon: BarChart3 // FIXED: Added missing icon
     },
-    bookingStats: { title: 'Boking Status', component: BookingStatusViewer, icon: ClipboardList },
-    document:{title : 'Document', component: DocumentViewer, icon :FileText},  
-    reports: { title: 'Reports', component: GenerateReport, icon: ClipboardList },
-    travelschedule: { title: 'Travel Schedule', component: TripSchedule, icon: Truck },
+     leads:{title:'Leads', component:LeadsPage, icon:Users},
+     booking:{title:'Booking',component:Bookings ,icon:PlusIcon},
+
+    GenerateReports: { 
+      title: 'Report', 
+      component: GenerateReport, 
+      icon: BarChart3
+    },
+    BookingStatusViewer: {
+      title: 'Booking Status',
+      component: BookingStatusViewer,
+      icon: ListChecks,
+    },
+    DocumentViewer: {
+      title: 'Documents',
+      component: DocumentViewer,
+      icon: Dock,
+    },
+    TripSchedule: {
+      title: 'TripSchedule',
+      component: TripSchedule,
+      icon: Bus,
+    },
+
   }
 };
 
