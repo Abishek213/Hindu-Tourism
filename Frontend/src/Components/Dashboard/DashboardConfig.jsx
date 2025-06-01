@@ -10,11 +10,11 @@ import {
   CalendarCheck2,
   ReceiptIndianRupee,
   Package,
-
+  ListChecks,
+  Bus,
+  Dock,
   Compass,
-
   PlusIcon,
-
   LucideCompass,
   GroupIcon
 
@@ -102,7 +102,7 @@ export const salesDashboardConfig = {
 
 export const adminDashboardConfig = {
   basePath: '/admindashboard',
-  defaultTab: 'reports',
+  defaultTab: 'overview',
   tabs: {
     overview:{title:'Overview', component:AdminOverview, icon:BarChart3},
     lead: { title: 'Leads', component: AdminLead, icon: Users },

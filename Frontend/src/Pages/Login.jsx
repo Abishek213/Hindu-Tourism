@@ -26,9 +26,9 @@ export default function LoginPage() {
   const redirectToDashboard = (role) => {
     if (role === "Admin") {
       navigate("/admindashboard");
-    } else if (role === "Sales Agent") {
+    } else if (role === "Sales") {
       navigate("/salesdashboard");
-    } else if (role === "Operation Team") {
+    } else if (role === "Operation") {
       navigate("/ops");
     } else if (role === "Accounts") {
       navigate("/accounts");
