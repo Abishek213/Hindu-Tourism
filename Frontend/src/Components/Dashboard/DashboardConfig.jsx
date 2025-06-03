@@ -17,9 +17,7 @@ import {
 
   PlusIcon,
   LucideCompass,
-  GroupIcon,
-  Dock,
-  Bus
+  GroupIcon
 
 } from 'lucide-react';
 
