@@ -2,7 +2,6 @@ import {
   BarChart3,
   Users,
   Truck,
-  PlaneTakeoff,
   Banknote,
   BanknoteIcon,
   FileText,
@@ -10,16 +9,14 @@ import {
   CalendarCheck2,
   ReceiptIndianRupee,
   Package,
-
-  Compass,
-
+  ListChecks,
   PlusIcon,
-
   LucideCompass,
-  GroupIcon
+  GroupIcon,
+  Dock,
+  Bus
 
 } from 'lucide-react';
-
 
 // Admin Dashboard Components
 import AdminOverview from '../../Pages/Admin/AdminOverview';
@@ -31,7 +28,6 @@ import AdminReports from '../../Pages/Admin/AdminReports';
 import AdminStaffManagement from '../../Pages/Admin/AdminStaffManagement';
 import AdminGuideAndTransportManagement from '../../Pages/Admin/AdminGuideAndTransportManagement';
 
-
 // Sales Dashboard Components
 import SalesOverview from '../../Pages/Sales/OverView';
 import LeadsPage from '../../Pages/Sales/Leads';
@@ -41,7 +37,6 @@ import BookingStatusViewer from '../../Pages/Sales/BookingStatusViewer';
 import DocumentViewer from '../../Pages/Sales/DocumentViewer';
 import TripSchedule from '../../Pages/Sales/TripSchedule';
 
-
 // Operation Dashboard Components
 import AssignTeamForm from '../../Pages/Operation/AssignTeam';
 import ManageTeamForm from '../../Pages/Operation/ManageTeam';
@@ -49,24 +44,16 @@ import PackageForm from '../../Pages/Operation/PackageForm';
 import TravelProgressUpdater from '../../Pages/Operation/TravelProgressUpdater';
 import OperationDashboardOverview from '../../Pages/Operation/OperationOverview';
 
-
 //Accounts Dashboard components
 import InvoicesPage from "../../Pages/Account/Invoices";
 import ManagePayments from '../../Pages/Account/ManagePayments';
 import ProcessRefunds from  '../../Pages/Account/ProcessRefunds';
-import FinancialReports from '../../Pages/Account/FinancialReports';
 import AccountOverview from '../../Pages/Account/AccountOverview';
-import BookingStats from '../../Pages/Account/BookingStats';
-import DocumentView from '../../Pages/Account/DocumentsView';
-import TripScheduleViewer from '../../Pages/Account/Trip';
-
-
 
 export const salesDashboardConfig = {
   basePath: '/salesdashboard',
   defaultTab: 'overview',
   tabs: {
-
     overview: { 
       title: 'Overview',    
       component: SalesOverview, 
@@ -95,10 +82,8 @@ export const salesDashboardConfig = {
       component: TripSchedule,
       icon: Bus,
     },
-
   }
 };
-
 
 export const adminDashboardConfig = {
   basePath: '/admindashboard',
@@ -115,7 +100,6 @@ export const adminDashboardConfig = {
   },
 };
 
-
 export const operationDashboardConfig = {
   basePath: '/ops',
   defaultTab: 'overview',
@@ -128,18 +112,13 @@ export const operationDashboardConfig = {
   }
 };
 
-
 export const accountDashboardConfig = {
   basePath: '/account',
   defaultTab: 'AccountOverview',
   tabs: {
     Overview: { title: 'Overview', component: AccountOverview, icon: BarChart3 },
-    bookingStats: { title: 'BokingStatus', component: BookingStats, icon: ClipboardList },
-    documentView: { title: 'Document', component: DocumentView, icon: FileText }, // FIXED: changed from File to FileText
-    financialReports: { title: 'Financial Reports', component: FinancialReports, icon: ReceiptIndianRupee },
     invoices: { title: 'Invoices', component: InvoicesPage, icon: FileText },
     managePayments: { title: 'Payments', component: ManagePayments, icon: Banknote },
-    processRefunds: { title: 'Refunds', component: ProcessRefunds, icon: BanknoteIcon }, // FIXED: changed from BanknoteArrowDown to BanknoteIcon
-    trip: { title: 'TripSchedule', component: TripScheduleViewer, icon: PlaneTakeoff }, // FIXED: changed component from TripSchedule to TripScheduleViewer
+    processRefunds: { title: 'Refunds', component: ProcessRefunds, icon: BanknoteIcon }
   }
 };
