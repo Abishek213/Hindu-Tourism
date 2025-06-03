@@ -27,7 +27,6 @@ const Header = ({ title = "Dashboard", userName = "User" }) => {
 
   return (
     <header className="sticky top-0 z-30 flex items-center justify-between px-6 py-4 bg-white shadow-md dark:bg-gray-900">
-      {/* Title */}
       <h1 className="text-2xl font-semibold text-gray-800 dark:text-white">{title}</h1>
 
       {/* User Menu */}
@@ -48,7 +47,7 @@ const Header = ({ title = "Dashboard", userName = "User" }) => {
         {userMenuOpen && (
           <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-xl shadow-xl dark:bg-gray-800 dark:border-gray-700 z-40 animate-fade-in-down">
             <a
-              href="/settings"
+             href='settings'
               className="block px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 dark:text-white dark:hover:bg-gray-700"
             >
               Settings
