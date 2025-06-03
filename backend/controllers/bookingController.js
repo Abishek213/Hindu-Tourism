@@ -9,50 +9,63 @@ import { generateBookingPDF as generateBookingPDFHelper } from '../services/pdfS
 
 export const createBooking = async (req, res, next) => {
     try {
-        const { lead_id, customer_id, package_id, travel_start_date, travel_end_date,
-            num_travelers, special_requirements, services } = req.body;
+      console.log("Raw request body:", req.body);
+        const {
+            customer_id, 
+            package_id, 
+            travel_start_date, 
+            travel_end_date,
+            num_travelers, 
+            special_requirements, 
+            services,
+            destination
+        } = req.body;
 
-        const lead = await Lead.findById(lead_id);
-        if (!lead || lead.status !== 'converted') {
-            return res.status(400).json({ error: 'Invalid lead or lead not ready for booking' });
-        }
-
+        // Validate customer exists
         const customer = await Customer.findById(customer_id);
         if (!customer) {
             return res.status(404).json({ error: 'Customer not found' });
         }
 
+        // Validate package exists and is active
         const tourPackage = await Package.findById(package_id);
         if (!tourPackage || !tourPackage.is_active) {
             return res.status(400).json({ error: 'Invalid or inactive package' });
         }
 
+        // Validate that the selected destination is available in the package
+        if ( !tourPackage.destination.includes(destination)) {
+            return res.status(400).json({ 
+                error: 'Selected destination is not available for this package',
+                availableDestinations: tourPackage.destination
+            });
+        }
+
+        // Create the booking with destination
         const booking = await Booking.create({
             customer_id,
             package_id,
-            lead_id,
+            destination, // Include destination in the booking
             travel_start_date,
             travel_end_date,
             num_travelers,
-            status: 'confirmed', 
+            status: 'confirmed',
             booking_date: new Date(),
-            special_requirements,
-            travelStatus: 'Not Started'
+            special_requirements
         });
 
-        lead.status = 'converted'; 
-        await lead.save();
-
+        // Add optional services if provided
         if (services && services.length > 0) {
             for (const service of services) {
                 await BookingService.create({
-                    booking_id: booking._id, 
+                    booking_id: booking._id,
                     service_id: service.service_id,
                     price_applied: service.price
                 });
             }
         }
 
+        // Create initial invoice
         const invoice = await Invoice.create({
             booking_id: booking._id,
             amount: tourPackage.base_price,
@@ -63,7 +76,6 @@ export const createBooking = async (req, res, next) => {
         res.status(201).json({
             booking,
             invoice
-            
         });
 
     } catch (error) {
