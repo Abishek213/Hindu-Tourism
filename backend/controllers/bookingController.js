@@ -9,7 +9,6 @@ import BookingService from '../models/BookingService.js';
 import Document from '../models/Document.js';
 import Payment from '../models/Payment.js';
 import Invoice from '../models/Invoice.js';
-import CommunicationLog from '../models/CommunicationLog.js';
 import { generateBookingPDF as generateBookingPDFHelper } from '../services/pdfService.js';
 
 /**
@@ -19,14 +18,17 @@ import { generateBookingPDF as generateBookingPDFHelper } from '../services/pdfS
  */
 export const createBooking = async (req, res, next) => {
     try {
-        const { lead_id, customer_id, package_id, travel_start_date, travel_end_date,
-            num_travelers, special_requirements, services } = req.body;
-
-        // Validate lead exists and is in correct status
-        const lead = await Lead.findById(lead_id);
-        if (!lead || lead.status !== 'converted') {
-            return res.status(400).json({ error: 'Invalid lead or lead not ready for booking' });
-        }
+      console.log("Raw request body:", req.body);
+        const {
+            customer_id, 
+            package_id, 
+            travel_start_date, 
+            travel_end_date,
+            num_travelers, 
+            special_requirements, 
+            services,
+            destination
+        } = req.body;
 
         // Validate customer exists
         const customer = await Customer.findById(customer_id);
@@ -40,28 +42,32 @@ export const createBooking = async (req, res, next) => {
             return res.status(400).json({ error: 'Invalid or inactive package' });
         }
 
-        // Create the booking
+        // Validate that the selected destination is available in the package
+        if ( !tourPackage.destination.includes(destination)) {
+            return res.status(400).json({ 
+                error: 'Selected destination is not available for this package',
+                availableDestinations: tourPackage.destination
+            });
+        }
+
+        // Create the booking with destination
         const booking = await Booking.create({
             customer_id,
             package_id,
-            lead_id,
+            destination, // Include destination in the booking
             travel_start_date,
             travel_end_date,
             num_travelers,
-            status: 'confirmed', // use lowercase to match your schema enum
+            status: 'confirmed',
             booking_date: new Date(),
             special_requirements
         });
-
-        // Update lead status
-        lead.status = 'converted'; // again, lowercase to match enum/status values
-        await lead.save();
 
         // Add optional services if provided
         if (services && services.length > 0) {
             for (const service of services) {
                 await BookingService.create({
-                    booking_id: booking._id, // Mongoose _id instead of booking_id
+                    booking_id: booking._id,
                     service_id: service.service_id,
                     price_applied: service.price
                 });
@@ -76,21 +82,9 @@ export const createBooking = async (req, res, next) => {
             status: 'sent'
         });
 
-        // Log communication
-        const communication=await CommunicationLog.create({
-            customer_id,
-            staff_id: req.user._id,
-            log_date: new Date(),
-            type: 'email', // or 'booking_confirmation' if added to schema
-            content: `Booking #${booking._id} created for ${tourPackage.title} package`,
-            status: 'completed'
-        });
-
         res.status(201).json({
             booking,
-            invoice,
-            communication
-            
+            invoice
         });
 
     } catch (error) {
@@ -151,14 +145,6 @@ export const getBooking = async (req, res, next) => {
             })
             .populate('guide_id')
             .populate('transport_id');
-            // Uncomment these only if those fields exist in your Booking schema
-            // .populate({
-            //     path: 'bookingServices',
-            //     populate: { path: 'optionalService' }
-            // })
-            // .populate('document')
-            // .populate('payment')
-            // .populate('invoice');
 
         if (!booking) {
             return res.status(404).json({ error: 'Booking not found' });
@@ -213,14 +199,6 @@ export const updateBooking = async (req, res, next) => {
             Object.assign(booking, updates);
             await booking.save();
 
-            await CommunicationLog.create({
-                booking_id: booking._id,
-                staff_id: req.user.staff_id,
-                log_date: new Date(),
-                type: 'Booking Update',
-                content: `Operation team updated booking details (guide/transport/status)`,
-                status: 'Completed'
-            });
 
             return res.json(booking);
         }
@@ -276,15 +254,6 @@ export const assignGuide = async (req, res, next) => {
     booking.guide_id = guide_id;
     await booking.save();
 
-    // 6. Log the assignment
-    // await CommunicationLog.create({
-    //   booking_id: booking._id,
-    //   staff_id: req.user._id,
-    //   log_date: new Date(),
-    //   type: 'other', // must match allowed enum in CommunicationLog
-    //   content: `Assigned guide ${guide.name} to booking`,
-    //   status: 'completed'
-    // });
 
     // 7. Send response
     res.json({ message: 'Guide assigned successfully', booking });
@@ -322,15 +291,6 @@ export const assignTransport = async (req, res, next) => {
     booking.transport_id = transport_id;
     await booking.save();
 
-    // Log the assignment
-    // await CommunicationLog.create({
-    //   booking_id: booking._id,
-    //   staff_id: req.user._id, // assuming populated in protect middleware
-    //   log_date: new Date(),
-    //   type: 'other', // because 'Transport Assignment' is not in enum
-    //   content: `Assigned transport ${transport.name} (${transport.type}) to booking`,
-    //   status: 'completed'
-    // });
 
     res.json({ message: 'Transport assigned successfully', booking });
   } catch (error) {
@@ -346,7 +306,7 @@ export const assignTransport = async (req, res, next) => {
 export const updateStatus = async (req, res, next) => {
   try {
     const { status } = req.body;
-    const validStatuses = ['confirmed', 'pending', 'cancelled', 'completed'];
+    const validStatuses = ['confirmed', 'cancelled', 'completed'];
 
     if (!validStatuses.includes(status.toLowerCase())) {
       return res.status(400).json({ error: 'Invalid status value' });
@@ -370,15 +330,6 @@ export const updateStatus = async (req, res, next) => {
     booking.status = status.toLowerCase();
     await booking.save();
 
-    // Log the status change
-    await CommunicationLog.create({
-      booking_id: booking._id,
-      staff_id: req.user._id,
-      log_date: new Date(),
-      type: 'other', // update if you later extend enum to include 'Status Update'
-      content: `Booking status changed to ${status}`,
-      status: 'completed'
-    });
 
     res.json({ message: 'Booking status updated', booking });
   } catch (error) {

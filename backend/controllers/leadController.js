@@ -56,14 +56,21 @@ export const createLead = async (req, res) => {
 // @access  Admin, Sales Agent
 export const getAllLeads = async (req, res) => {
   try {
-    const { status, search } = req.query;
+    const { status, search, include_converted } = req.query;
     const query = {};
 
+    if (!include_converted && !status) {
+      query.status = { $ne: 'converted' };
+    }
+
     if (status) query.status = status;
+    // if(source) query.source=source;
     if (search) {
       query.$or = [
         { name: { $regex: search, $options: 'i' } },
         { email: { $regex: search, $options: 'i' } },
+        { phone: { $regex: search, $options: 'i' } },
+
       ];
     }
 

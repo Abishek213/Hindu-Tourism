@@ -19,8 +19,8 @@ const router = express.Router();
 
 // Admin-only routes
 router.route('/')
-    .post(protect, checkRole('Admin'), brochureUpload.single('brochure'), validatePackage, createPackage)
-    .get(protect, checkRole('Admin', 'Operation Team'), getAllPackages);
+    .post(protect, checkRole('Admin'),brochureUpload.single('brochure'), validatePackage, createPackage)
+    .get(protect, checkRole('Admin', 'Sales Agent','Operation Team'), getAllPackages);
 
 router.route('/:id')
     .get(protect, checkRole('Admin', 'Operation Team'), getPackageById)

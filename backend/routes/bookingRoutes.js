@@ -1,4 +1,5 @@
 import express from 'express';
+import multer from 'multer';
 import {
     createBooking,
     getAllBookings,
@@ -13,6 +14,7 @@ import { protect } from '../middleware/auth.js';
 import { checkRole } from '../middleware/roleCheck.js';
 
 const router = express.Router();
+const upload = multer();
 
 // Protect all routes
 router.use(protect);
@@ -20,6 +22,7 @@ router.use(protect);
 // Create booking from lead (Sales Agent, Admin)
 router.post('/',
     checkRole('Admin', 'Sales Agent'),
+     upload.any(),
     createBooking
 );
 

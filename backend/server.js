@@ -8,6 +8,7 @@ import path from 'path';
 import fs from 'fs';
 import { fileURLToPath, pathToFileURL } from 'url';
 import dotenv from 'dotenv';
+import multer from 'multer';
 
 // Utils
 import logger from './utils/logger.js';
@@ -31,6 +32,7 @@ dotenv.config({ path: path.join(__dirname, '.env') });
 
 // Initialize Express app
 const app = express();
+const upload = multer();
 
 (async () => {
   try {

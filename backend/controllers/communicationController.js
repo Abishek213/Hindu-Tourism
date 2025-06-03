@@ -10,11 +10,11 @@ export const createCommunicationLog = async (req, res) => {
     const {
       lead_id,
       customer_id,
-      staff_id,
       type,
       content,
       status
     } = req.body;
+     const staff_id = req.user._id;
 
     // Validation (ensure required fields exist)
     if (!staff_id || !type || !content) {
