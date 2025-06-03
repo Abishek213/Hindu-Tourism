@@ -1,20 +1,16 @@
 import { useState, useEffect } from 'react';
-import { 
-  Users, Eye, Plus, Calendar, User, Phone, 
+import {
+  Users, Eye, Plus, Calendar, User, Phone,
   MapPin, X, Search, Filter
 } from 'lucide-react';
 import BookingFormOverlay from '../../Components/SalesBooking/BookingForm';
 import { debounce } from 'lodash';
 import api from '../../api/auth';
 
-// Mock useCustomers hook for demonstration
-
-
-    
 
 const useCustomers = () => {
 
-const [customers, setCustomers] = useState([]);
+  const [customers, setCustomers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -23,19 +19,19 @@ const [customers, setCustomers] = useState([]);
       try {
         setLoading(true);
         // Use '/customer' to match your backend route
-        const response = await api.get('/customer'); 
-        
+        const response = await api.get('/customer');
+
         console.log('API Response:', response); // Debug log
-        
+
         if (!response || !response.data) {
           throw new Error('No data received from server');
         }
-        
+
         // Handle both direct array response and paginated response
-        const customersData = Array.isArray(response.data) 
-          ? response.data 
+        const customersData = Array.isArray(response.data)
+          ? response.data
           : response.data.customers || [];
-          
+
         setCustomers(customersData);
 
       } catch (err) {
@@ -50,10 +46,10 @@ const [customers, setCustomers] = useState([]);
   }, []);
 
 
-const updateCustomer = async (id, updatedCustomer) => {
+  const updateCustomer = async (id, updatedCustomer) => {
     try {
       const response = await api.put(`/customer/${id}`, updatedCustomer);
-      setCustomers(prev => prev.map(customer => 
+      setCustomers(prev => prev.map(customer =>
         customer._id === id ? response.data : customer
       ));
     } catch (err) {
@@ -64,11 +60,19 @@ const updateCustomer = async (id, updatedCustomer) => {
 
   const addCustomer = async (newCustomer) => {
     try {
-      const response = await api.post('/customers', newCustomer);
+      const response = await api.post('/customer', newCustomer);
       setCustomers(prev => [...prev, response.data]);
       return response.data;
     } catch (err) {
-      console.error('Error adding customer:', err);
+      console.error('Error adding customer:', {
+        status: err.response?.status,
+        data: err.response?.data,
+      });
+
+      // Throw a more specific error
+      if (err.response?.status === 403) {
+        throw new Error('You need admin and sales_agent privileges to add customers. Please contact your administrator.');
+      }
       throw err;
     }
   };
@@ -105,38 +109,38 @@ function AddCustomerModal({ isOpen, onClose, onSubmit }) {
 
   const validateForm = () => {
     const newErrors = {};
-    
+
     if (!formData.name.trim()) {
       newErrors.name = 'Full name is required';
     }
-    
+
     if (!formData.phone.trim()) {
       newErrors.phone = 'Contact number is required';
     }
-    
+
     if (!formData.email.trim()) {
       newErrors.email = 'Email address is required';
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
       newErrors.email = 'Please enter a valid email address';
     }
-    
+
     if (!formData.source.trim()) {
       newErrors.source = 'Source is required';
     }
-    
+
     return newErrors;
   };
 
   const handleSubmit = () => {
     const newErrors = validateForm();
-    
+
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
     }
-    
+
     onSubmit(formData);
-    
+
     // Reset form
     setFormData({
       name: '',
@@ -177,7 +181,7 @@ function AddCustomerModal({ isOpen, onClose, onSubmit }) {
             </button>
           </div>
         </div>
-        
+
         <div className="p-6 space-y-4">
           <div>
             <label htmlFor="name" className="block mb-1 text-sm font-medium text-gray-700">
@@ -189,9 +193,8 @@ function AddCustomerModal({ isOpen, onClose, onSubmit }) {
               name="name"
               value={formData.name}
               onChange={handleChange}
-              className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent ${
-                errors.name ? 'border-red-500' : 'border-gray-300'
-              }`}
+              className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent ${errors.name ? 'border-red-500' : 'border-gray-300'
+                }`}
               placeholder="Enter full name"
             />
             {errors.name && <p className="mt-1 text-xs text-red-500">{errors.name}</p>}
@@ -207,9 +210,8 @@ function AddCustomerModal({ isOpen, onClose, onSubmit }) {
               name="phone"
               value={formData.phone}
               onChange={handleChange}
-              className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent ${
-                errors.phone ? 'border-red-500' : 'border-gray-300'
-              }`}
+              className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent ${errors.phone ? 'border-red-500' : 'border-gray-300'
+                }`}
               placeholder="Enter contact number"
             />
             {errors.phone && <p className="mt-1 text-xs text-red-500">{errors.phone}</p>}
@@ -225,9 +227,8 @@ function AddCustomerModal({ isOpen, onClose, onSubmit }) {
               name="email"
               value={formData.email}
               onChange={handleChange}
-              className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent ${
-                errors.email ? 'border-red-500' : 'border-gray-300'
-              }`}
+              className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent ${errors.email ? 'border-red-500' : 'border-gray-300'
+                }`}
               placeholder="Enter email address"
             />
             {errors.email && <p className="mt-1 text-xs text-red-500">{errors.email}</p>}
@@ -242,9 +243,8 @@ function AddCustomerModal({ isOpen, onClose, onSubmit }) {
               name="source"
               value={formData.source}
               onChange={handleChange}
-              className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent ${
-                errors.source ? 'border-red-500' : 'border-gray-300'
-              }`}
+              className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent ${errors.source ? 'border-red-500' : 'border-gray-300'
+                }`}
             >
               <option value="">Select source</option>
               <option value="Website">Website</option>
@@ -334,7 +334,7 @@ function CustomerViewModal({ isOpen, onClose, customer }) {
             </button>
           </div>
         </div>
-        
+
         <div className="p-6">
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
             <div>
@@ -364,7 +364,7 @@ function CustomerViewModal({ isOpen, onClose, customer }) {
                 </div>
               </div>
             </div>
-            
+
             <div>
               <h4 className="flex items-center gap-2 mb-4 font-semibold text-gray-800">
                 <MapPin size={18} className="text-yellow-500" />
@@ -386,7 +386,7 @@ function CustomerViewModal({ isOpen, onClose, customer }) {
               </div>
             </div>
           </div>
-          
+
           {customer.notes && (
             <div className="mt-6">
               <h4 className="mb-3 font-semibold text-gray-800">Notes</h4>
@@ -426,7 +426,7 @@ function CustomerTable({ customers, onViewCustomer, onBookNow }) {
                     </div>
                     <div>
                       <div className="text-sm font-medium text-gray-900">{customer.name || 'Unknown'}</div>
-                      <div className="text-xs text-gray-500">{customer.leadId || 'No ID'}</div>
+                      <div className="text-xs text-gray-500">{customer._id  || 'No ID'}</div>
                     </div>
                   </div>
                 </td>
@@ -505,28 +505,28 @@ export default function CustomerList({ onAddCustomer }) {
 
   // Filter customers based on search term
   useEffect(() => {
-  if (!customers) return;
+    if (!customers) return;
 
-  const filtered = customers.filter(customer => {
-    if (!customer) return false;
-    
-    const searchLower = searchTerm.toLowerCase();
-    const fieldsToSearch = [
-      customer.name || '',
-      customer.email || '',
-      customer.phone || '',
-      customer.leadId || '',
-      customer.source || '',
-      customer.notes || ''
-    ];
+    const filtered = customers.filter(customer => {
+      if (!customer) return false;
 
-    return fieldsToSearch.some(field => 
-      field.toLowerCase().includes(searchLower)
-    );
-  });
+      const searchLower = searchTerm.toLowerCase();
+      const fieldsToSearch = [
+        customer.name || '',
+        customer.email || '',
+        customer.phone || '',
+        customer.leadId || '',
+        customer.source || '',
+        customer.notes || ''
+      ];
 
-  setFilteredCustomers(filtered);
-}, [searchTerm, customers]);
+      return fieldsToSearch.some(field =>
+        field.toLowerCase().includes(searchLower)
+      );
+    });
+
+    setFilteredCustomers(filtered);
+  }, [searchTerm, customers]);
 
 
   const handleViewCustomer = (customer) => {
@@ -569,15 +569,23 @@ export default function CustomerList({ onAddCustomer }) {
     setAddCustomerModalOpen(false);
   };
 
-  const handleAddCustomerSubmit = (customerData) => {
-    addCustomer(customerData);
-  };
+ const handleAddCustomerSubmit = async (customerData) => {
+  try {
+    await addCustomer(customerData);
+    // Show success message
+    alert('Customer added successfully!');
+    setAddCustomerModalOpen(false);
+  } catch (err) {
+    // Show user-friendly error
+    alert(err.message || 'Failed to add customer');
+  }
+};
 
   return (
     <div className="p-6 mx-auto max-w-7xl">
       {/* Header */}
       <CustomerHeader onAddCustomer={handleAddCustomerClick} />
-      
+
       {/* Search Bar */}
       <div className="relative mb-6">
         <Search className="absolute w-5 h-5 text-gray-400 transform -translate-y-1/2 left-3 top-1/2" />
@@ -594,7 +602,7 @@ export default function CustomerList({ onAddCustomer }) {
         {filteredCustomers.length === 0 ? (
           <EmptyState onAddCustomer={handleAddCustomerClick} />
         ) : (
-          <CustomerTable 
+          <CustomerTable
             customers={filteredCustomers}
             onViewCustomer={handleViewCustomer}
             onBookNow={handleBookNow}
@@ -611,13 +619,13 @@ export default function CustomerList({ onAddCustomer }) {
 
       {/* Customer View Modal */}
       {viewModalOpen && selectedCustomer && (
-        <CustomerViewModal 
+        <CustomerViewModal
           customer={selectedCustomer}
           isOpen={viewModalOpen}
           onClose={handleCloseView}
         />
       )}
-      
+
       {/* Your External Booking Form */}
       {bookingFormOpen && (
         <BookingFormOverlay

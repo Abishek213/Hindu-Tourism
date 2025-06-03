@@ -3,37 +3,31 @@ import {
   CreditCard, 
   FileText, 
   DollarSign, 
-  Receipt, 
   ArrowUpRight, 
   ArrowDownRight,
   TrendingUp,
   Users,
-  Calendar,
   Bell,
-  Settings,
-  Download,
   Eye,
   AlertCircle,
   CheckCircle,
   Clock,
-  Target
+  BarChart3
 } from "lucide-react";
 import { 
-  BarChart, 
-  Bar, 
-  XAxis, 
-  YAxis, 
-  Tooltip, 
   ResponsiveContainer, 
   Cell,
-  LineChart,
-  Line,
   PieChart,
   Pie,
   Area,
-  AreaChart
+  AreaChart,
+  XAxis,
+  YAxis,
+  Tooltip
 } from "recharts";
+import FinancialReport from './FinancialReports';
 
+// Enhanced data structure
 const stats = [
   {
     label: "Total Revenue",
@@ -43,7 +37,6 @@ const stats = [
     icon: <DollarSign className="text-amber-600" />,
     bg: "bg-gradient-to-br from-amber-50 to-orange-50",
     border: "border-amber-200",
-    chartData: 120000,
     target: "$150,000",
     period: "This Month"
   },
@@ -55,7 +48,6 @@ const stats = [
     icon: <CreditCard className="text-orange-600" />,
     bg: "bg-gradient-to-br from-orange-50 to-red-50",
     border: "border-orange-200",
-    chartData: 110000,
     target: "$125,000",
     period: "This Month"
   },
@@ -67,31 +59,29 @@ const stats = [
     icon: <Users className="text-yellow-600" />,
     bg: "bg-gradient-to-br from-yellow-50 to-amber-50",
     border: "border-yellow-200",
-    chartData: 1247,
     target: "1,500",
     period: "Total"
   },
   {
-    label: "Invoices Generated",
-    value: "124",
-    change: "+5%",
+    label: "Net Profit",
+    value: "$45,750",
+    change: "+18%",
     isPositive: true,
-    icon: <FileText className="text-amber-700" />,
-    bg: "bg-gradient-to-br from-amber-50 to-yellow-50",
-    border: "border-amber-300",
-    chartData: 124,
-    target: "150",
+    icon: <TrendingUp className="text-green-600" />,
+    bg: "bg-gradient-to-br from-green-50 to-emerald-50",
+    border: "border-green-200",
+    target: "$60,000",
     period: "This Month"
   },
 ];
 
-// Enhanced chart data
-const revenueData = [
-  { month: "Jan", revenue: 95000, payments: 87000, customers: 1100 },
-  { month: "Feb", revenue: 102000, payments: 94000, customers: 1150 },
-  { month: "Mar", revenue: 108000, payments: 98000, customers: 1200 },
-  { month: "Apr", revenue: 115000, payments: 105000, customers: 1230 },
-  { month: "May", revenue: 120000, payments: 110000, customers: 1247 },
+// Financial data for detailed reports
+const financialData = [
+  { month: "Jan", revenue: 95000, payments: 87000, customers: 1100, refunds: 2400, expenses: 15000 },
+  { month: "Feb", revenue: 102000, payments: 94000, customers: 1150, refunds: 1800, expenses: 16000 },
+  { month: "Mar", revenue: 108000, payments: 98000, customers: 1200, refunds: 2100, expenses: 17000 },
+  { month: "Apr", revenue: 115000, payments: 105000, customers: 1230, refunds: 1900, expenses: 18000 },
+  { month: "May", revenue: 120000, payments: 110000, customers: 1247, refunds: 1600, expenses: 19000 },
 ];
 
 const categoryData = [
@@ -102,61 +92,32 @@ const categoryData = [
 ];
 
 const recentTransactions = [
-  { id: "TXN-001", customer: "Acme Corp", amount: "$2,500", status: "completed", date: "2 hours ago" },
-  { id: "TXN-002", customer: "Tech Solutions", amount: "$1,800", status: "pending", date: "4 hours ago" },
-  { id: "TXN-003", customer: "Design Studio", amount: "$3,200", status: "completed", date: "6 hours ago" },
-  { id: "TXN-004", customer: "Marketing Pro", amount: "$950", status: "failed", date: "8 hours ago" },
-  { id: "TXN-005", customer: "StartupXYZ", amount: "$4,100", status: "completed", date: "1 day ago" },
+  { id: "TXN-001", customer: "Acme Corp", amount: "$2,500", status: "completed", date: "2 hours ago", type: "payment" },
+  { id: "TXN-002", customer: "Tech Solutions", amount: "$1,800", status: "pending", date: "4 hours ago", type: "payment" },
+  { id: "TXN-003", customer: "Design Studio", amount: "$3,200", status: "completed", date: "6 hours ago", type: "payment" },
+  { id: "REF-001", customer: "Marketing Pro", amount: "-$950", status: "refunded", date: "8 hours ago", type: "refund" },
+  { id: "TXN-005", customer: "StartupXYZ", amount: "$4,100", status: "completed", date: "1 day ago", type: "payment" },
 ];
 
 const alerts = [
   { type: "success", message: "Monthly revenue target achieved!", time: "2h ago" },
   { type: "warning", message: "Payment failure rate increased by 2%", time: "4h ago" },
-  { type: "info", message: "New integration available", time: "1d ago" },
+  { type: "info", message: "New financial report available", time: "1d ago" },
 ];
 
 const AccountOverview = () => {
   const [timeFrame, setTimeFrame] = useState("monthly");
   const [activeChart, setActiveChart] = useState("revenue");
-  
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50 p-6">
-      {/* Header */}
-      <div className="flex justify-between items-center mb-8">
-        <div>
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">
-            Overview
-          </h1>
-          <p className="text-amber-700 mt-1">Welcome back! Here's your business overview.</p>
-        </div>
-        
-      </div>
+  const [currentView, setCurrentView] = useState("overview");
 
-      {/* Time Frame Selector */}
-      <div className="flex justify-center mb-8">
-        <div className="flex bg-white/80 backdrop-blur-sm p-1 rounded-xl border border-amber-200 shadow-sm">
-          {["weekly", "monthly", "yearly"].map((period) => (
-            <button 
-              key={period}
-              className={`px-6 py-2 text-sm rounded-lg transition-all duration-200 capitalize ${
-                timeFrame === period 
-                  ? "bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-md" 
-                  : "text-amber-700 hover:bg-amber-100"
-              }`}
-              onClick={() => setTimeFrame(period)}
-            >
-              {period}
-            </button>
-          ))}
-        </div>
-      </div>
-
+  const renderOverview = () => (
+    <>
       {/* Stats Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         {stats.map((item, index) => (
           <div
             key={index}
-            className={`p-6 rounded-2xl ${item.bg} border ${item.border} backdrop-blur-sm shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group`}
+            className={`p-6 rounded-2xl ${item.bg} border ${item.border} backdrop-blur-sm shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group cursor-pointer`}
           >
             <div className="flex justify-between items-start mb-4">
               <div className="w-14 h-14 rounded-2xl flex items-center justify-center shadow-md bg-white/90 group-hover:scale-110 transition-transform duration-200">
@@ -185,38 +146,31 @@ const AccountOverview = () => {
 
       {/* Charts Section */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-        {/* Revenue Trend Chart */}
+        {/* Trend Chart */}
         <div className="bg-white/80 backdrop-blur-sm p-6 rounded-2xl border border-amber-200 shadow-lg">
           <div className="flex justify-between items-center mb-6">
-            <h3 className="text-lg font-semibold text-amber-900">Revenue Trend</h3>
+            <h3 className="text-lg font-semibold text-amber-900">Performance Trend</h3>
             <div className="flex space-x-2">
-              <button 
-                className={`px-3 py-1 text-xs rounded-lg transition-colors ${
-                  activeChart === "revenue" 
-                    ? "bg-amber-500 text-white" 
-                    : "bg-amber-100 text-amber-700 hover:bg-amber-200"
-                }`}
-                onClick={() => setActiveChart("revenue")}
-              >
-                Revenue
-              </button>
-              <button 
-                className={`px-3 py-1 text-xs rounded-lg transition-colors ${
-                  activeChart === "customers" 
-                    ? "bg-amber-500 text-white" 
-                    : "bg-amber-100 text-amber-700 hover:bg-amber-200"
-                }`}
-                onClick={() => setActiveChart("customers")}
-              >
-                Customers
-              </button>
+              {["revenue", "customers", "payments"].map((metric) => (
+                <button 
+                  key={metric}
+                  className={`px-3 py-1 text-xs rounded-lg transition-colors capitalize ${
+                    activeChart === metric 
+                      ? "bg-amber-500 text-white" 
+                      : "bg-amber-100 text-amber-700 hover:bg-amber-200"
+                  }`}
+                  onClick={() => setActiveChart(metric)}
+                >
+                  {metric}
+                </button>
+              ))}
             </div>
           </div>
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={revenueData}>
+              <AreaChart data={financialData}>
                 <defs>
-                  <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
+                  <linearGradient id="colorGradient" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="5%" stopColor="#f59e0b" stopOpacity={0.8}/>
                     <stop offset="95%" stopColor="#f59e0b" stopOpacity={0.1}/>
                   </linearGradient>
@@ -224,7 +178,10 @@ const AccountOverview = () => {
                 <XAxis dataKey="month" axisLine={false} tickLine={false} />
                 <YAxis axisLine={false} tickLine={false} />
                 <Tooltip 
-                  formatter={(value) => [`$${value.toLocaleString()}`, activeChart === "revenue" ? 'Revenue' : 'Customers']}
+                  formatter={(value) => [
+                    activeChart === "customers" ? value.toLocaleString() : `$${value.toLocaleString()}`,
+                    activeChart.charAt(0).toUpperCase() + activeChart.slice(1)
+                  ]}
                   contentStyle={{ 
                     backgroundColor: '#fffbeb',
                     border: '1px solid #f59e0b',
@@ -237,7 +194,7 @@ const AccountOverview = () => {
                   dataKey={activeChart} 
                   stroke="#f59e0b" 
                   fillOpacity={1} 
-                  fill="url(#colorRevenue)"
+                  fill="url(#colorGradient)"
                   strokeWidth={3}
                 />
               </AreaChart>
@@ -301,7 +258,11 @@ const AccountOverview = () => {
             {recentTransactions.map((transaction, index) => (
               <div key={index} className="flex items-center justify-between p-4 bg-amber-50/50 rounded-xl hover:bg-amber-50 transition-colors duration-200">
                 <div className="flex items-center space-x-4">
-                  <div className="w-10 h-10 bg-gradient-to-br from-amber-400 to-orange-400 rounded-lg flex items-center justify-center">
+                  <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
+                    transaction.type === 'refund' 
+                      ? 'bg-gradient-to-br from-red-400 to-red-500' 
+                      : 'bg-gradient-to-br from-amber-400 to-orange-400'
+                  }`}>
                     <CreditCard className="text-white" size={16} />
                   </div>
                   <div>
@@ -310,16 +271,19 @@ const AccountOverview = () => {
                   </div>
                 </div>
                 <div className="text-right">
-                  <p className="font-semibold text-amber-900">{transaction.amount}</p>
+                  <p className={`font-semibold ${
+                    transaction.type === 'refund' ? 'text-red-600' : 'text-amber-900'
+                  }`}>{transaction.amount}</p>
                   <div className="flex items-center space-x-2">
                     <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
                       transaction.status === 'completed' ? 'bg-green-100 text-green-800' :
                       transaction.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
+                      transaction.status === 'refunded' ? 'bg-red-100 text-red-800' :
                       'bg-red-100 text-red-800'
                     }`}>
                       {transaction.status === 'completed' && <CheckCircle size={12} className="mr-1" />}
                       {transaction.status === 'pending' && <Clock size={12} className="mr-1" />}
-                      {transaction.status === 'failed' && <AlertCircle size={12} className="mr-1" />}
+                      {(transaction.status === 'failed' || transaction.status === 'refunded') && <AlertCircle size={12} className="mr-1" />}
                       {transaction.status}
                     </span>
                     <span className="text-xs text-amber-500">{transaction.date}</span>
@@ -352,10 +316,76 @@ const AccountOverview = () => {
               </div>
             ))}
           </div>
-          
-          
         </div>
       </div>
+    </>
+  );
+  
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50 p-6">
+      {/* Header */}
+      <div className="flex justify-between items-center mb-8">
+        <div>
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text text-transparent">
+            {currentView === "overview" ? "Dashboard Overview" : "Financial Reports"}
+          </h1>
+          <p className="text-amber-700 mt-1">
+            {currentView === "overview" 
+              ? "Welcome back! Here's your business overview." 
+              : "Detailed financial analysis and reporting."}
+          </p>
+        </div>
+        
+        {/* View Toggle */}
+        <div className="flex bg-white/80 backdrop-blur-sm p-1 rounded-xl border border-amber-200 shadow-sm">
+          <button 
+            className={`flex items-center px-4 py-2 text-sm rounded-lg transition-all duration-200 ${
+              currentView === "overview" 
+                ? "bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-md" 
+                : "text-amber-700 hover:bg-amber-100"
+            }`}
+            onClick={() => setCurrentView("overview")}
+          >
+            <BarChart3 size={16} className="mr-2" />
+            Overview
+          </button>
+          <button 
+            className={`flex items-center px-4 py-2 text-sm rounded-lg transition-all duration-200 ${
+              currentView === "reports" 
+                ? "bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-md" 
+                : "text-amber-700 hover:bg-amber-100"
+            }`}
+            onClick={() => setCurrentView("reports")}
+          >
+            <FileText size={16} className="mr-2" />
+            Reports
+          </button>
+        </div>
+      </div>
+
+      {/* Time Frame Selector - Only show on overview */}
+      {currentView === "overview" && (
+        <div className="flex justify-center mb-8">
+          <div className="flex bg-white/80 backdrop-blur-sm p-1 rounded-xl border border-amber-200 shadow-sm">
+            {["weekly", "monthly", "yearly"].map((period) => (
+              <button 
+                key={period}
+                className={`px-6 py-2 text-sm rounded-lg transition-all duration-200 capitalize ${
+                  timeFrame === period 
+                    ? "bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-md" 
+                    : "text-amber-700 hover:bg-amber-100"
+                }`}
+                onClick={() => setTimeFrame(period)}
+              >
+                {period}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Dynamic Content */}
+      {currentView === "overview" ? renderOverview() : <FinancialReport />}
     </div>
   );
 };

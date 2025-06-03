@@ -1,25 +1,46 @@
-// TravelersInformation.jsx
-export default function TravelersInformation({ 
-  travelersInfo, 
-  errors, 
-  onChange 
-}) {
+// import { useState } from 'react';
+
+// AdditionalServices Component
+function AdditionalServices({ form, onChange }) {
   return (
-    <div>
-      <h3 className="mb-4 text-lg font-medium text-gray-800">Travelers Information</h3>
-      
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-        {travelersInfo.map((traveler, index) => (
-          <TravelerCard 
-            key={index}
-            index={index}
-            traveler={traveler}
-            onChange={onChange}
-            errors={errors}
-          />
-        ))}
+    <div className="pt-4 mt-6 border-t border-gray-200">
+      <h4 className="mb-4 font-medium text-gray-800 text-md">Additional Services</h4>
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+        <ServiceCheckbox
+          name="helicopter"
+          label="Helicopter Ride"
+          checked={form.helicopter}
+          onChange={onChange}
+        />
+        <ServiceCheckbox
+          name="hotelUpgrade"
+          label="Hotel Upgrade"
+          checked={form.hotelUpgrade}
+          onChange={onChange}
+        />
+        <ServiceCheckbox
+          name="nurseSupport"
+          label="Nurse Support"
+          checked={form.nurseSupport}
+          onChange={onChange}
+        />
       </div>
     </div>
+  );
+}
+
+function ServiceCheckbox({ name, label, checked, onChange }) {
+  return (
+    <label className="flex items-center p-3 space-x-2 border border-gray-200 rounded-md cursor-pointer hover:bg-gray-50">
+      <input
+        type="checkbox"
+        name={name}
+        checked={checked}
+        onChange={onChange}
+        className="w-4 h-4 text-orange-600 border-gray-300 rounded focus:ring-orange-500"
+      />
+      <span className="text-sm text-gray-700">{label}</span>
+    </label>
   );
 }
 
@@ -42,16 +63,16 @@ function TravelerCard({
   };
 
   return (
-    <div className="p-4 border border-gray-200 rounded-lg bg-gray-50">
-      <div className="flex items-center justify-between mb-3">
+    <div className="w-full lg:w-[calc(50%-0.5rem)] mb-4 p-3 bg-gray-50 rounded-lg border border-gray-200">
+      <div className="flex items-center justify-between mb-2">
         <h4 className="text-sm font-medium text-gray-700">
           {index === 0 ? "Lead Traveler" : `Traveler ${index + 1}`}
         </h4>
       </div>
       
       {/* Traveler Name */}
-      <div className="mb-4">
-        <label className="block mb-1 text-sm font-medium text-gray-700">Full Name</label>
+      <div className="mb-3">
+        <label className="block mb-1 text-xs font-medium text-gray-700">Full Name</label>
         <input
           type="text"
           placeholder="Enter traveler's full name"
@@ -63,10 +84,10 @@ function TravelerCard({
       </div>
 
       {/* Document Type Selection */}
-      <div className="mb-4">
-        <label className="block mb-1 text-sm font-medium text-gray-700">Document Type</label>
+      <div className="mb-3">
+        <label className="block mb-1 text-xs font-medium text-gray-700">Document Type</label>
         <select
-          value={traveler.documentType || ''}
+          value={traveler.documentType}
           onChange={handleDocumentTypeChange}
           className={`w-full p-2 text-sm border ${errors[`documentType_${index}`] ? 'border-red-500' : 'border-gray-300'} rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500`}
         >
@@ -77,9 +98,9 @@ function TravelerCard({
         {errors[`documentType_${index}`] && <p className="mt-1 text-xs text-red-500">{errors[`documentType_${index}`]}</p>}
       </div>
       
-      {/* Document Upload Section - Show based on selected document type */}
+      {/* Document Upload Section */}
       {traveler.documentType && (
-        <div className="grid grid-cols-1 gap-3">
+        <div className="grid grid-cols-1 gap-2">
           {traveler.documentType === 'passport' && (
             <DocumentUploader 
               label="Passport"
@@ -139,11 +160,10 @@ function DocumentUploader({
 
   return (
     <div>
-      <label className="block mb-1 text-sm font-medium text-gray-700">{label}</label>
       <div className="flex items-center justify-center w-full">
-        <label className={`flex flex-col items-center justify-center w-full h-24 border-2 ${errors[errorKey] ? 'border-red-300' : 'border-gray-300'} border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100`}>
-          <div className="flex flex-col items-center justify-center px-4 py-2 text-center">
-            <svg className="w-6 h-6 mb-1 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <label className={`flex flex-col items-center justify-center w-full h-20 border-2 ${errors[errorKey] ? 'border-red-300' : 'border-gray-300'} border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100`}>
+          <div className="flex flex-col items-center justify-center px-2 py-1 text-center">
+            <svg className="w-5 h-5 mb-1 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10"></path>
             </svg>
             <p className="text-xs text-gray-500">Upload {label}</p>
@@ -162,6 +182,40 @@ function DocumentUploader({
         </p>
       )}
       {errors[errorKey] && <p className="mt-1 text-xs text-red-500">{errors[errorKey]}</p>}
+    </div>
+  );
+}
+
+// TravelersInformation Component - Includes documents AND additional services
+export default function TravelersInformation({ 
+  travelersInfo, 
+  errors, 
+  onChange,
+  form,
+  onFormChange
+}) {
+  return (
+    <div className="pt-4 mt-6 border-t">
+      <h3 className="mb-3 text-lg font-medium text-gray-800">Travelers Information</h3>
+      
+      {/* Travelers Cards */}
+      <div className="flex flex-wrap gap-4 mb-6">
+        {travelersInfo.map((traveler, index) => (
+          <TravelerCard 
+            key={index}
+            index={index}
+            traveler={traveler}
+            onChange={onChange}
+            errors={errors}
+          />
+        ))}
+      </div>
+
+      {/* Additional Services moved here */}
+      <AdditionalServices
+        form={form}
+        onChange={onFormChange}
+      />
     </div>
   );
 }
