@@ -108,7 +108,7 @@ export default function LoginPage() {
       </button>
 
       {/* Left side - Branding */}
-      <div className={`md:w-1/2 flex items-center justify-center ${darkMode ? 'bg-gradient-to-br from-orange-800 to-orange-900' : 'bg-gradient-to-br from-orange-500 to-orange-600'} p-8 md:p-16`}>
+      <div className={`md:w-1/2 flex items-center justify-center ${darkMode ? 'bg-gradient-to-br from-light to-dark' : 'bg-gradient-to-br from-light to-light'} p-8 md:p-16`}>
         <div className="text-center md:text-left">
           <div className="flex items-center justify-center mb-6 md:justify-start">
             <h1 className="ml-4 text-3xl font-bold text-white md:text-4xl">
@@ -153,7 +153,7 @@ export default function LoginPage() {
         {/* Login form */}
         <div className="z-10 w-full max-w-xs">
           <div className={`${darkMode ? 'bg-gray-800 shadow-lg' : 'bg-white shadow-lg'} rounded-lg p-4`}>
-            <h2 className={`text-lg font-bold ${darkMode ? 'text-orange-400' : 'text-orange-800'} mb-3 text-center`}>
+            <h2 className={`text-lg font-bold ${darkMode ? 'text-light' : 'text-darkx'} mb-3 text-center`}>
               Login to CRM
             </h2>
 
