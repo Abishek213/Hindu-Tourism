@@ -1,3 +1,13 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Your custom fonts */
+@font-face {
+  font-family: 'Fontspring Bold Italic';
+  src: url('/fonts/Fontspring-DEMO-BOLD-ITALIC.otf') format('opentype');
+}
+@font-face {
+  font-family: 'Qasira';
+  src: url('/fonts/Qasira.otf') format('opentype');
+}

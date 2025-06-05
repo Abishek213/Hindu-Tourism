@@ -6,13 +6,16 @@ module.exports = {
     extend: {
       colors: {
         'primary-saffron': '#f85c2c',
-        'secondary': '#fa8359',
-        'accent-red':'#fcb49a',
-        'light-bg': '#f9f9f9',
+        'secondary-green': '#16a34a',
+        'white':'#FFFFFFFF',
+        'light': '#F05A28',
+        'dark': '#833419',
       },
       fontFamily: {
-        sans: ['Roboto', 'sans-serif'],
-      }
+        sans: ["var(--font-inter)", "sans-serif"],
+        custom: ["'Fontspring Bold Italic'", "sans-serif"],
+        Qasira: ["Qasira", "sans-serif"],
+      },
     },
   },
   variants: {
@@ -26,4 +29,4 @@ module.exports = {
   plugins: [
     require('@tailwindcss/forms'),
   ],
-}
+};
