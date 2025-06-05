@@ -15,10 +15,11 @@ export const createPackage = async (req, res) => {
             return res.status(400).json({ errors: errors.array() });
         }
 
-        const { title, description, base_price, duration_days, inclusions, exclusions } = req.body;
+        const { title,destination, description, base_price, duration_days, inclusions, exclusions } = req.body;
         
         const newTourPackage = new TourPackage({
             title,
+            destination,
             description,
             base_price,
             duration_days,

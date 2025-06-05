@@ -8,9 +8,14 @@ import {
   ClipboardList,
   CalendarCheck2,
   Package,
+
   PlusIcon,
   LucideCompass,
   GroupIcon,
+
+  ListChecks,
+  PlusIcon,
+
 
 } from 'lucide-react';
 
