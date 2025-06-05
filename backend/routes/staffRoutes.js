@@ -2,6 +2,9 @@ import express from 'express';
 import { protect } from '../middleware/auth.js';
 import { checkRole } from '../middleware/roleCheck.js';
 import {
+  getCurrentUserProfile,
+  updateCurrentUserProfile,
+  changePassword,
   createStaff,
   getAllStaff,
   getStaffById,
@@ -12,17 +15,24 @@ import {
 
 const router = express.Router();
 
-// Admin-only routes
+router.route('/profile')
+  .get(protect, getCurrentUserProfile)
+  .put(protect, updateCurrentUserProfile);
+
+router.route('/change-password')
+  .put(protect, changePassword);
+
+
 router.route('/')
-  .post(protect, checkRole('Admin'), createStaff)  // Create staff
-  .get(protect, checkRole('Admin'), getAllStaff);  // List all staff
+  .post(protect, checkRole('Admin'), createStaff)  
+  .get(protect, checkRole('Admin'), getAllStaff);  
 
 router.route('/search')
-  .get(protect, checkRole('Admin'), searchStaff);  // Search staff
+  .get(protect, checkRole('Admin'), searchStaff);  
 
 router.route('/:id')
-  .get(protect, checkRole('Admin'), getStaffById)   // Get single staff
-  .put(protect, checkRole('Admin'), updateStaff)    // Update staff
-  .delete(protect, checkRole('Admin'), deleteStaff); // Deactivate staff
+  .get(protect, checkRole('Admin'), getStaffById)   
+  .put(protect, checkRole('Admin'), updateStaff)   
+  .delete(protect, checkRole('Admin'), deleteStaff); 
 
 export default router;

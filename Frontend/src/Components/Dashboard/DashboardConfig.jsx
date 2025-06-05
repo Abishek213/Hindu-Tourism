@@ -7,19 +7,10 @@ import {
   FileText,
   ClipboardList,
   CalendarCheck2,
-  ReceiptIndianRupee,
   Package,
-  ListChecks,
-
-  Bus,
-  Dock,
-  Compass,
-
   PlusIcon,
   LucideCompass,
   GroupIcon,
-  Dock,
-  Bus
 
 } from 'lucide-react';
 
@@ -38,9 +29,6 @@ import SalesOverview from '../../Pages/Sales/OverView';
 import LeadsPage from '../../Pages/Sales/Leads';
 import Bookings from '../../Pages/Sales/Booking';
 import GenerateReport from '../../Pages/Sales/GenerateReports';
-import BookingStatusViewer from '../../Pages/Sales/BookingStatusViewer';
-import DocumentViewer from '../../Pages/Sales/DocumentViewer';
-import TripSchedule from '../../Pages/Sales/TripSchedule';
 
 // Operation Dashboard Components
 import AssignTeamForm from '../../Pages/Operation/AssignTeam';
@@ -71,22 +59,7 @@ export const salesDashboardConfig = {
       title: 'Report', 
       component: GenerateReport, 
       icon: BarChart3
-    },
-    BookingStatusViewer: {
-      title: 'Booking Status',
-      component: BookingStatusViewer,
-      icon: ListChecks,
-    },
-    DocumentViewer: {
-      title: 'Documents',
-      component: DocumentViewer,
-      icon: Dock,
-    },
-    TripSchedule: {
-      title: 'TripSchedule',
-      component: TripSchedule,
-      icon: Bus,
-    },
+    }
   }
 };
 
