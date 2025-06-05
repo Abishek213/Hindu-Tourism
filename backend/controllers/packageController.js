@@ -1,16 +1,13 @@
-// controllers/packageController.js
 import TourPackage from '../models/Package.js';
 import PackageItinerary from '../models/PackageItinerary.js';
 import { validationResult } from 'express-validator';
 import logger from '../utils/logger.js';
-import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Create a new package (Admin only)
 export const createPackage = async (req, res) => {
     try {
         const errors = validationResult(req);
@@ -46,7 +43,6 @@ export const createPackage = async (req, res) => {
     }
 };
 
-// Update package details (Admin only)
 export const updatePackage = async (req, res) => {
     try {
         const errors = validationResult(req);
@@ -70,15 +66,6 @@ export const updatePackage = async (req, res) => {
         tourPackage.exclusions = updateData.exclusions || tourPackage.exclusions;
         tourPackage.is_active = updateData.is_active !== undefined ? updateData.is_active : tourPackage.is_active;
 
-        if (req.file) {
-            if (tourPackage.brochure_url) {
-                const oldBrochurePath = path.join(__dirname, '../public', tourPackage.brochure_url);
-                if (fs.existsSync(oldBrochurePath)) {
-                    fs.unlinkSync(oldBrochurePath);
-                }
-            }
-            tourPackage.brochure_url = `/uploads/brochures/${req.file.filename}`;
-        }
 
         await tourPackage.save();
         
@@ -90,7 +77,6 @@ export const updatePackage = async (req, res) => {
     }
 };
 
-// Get all packages (Admin and Operation Team)
 export const getAllPackages = async (req, res) => {
     try {
         const { is_active } = req.query;
@@ -100,7 +86,9 @@ export const getAllPackages = async (req, res) => {
             query.is_active = is_active === 'true';
         }
 
-        const packages = await TourPackage.find(query).sort({ title: 1 });
+        const packages = await TourPackage.find(query)
+            .populate('itineraries')
+            .sort({ title: 1 });
         res.json(packages);
     } catch (error) {
         logger.error(`Error fetching packages: ${error.message}`);
@@ -108,7 +96,6 @@ export const getAllPackages = async (req, res) => {
     }
 };
 
-// Get package by ID (Admin and Operation Team)
 export const getPackageById = async (req, res) => {
     try {
         const { id } = req.params;
@@ -129,28 +116,33 @@ export const getPackageById = async (req, res) => {
     }
 };
 
-// Toggle package status (Admin only)
-export const togglePackageStatus = async (req, res) => {
+export const updatePackageStatus = async (req, res) => {
     try {
         const { id } = req.params;
-        const tourPackage = await TourPackage.findById(id);
+        const { is_active } = req.body;
         
+        // Validate that is_active is provided
+        if (is_active === undefined || is_active === null) {
+            return res.status(400).json({ message: 'is_active field is required' });
+        }
+        
+        const tourPackage = await TourPackage.findById(id);    
         if (!tourPackage) {
             return res.status(404).json({ message: 'Package not found' });
         }
         
-        tourPackage.is_active = !tourPackage.is_active;
+        // Use the value sent from frontend instead of toggling
+        tourPackage.is_active = is_active;
         await tourPackage.save();
         
-        logger.info(`Package status toggled to ${tourPackage.is_active} for package ${id} by user ${req.user.id}`);
+        logger.info(`Package status updated to ${tourPackage.is_active} for package ${id} by user ${req.user.id}`);
         res.json({ message: 'Package status updated', is_active: tourPackage.is_active });
     } catch (error) {
-        logger.error(`Error toggling package status: ${error.message}`);
-        res.status(500).json({ message: 'Server error while toggling package status' });
+        logger.error(`Error updating package status: ${error.message}`);
+        res.status(500).json({ message: 'Server error while updating package status' });
     }
 };
 
-// Add itinerary to package
 export const addItinerary = async (req, res) => {
     try {
         const errors = validationResult(req);
@@ -188,7 +180,6 @@ export const addItinerary = async (req, res) => {
     }
 };
 
-// Update itinerary (Admin and Operation Team)
 export const updateItinerary = async (req, res) => {
     try {
         const errors = validationResult(req);
@@ -222,7 +213,6 @@ export const updateItinerary = async (req, res) => {
     }
 };
 
-// Delete itinerary (Admin only)
 export const deleteItinerary = async (req, res) => {
     try {
         const { itineraryId } = req.params;

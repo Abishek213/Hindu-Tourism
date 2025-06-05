@@ -1,40 +1,71 @@
 import { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
-import BookingDetails from './BookingFormDetails';
+import BookingDetails from './BookingFormDetail';
 import TravelersInformation from './BookingTravelInfo';
 import api from '../../api/auth';
 
-export default function BookingFormOverlay({ isOpen, onClose, onSubmitted, customer }) {
-  // Main form state
-
+export default function BookingFormOverlay({ isOpen = true, onClose, onSubmitted, customer }) {
   const [form, setForm] = useState({
     destination: '',
-    package: '',
+    packageId: '', // Will store the _id of the selected package
     travelers: 1,
     startDate: '',
     endDate: '',
     helicopter: false,
     hotelUpgrade: false,
-    nurseSupport: false
+    nurseSupport: false,
+    packageType: 'Deluxe'
   });
   const [packages, setPackages] = useState([]);
+  const [destinations, setDestinations] = useState([]);
+  const [servicesList, setServicesList] = useState([]); // State to store fetched services
 
+  // State for custom alerts/modals
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [showErrorModal, setShowErrorModal] = useState(false);
+  const [modalMessage, setModalMessage] = useState('');
+
+  // Effect to fetch packages and services
   useEffect(() => {
-    const fetchPackages = async () => {
+    const fetchData = async () => {
       try {
-        const response = await api.get('/package', {
+        // Fetch packages
+        const packageResponse = await api.get('/package', {
           params: { is_active: true }
         });
-        setPackages(response.data);
+        setPackages(packageResponse.data);
+
+        // Extract unique destinations from package titles
+        const uniqueDestinations = [...new Set(packageResponse.data.map(pkg => pkg.title))];
+        setDestinations(uniqueDestinations);
+
+        // Fetch services
+        // const serviceResponse = await api.get('/service'); // Assuming a /service endpoint
+        // setServicesList(serviceResponse.data);
+
       } catch (error) {
-        console.error('Error fetching packages:', error);
+        // console.error('Error fetching data:', error);
+        setModalMessage('Failed to load form data. Please try again later.');
+        setShowErrorModal(true);
       }
     };
 
     if (isOpen) {
-      fetchPackages();
+      fetchData();
     }
   }, [isOpen]);
+
+  // Effect to set packageId when destination changes
+  useEffect(() => {
+    if (form.destination && packages.length > 0) {
+      const matched = packages.find(pkg => pkg.title === form.destination);
+      if (matched) {
+        setForm(prev => ({ ...prev, packageId: matched._id }));
+      } else {
+        setForm(prev => ({ ...prev, packageId: '' }));
+      }
+    }
+  }, [form.destination, packages]);
 
   // Travelers information state
   const [travelersInfo, setTravelersInfo] = useState([
@@ -54,34 +85,27 @@ export default function BookingFormOverlay({ isOpen, onClose, onSubmitted, custo
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Handle form field changes
- const handleFormChange = (e) => {
-  const { name, value, type, checked } = e.target;
-  
-  setForm(prev => {
-    const newForm = {
-      ...prev,
-      [name]: type === 'checkbox' ? checked : value
-    };
+  const handleFormChange = (e) => {
+    const { name, value, type, checked } = e.target;
 
-    // If package changes, validate destination
-    if (name === 'package' && value) {
-      const selectedPackage = packages.find(pkg => pkg._id === value);
-      if (selectedPackage) {
-        // Reset destination if it's not allowed for the new package
-        if (!selectedPackage.destination.includes(newForm.destination)) {
-          newForm.destination = selectedPackage.destination[0]; // Set to first allowed destination
-        }
+    setForm(prev => {
+      const newForm = {
+        ...prev,
+        [name]: type === 'checkbox' ? checked : value
+      };
+
+      // Reset packageId when destination changes to ensure re-matching
+      if (name === 'destination') {
+        newForm.packageId = '';
       }
+
+      return newForm;
+    });
+
+    if (errors[name]) {
+      setErrors(prev => ({ ...prev, [name]: '' }));
     }
-
-    return newForm;
-  });
-
-  // Clear related errors
-  if (errors[name]) {
-    setErrors(prev => ({ ...prev, [name]: '' }));
-  }
-};
+  };
 
   // Handle travelers count change and update travelers array
   const handleTravelersChange = (e) => {
@@ -157,7 +181,7 @@ export default function BookingFormOverlay({ isOpen, onClose, onSubmitted, custo
 
     // Validate basic form fields
     if (!form.destination) newErrors.destination = 'Destination is required';
-    if (!form.package) newErrors.package = 'Package is required';
+    if (!form.packageId) newErrors.packageId = 'A valid package must be selected for the destination.';
     if (!form.travelers || form.travelers < 1) newErrors.travelers = 'At least 1 traveler is required';
     if (!form.startDate) newErrors.startDate = 'Start date is required';
     if (!form.endDate) newErrors.endDate = 'End date is required';
@@ -209,14 +233,10 @@ export default function BookingFormOverlay({ isOpen, onClose, onSubmitted, custo
   // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!packages.some(pkg => pkg._id === form.package)) {
-      setErrors("Please select a valid package");
-      return;
-    }
-    console.log("Submitting:", form);
-
 
     if (!validateForm()) {
+      setModalMessage('Please correct the errors in the form.');
+      setShowErrorModal(true);
       return;
     }
 
@@ -224,22 +244,31 @@ export default function BookingFormOverlay({ isOpen, onClose, onSubmitted, custo
 
     try {
       const formData = new FormData();
+      formData.append('customer_id', customer._id || customer.id);
+      formData.append('package_id', form.packageId); // Crucial: This sends the package's _id
+      formData.append('package_type', form.packageType);
+      formData.append('travel_start_date', form.startDate);
+      formData.append('travel_end_date', form.endDate);
+      formData.append('num_travelers', form.travelers);
 
-      // Add customer information
-      if (customer) {
-        formData.append('package_id', String(form.package)); // Key must match backend
-        formData.append('destination', form.destination);
-        formData.append('customer_id', customer._id || customer.id);
-        formData.append('customerName', customer.name);
-        formData.append('customerEmail', customer.email);
-        formData.append('customerPhone', customer.phone);
+      const services = [];
+      // Map selected services to their actual IDs and prices from servicesList
+      if (form.helicopter) {
+        const service = servicesList.find(s => s.name === 'Helicopter Ride');
+        if (service) services.push({ service_id: service._id, price: service.price });
+      }
+      if (form.hotelUpgrade) {
+        const service = servicesList.find(s => s.name === 'Hotel Upgrade');
+        if (service) services.push({ service_id: service._id, price: service.price });
+      }
+      if (form.nurseSupport) {
+        const service = servicesList.find(s => s.name === 'Nurse Support');
+        if (service) services.push({ service_id: service._id, price: service.price });
       }
 
-      // Add form data
-      Object.keys(form).forEach(key => {
-        formData.append(key, form[key]);
-      });
-
+      if (services.length > 0) {
+        formData.append('services', JSON.stringify(services));
+      }
       // Add travelers information
       travelersInfo.forEach((traveler, index) => {
         formData.append(`travelers[${index}][name]`, traveler.name);
@@ -263,22 +292,23 @@ export default function BookingFormOverlay({ isOpen, onClose, onSubmitted, custo
         }
       });
 
-      // Handle successful response (Axios uses response.status)
       if (response.status === 200 || response.status === 201) {
-        alert('Booking submitted successfully!');
+        setModalMessage('Booking submitted successfully!');
+        setShowSuccessModal(true);
 
         if (onSubmitted) {
-          onSubmitted(response.data); // Axios stores data in response.data
+          onSubmitted(response.data);
         }
 
         resetForm();
-        onClose();
+        // onClose(); // Close after user dismisses success modal
       } else {
         throw new Error('Failed to submit booking');
       }
     } catch (error) {
       console.error('Submission error:', error.response?.data || error.message);
-      alert(error.response?.data?.message || 'Failed to submit booking. Please try again.');
+      setModalMessage(error.response?.data?.message || 'Failed to submit booking. Please try again.');
+      setShowErrorModal(true);
     } finally {
       setIsSubmitting(false);
     }
@@ -288,13 +318,14 @@ export default function BookingFormOverlay({ isOpen, onClose, onSubmitted, custo
   const resetForm = () => {
     setForm({
       destination: '',
-      package: '',
+      packageId: '',
       travelers: 1,
       startDate: '',
       endDate: '',
       helicopter: false,
       hotelUpgrade: false,
-      nurseSupport: false
+      nurseSupport: false,
+      packageType: 'Deluxe'
     });
     setTravelersInfo([
       {
@@ -389,6 +420,7 @@ export default function BookingFormOverlay({ isOpen, onClose, onSubmitted, custo
               onChange={handleFormChange}
               onTravelersChange={handleTravelersChange}
               packages={packages}
+              destinations={destinations}
             />
 
             {/* Travelers Information Section */}
@@ -440,8 +472,8 @@ export default function BookingFormOverlay({ isOpen, onClose, onSubmitted, custo
                 type="submit"
                 disabled={isSubmitting}
                 className={`px-6 py-2 text-sm font-medium text-white rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 ${isSubmitting
-                    ? 'bg-gray-400 cursor-not-allowed'
-                    : 'bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700'
+                  ? 'bg-gray-400 cursor-not-allowed'
+                  : 'bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700'
                   }`}
               >
                 {isSubmitting ? (
@@ -460,6 +492,45 @@ export default function BookingFormOverlay({ isOpen, onClose, onSubmitted, custo
           </form>
         </div>
       </div>
+
+      {/* Success Modal */}
+      {showSuccessModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50">
+          <div className="w-full max-w-sm p-6 text-center bg-white rounded-lg shadow-xl">
+            <h3 className="mb-4 text-lg font-semibold text-green-700">Success!</h3>
+            <p className="mb-6 text-gray-700">{modalMessage}</p>
+            <button
+              onClick={() => {
+                setShowSuccessModal(false);
+                setModalMessage('');
+                onClose(); // Close the main form after success
+              }}
+              className="px-4 py-2 text-white bg-green-500 rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* Error Modal */}
+      {showErrorModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50">
+          <div className="w-full max-w-sm p-6 text-center bg-white rounded-lg shadow-xl">
+            <h3 className="mb-4 text-lg font-semibold text-red-700">Error!</h3>
+            <p className="mb-6 text-gray-700">{modalMessage}</p>
+            <button
+              onClick={() => {
+                setShowErrorModal(false);
+                setModalMessage('');
+              }}
+              className="px-4 py-2 text-white bg-red-500 rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

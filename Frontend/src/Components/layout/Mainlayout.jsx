@@ -9,25 +9,24 @@ import {
   accountDashboardConfig,
 } from '../Dashboard/DashboardConfig';
 
-// Get dashboard config based on URL prefix
+// Dashboard config selection
 const getDashboardConfig = (pathname) => {
   if (pathname.startsWith('/salesdashboard')) return salesDashboardConfig;
   if (pathname.startsWith('/admindashboard')) return adminDashboardConfig;
   if (pathname.startsWith('/ops')) return operationDashboardConfig;
-  if (pathname.startsWith('/account')) return accountDashboardConfig; // FIXED: was '/accounts'
-  return adminDashboardConfig; // Default fallback
+  if (pathname.startsWith('/account')) return accountDashboardConfig;
+  return adminDashboardConfig;
 };
 
-// Get page title from path, supports nested children tabs too
+// Title extraction based on path
 const getPageTitle = (pathname) => {
-  const segments = pathname.split('/').filter(Boolean); // Remove empty
+  const segments = pathname.split('/').filter(Boolean);
   if (segments.length >= 2) {
     const config = getDashboardConfig(`/${segments[0]}`);
     const tabKey = segments[1];
     const tab = config.tabs[tabKey];
     if (!tab) return 'Dashboard';
 
-    // If this tab has children, try to get title of sub-tab (third segment)
     if (tab.children && segments.length >= 3) {
       const childKey = segments[2];
       const childTab = tab.children[childKey];
@@ -39,24 +38,83 @@ const getPageTitle = (pathname) => {
   return 'Dashboard';
 };
 
+// Role display name
+const getRoleDisplayName = (role) => {
+  switch (role?.toLowerCase()) {
+    case 'admin':
+    case 'administrator':
+      return 'Admin';
+
+    case 'sales':
+    case 'sales_agent':
+    case 'sales_manager':
+      return 'Sales';
+
+    case 'ops':
+    case 'operation':
+    case 'ops_manager':
+    case 'operation_manager':
+      return 'Operation';
+
+    case 'account':
+    case 'finance_accountant':
+    case 'accountant':
+    case 'account_manager':
+      return 'Accountant';
+
+    default:
+      return 'User';
+  }
+};
+
+
+// Fallback name if not set
+const getDefaultUserName = (role) => {
+  switch (role.toLowerCase()) {
+    case 'admin':
+    case 'administrator':
+      return 'Admin';
+
+    case 'sales':
+    case 'sales_agent':
+    case 'sales_manager':
+      return 'Sales';
+
+    case 'ops':
+    case 'operation':
+    case 'ops_manager':
+    case 'operation_manager':
+      return 'Operation';
+
+    case 'account':
+    case 'finance_accountant':
+    case 'accountant':
+    case 'account_manager':
+      return 'Accountant';
+
+    default:
+      return 'User';
+  }
+};
+
 const MainLayout = () => {
   const { pathname } = useLocation();
   const dashboardConfig = getDashboardConfig(pathname);
   const pageTitle = getPageTitle(pathname);
 
-  //Mock user for demo; replace with real user data from auth context/state
+  const storedRole = localStorage.getItem('userRole') || '';
+  const storedName = localStorage.getItem('userName') || getDefaultUserName(storedRole);
+
   const mockUser = {
-    role: pathname.startsWith('/admindashboard') ? 'Admin' :
-          pathname.startsWith('/salesdashboard') ? 'Sales Agent' : // FIXED: was '/Salesdashboard'
-          pathname.startsWith('/ops') ? 'Operation Team' : 
-          pathname.startsWith('/account') ? 'Accounts' : 'Admin', // FIXED: added account check
-    fullname: 'Demo User',
+    fullname: storedName,
+    role: getRoleDisplayName(storedRole),
   };
+
+  
 
   return (
     <div className="flex h-screen">
       <Sidebar config={dashboardConfig} user={mockUser} />
-      {/* Margin-left matches sidebar width: 16 for collapsed, 64 for expanded */}
       <div className="flex flex-col flex-1 overflow-hidden ml-16 md:ml-64">
         <Header title={pageTitle} userName={mockUser.fullname} />
         <main className="flex-1 overflow-y-auto p-4 bg-gray-50 dark:bg-gray-900">

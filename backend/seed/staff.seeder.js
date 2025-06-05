@@ -44,7 +44,7 @@ const staffSeedData = [
     name: 'Finance Accountant',
     email: 'accountant@example.com',
     phone: '+1234567892',
-    username: 'finance_accountant',
+    username: 'accountant',
     password: 'password123',
     role_name: 'Accountant'
   }

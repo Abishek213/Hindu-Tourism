@@ -206,7 +206,7 @@ if (customerCount > 0 || roleCount > 0 || staffCount > 0) {
         travel_start_date: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
         travel_end_date: new Date(Date.now() + 44 * 24 * 60 * 60 * 1000),
         num_travelers: 2,
-        status: 'confirmed',
+        status: 'completed',
         guide_id: guides[0]._id,
         transport_id: transports[0]._id,
         special_requirements: 'Vegetarian meals'
@@ -217,7 +217,7 @@ if (customerCount > 0 || roleCount > 0 || staffCount > 0) {
         travel_start_date: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000),
         travel_end_date: new Date(Date.now() + 81 * 24 * 60 * 60 * 1000),
         num_travelers: 4,
-        status: 'pending',
+        status: 'confirmed',
         special_requirements: 'Wheelchair access'
       }
     ];

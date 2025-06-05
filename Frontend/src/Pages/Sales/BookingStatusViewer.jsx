@@ -94,12 +94,14 @@ export default function ViewBookingStatus() {
                 Monitor and manage all your pilgrimage bookings
               </p>
             </div>
+
             <div className="hidden space-x-4 md:flex">
               <button className="flex items-center px-6 py-3 space-x-2 text-white transition-all duration-300 shadow-lg bg-white/20 backdrop-blur-sm rounded-xl hover:bg-white/30">
                 <Download size={20} />
                 <span>Export</span>
               </button>
             </div>
+
           </div>
         </div>
       </div>

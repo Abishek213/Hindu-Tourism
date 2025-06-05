@@ -71,7 +71,9 @@ const useCustomers = () => {
 
       // Throw a more specific error
       if (err.response?.status === 403) {
+
         throw new Error('You need admin privileges to add customers. Please contact your administrator.');
+
       }
       throw err;
     }
