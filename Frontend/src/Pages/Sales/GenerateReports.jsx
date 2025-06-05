@@ -1,31 +1,104 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid,
 } from "recharts";
-import { CalendarDays, DollarSign, Users, TrendingUp } from "lucide-react";
-
-const dummyData = {
-  metrics: {
-    totalLeads: 120,
-    totalConversions: 45,
-    revenue: 86500,
-  },
-  monthlyData: [
-    { month: "Jan", leads: 20, conversions: 5 },
-    { month: "Feb", leads: 25, conversions: 10 },
-    { month: "Mar", leads: 30, conversions: 8 },
-    { month: "Apr", leads: 22, conversions: 7 },
-    { month: "May", leads: 23, conversions: 15 },
-  ],
-};
+import { CalendarDays, Users, TrendingUp } from "lucide-react";
+import api from "../../api/auth"; // Your axios instance
 
 const GenerateReport = () => {
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
+  const [reportData, setReportData] = useState({
+    metrics: {
+      totalLeads: 0,
+      totalConversions: 0,
+    },
+    monthlyData: [],
+  });
+  const [loading, setLoading] = useState(false);
+
+  // Load initial data on component mount
+  useEffect(() => {
+    fetchReportData();
+  }, []);
+
+  const fetchReportData = async (startDate = null, endDate = null) => {
+    setLoading(true);
+    try {
+      // Fetch all leads from your backend
+      const response = await api.get('/lead');
+      let leads = response.data;
+
+      // Filter by date range if provided
+      if (startDate && endDate) {
+        const start = new Date(startDate);
+        const end = new Date(endDate);
+        end.setHours(23, 59, 59, 999);
+        
+        leads = leads.filter(lead => {
+          const leadDate = new Date(lead.created_date);
+          return leadDate >= start && leadDate <= end;
+        });
+      }
+
+      // Calculate metrics
+      const totalLeads = leads.length;
+      const totalConversions = leads.filter(lead => lead.status === 'converted').length;
+
+      // Process monthly data
+      const monthlyStats = processMonthlyData(leads);
+
+      setReportData({
+        metrics: {
+          totalLeads,
+          totalConversions,
+        },
+        monthlyData: monthlyStats,
+      });
+
+    } catch (error) {
+      console.error('Error fetching report data:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const processMonthlyData = (leads) => {
+    const monthlyMap = {};
+    
+    leads.forEach(lead => {
+      const date = new Date(lead.created_date);
+      const monthKey = date.toLocaleDateString('en-US', { month: 'short' });
+      
+      if (!monthlyMap[monthKey]) {
+        monthlyMap[monthKey] = {
+          month: monthKey,
+          leads: 0,
+          conversions: 0
+        };
+      }
+      
+      monthlyMap[monthKey].leads++;
+      if (lead.status === 'converted') {
+        monthlyMap[monthKey].conversions++;
+      }
+    });
+
+    // Convert to array and sort by month order
+    const monthOrder = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    return monthOrder
+      .filter(month => monthlyMap[month])
+      .map(month => monthlyMap[month]);
+  };
 
   const handleFilter = () => {
-    // TODO: Add logic to filter actual data from backend
+    if (!fromDate || !toDate) {
+      console.log("Please select both dates");
+      return;
+    }
+    
     console.log("Filtering report from", fromDate, "to", toDate);
+    fetchReportData(fromDate, toDate);
   };
 
   return (
@@ -54,19 +127,20 @@ const GenerateReport = () => {
         </div>
         <button
           onClick={handleFilter}
-          className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-md"
+          disabled={loading}
+          className="bg-orange-500 hover:bg-orange-600 disabled:bg-orange-300 text-white px-4 py-2 rounded-md"
         >
-          Apply Filter
+          {loading ? "Loading..." : "Apply Filter"}
         </button>
       </div>
 
       {/* Metrics Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
         <div className="bg-orange-50 border border-orange-200 rounded-xl p-4 flex items-center gap-4 shadow-sm">
           <Users className="text-orange-500 w-8 h-8" />
           <div>
             <p className="text-sm text-gray-600">Total Leads</p>
-            <p className="text-xl font-bold text-gray-800">{dummyData.metrics.totalLeads}</p>
+            <p className="text-xl font-bold text-gray-800">{reportData.metrics.totalLeads}</p>
           </div>
         </div>
 
@@ -74,15 +148,7 @@ const GenerateReport = () => {
           <TrendingUp className="text-orange-500 w-8 h-8" />
           <div>
             <p className="text-sm text-gray-600">Conversions</p>
-            <p className="text-xl font-bold text-gray-800">{dummyData.metrics.totalConversions}</p>
-          </div>
-        </div>
-
-        <div className="bg-orange-50 border border-orange-200 rounded-xl p-4 flex items-center gap-4 shadow-sm">
-          <DollarSign className="text-orange-500 w-8 h-8" />
-          <div>
-            <p className="text-sm text-gray-600">Revenue</p>
-            <p className="text-xl font-bold text-gray-800">₹{dummyData.metrics.revenue.toLocaleString()}</p>
+            <p className="text-xl font-bold text-gray-800">{reportData.metrics.totalConversions}</p>
           </div>
         </div>
       </div>
@@ -91,7 +157,7 @@ const GenerateReport = () => {
       <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
         <h2 className="text-lg font-semibold text-gray-800 mb-4">Monthly Lead & Conversion Trends</h2>
         <ResponsiveContainer width="100%" height={300}>
-          <BarChart data={dummyData.monthlyData}>
+          <BarChart data={reportData.monthlyData}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="month" />
             <YAxis />

@@ -51,7 +51,7 @@ const App = () => {
         >
           <Route index element={<Navigate to={salesDashboardConfig.defaultTab} replace />} />
           {renderDashboardRoutes(salesDashboardConfig)}
-          <Route path="settings" element={<Settings />} /> {/* ✅ Added */}
+          <Route path="settings" element={<Settings />} />
         </Route>
 
         {/* Admin Dashboard */}

@@ -4,7 +4,6 @@ import {
   Tag, MapPin, Phone, Plus, X, UserCheck
 } from 'lucide-react';
 import api from '../../api/auth';
-// import { useNavigate } from 'react-router-dom';
 import { debounce } from 'lodash';
 import { ChevronDown } from 'lucide-react';
 
@@ -16,6 +15,8 @@ export default function LeadManagement() {
   const [error, setError] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
+  const [convertingLeads, setConvertingLeads] = useState(new Set());
   // const navigate = useNavigate();
 
   // Form state
@@ -118,24 +119,6 @@ export default function LeadManagement() {
     });
   };
 
-
-  //   e.preventDefault();
-  //   setSubmitting(true);
-
-  //   try {
-  //     const response = await api.post('/lead', form);
-  //     console.log('Lead created successfully:', response.data);
-  //     loadLeads(); // Refresh the leads list
-  //     setShowForm(false);
-  //     resetForm();
-  //   } catch (error) {
-  //     console.error('Failed to submit lead:', error.response?.data || error.message);
-  //     setError('Error submitting lead. Please check your input and try again.');
-  //   } finally {
-  //     setSubmitting(false);
-  //   }
-  // };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSubmitting(true);
@@ -171,20 +154,35 @@ export default function LeadManagement() {
     }
   };
 
-
   const handleConvertToCustomer = async (leadId) => {
-    console.log('Attempting to convert lead:', leadId); // Add this
+    console.log('Attempting to convert lead:', leadId);
+    
+    // Add lead to converting state
+    setConvertingLeads(prev => new Set([...prev, leadId]));
+    
     try {
-      setFilteredLeads(prev => prev.filter(lead => lead._id !== leadId));
-
       const response = await api.post(`/lead/${leadId}/convert`);
-
-      console.log('Conversion successful:', response.data); // Add this
-      // loadLeads(); // Refresh the leads list
+      console.log('Conversion successful:', response.data);
+      
+      // Show success feedback
+      const leadName = leads.find(lead => lead._id === leadId)?.name || 'Lead';
+      setError(''); // Clear any previous errors
+      setSuccessMessage(`${leadName} successfully converted to customer!`);
+      
+      // Refresh the leads list to show updated data
+      await loadLeads();
+      
     } catch (error) {
       console.error('Failed to convert lead:', error);
-      console.error('Error details:', error.response?.data); // Add this
+      console.error('Error details:', error.response?.data);
       setError('Failed to convert lead to customer.');
+    } finally {
+      // Remove lead from converting state
+      setConvertingLeads(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(leadId);
+        return newSet;
+      });
     }
   };
 
@@ -198,9 +196,57 @@ export default function LeadManagement() {
     }
   };
 
+  // Function to render convert button based on lead status
+  const renderConvertButton = (lead) => {
+    const leadId = lead._id || lead.id;
+    const isConverting = convertingLeads.has(leadId);
+    
+    if (lead.status === 'converted') {
+      return (
+        <button
+          disabled
+          className="px-3 py-1.5 text-xs font-medium text-emerald-700 bg-emerald-100 border border-emerald-200 rounded-lg cursor-default"
+        >
+          <div className="flex items-center gap-1">
+            <UserCheck className="w-4 h-4" />
+            Converted
+          </div>
+        </button>
+      );
+    }
+
+    return (
+      <button
+        onClick={() => handleConvertToCustomer(leadId)}
+        disabled={isConverting}
+        className={`
+          px-3 py-1.5 text-xs font-medium rounded-lg border transition-colors duration-200
+          ${isConverting 
+            ? 'text-orange-600 bg-orange-50 border-orange-200 cursor-not-allowed' 
+            : 'text-emerald-600 bg-emerald-50 border-emerald-200 hover:bg-emerald-100 hover:text-emerald-700'
+          }
+        `}
+      >
+        <div className="flex items-center gap-1">
+          {isConverting ? (
+            <>
+              <div className="w-4 h-4 border-2 border-orange-300 rounded-full border-t-orange-600 animate-spin"></div>
+              Converting...
+            </>
+          ) : (
+            <>
+              <UserCheck className="w-4 h-4" />
+              Convert
+            </>
+          )}
+        </div>
+      </button>
+    );
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-amber-50">
-      <div className="p-4 mx-auto max-w-7xl sm:p-6">
+    // <div className="">
+      <div className="p-4 mx-auto max-w-7xl sm:p-2">
         <div className="bg-white border border-orange-100 shadow-xl rounded-2xl">
           {/* Header */}
           <div className="px-6 py-8 border-b border-gray-100 bg-gradient-to-r from-orange-500 to-amber-500 rounded-t-2xl">
@@ -226,6 +272,22 @@ export default function LeadManagement() {
           </div>
 
           <div className="p-6">
+            {/* Success message */}
+            {successMessage && (
+              <div className="p-4 mb-6 text-green-700 border border-green-200 bg-green-50 rounded-xl">
+                <div className="flex items-center gap-2">
+                  <UserCheck className="w-5 h-5" />
+                  <div className="font-medium">{successMessage}</div>
+                </div>
+                <button
+                  onClick={() => setSuccessMessage('')}
+                  className="mt-2 text-sm text-green-600 underline hover:text-green-800"
+                >
+                  Dismiss
+                </button>
+              </div>
+            )}
+
             {/* Error message */}
             {error && (
               <div className="p-4 mb-6 text-red-700 border border-red-200 bg-red-50 rounded-xl">
@@ -314,9 +376,6 @@ export default function LeadManagement() {
                           </select>
                         </div>
 
-
-
-
                         <div>
                           <select
                             name="communicationType"
@@ -388,7 +447,6 @@ export default function LeadManagement() {
                     onClick={() => {
                       setSearchTerm('');
                       setStatusFilter('');
-
                     }}
                     className="flex items-center gap-1 px-3 py-2 text-sm text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200"
                   >
@@ -409,7 +467,6 @@ export default function LeadManagement() {
                     <option key={value} value={value}>{label}</option>
                   ))}
                 </select>
-
               </div>
             </div>
 
@@ -456,7 +513,7 @@ export default function LeadManagement() {
                         <th className="px-6 py-4 text-xs font-semibold tracking-wider text-left text-gray-600 uppercase">
                           <div className="flex items-center">
                             <User className="w-4 h-4 mr-2" />
-                            Client Name
+                            Lead Name
                           </div>
                         </th>
                         <th className="hidden px-6 py-4 text-xs font-semibold tracking-wider text-left text-gray-600 uppercase md:table-cell">
@@ -494,8 +551,8 @@ export default function LeadManagement() {
                           <td className="px-6 py-4">
                             <div className="font-semibold text-gray-900">{lead.name}</div>
                             <div className="max-w-xs text-sm text-gray-500 truncate">
-                              {lead.notes && lead.notes.length > 40
-                                ? `${lead.notes.substring(0, 40)}...`
+                              {lead.notes && lead.notes.length > 30
+                                ? `${lead.notes.substring(0, 30)}...`
                                 : lead.notes || 'No notes'
                               }
                             </div>
@@ -561,43 +618,18 @@ export default function LeadManagement() {
                             {formatDate(lead.createdAt)}
                           </td>
                           <td className="px-6 py-4">
-                            {lead.status !== 'converted' && (
-                              <button
-                                onClick={() => handleConvertToCustomer(lead._id || lead.id)}
-                                className="p-2 transition-all duration-200 rounded-lg text-emerald-600 hover:text-emerald-800 hover:bg-emerald-50"
-                                title="Convert to Customer"
-                              >
-                                <UserCheck className="w-5 h-5" />
-                              </button>
-                            )}
+                            {renderConvertButton(lead)}
                           </td>
                         </tr>
                       ))}
                     </tbody>
                   </table>
                 </div>
-
-                {/* Results summary */}
-                <div className="px-6 py-4 border-t border-gray-100 bg-gray-50">
-                  <div className="flex items-center justify-between text-sm">
-                    <div className="text-gray-600">
-                      Showing <span className="font-semibold text-gray-900">{filteredLeads.length}</span> leads
-                      {(searchTerm || statusFilter) && (
-                        <span className="px-2 py-1 ml-2 text-xs text-orange-700 bg-orange-100 rounded-full">
-                          Filtered
-                        </span>
-                      )}
-                    </div>
-                    <div className="text-xs text-gray-500">
-                      Click the convert icon to mark leads as customers
-                    </div>
-                  </div>
-                </div>
               </div>
             )}
           </div>
         </div>
       </div>
-    </div>
+    // </div>
   );
 }

@@ -57,7 +57,7 @@ const Sidebar = ({ config, user }) => {
   return (
     <div
       className={`fixed top-0 left-0 h-screen z-50 transition-all duration-300 
-      ${isSidebarOpen ? 'w-64' : 'w-16'} 
+      ${isSidebarOpen ? 'w-52' : 'w-16'} 
       ${isDarkMode ? 'bg-gray-900 text-gray-100 border-r border-gray-800' : 'bg-white text-gray-800 border-r border-gray-200'}`}
     >
       {/* Logo + Toggle */}
