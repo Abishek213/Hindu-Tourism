@@ -8,79 +8,81 @@ import Invoice from '../models/Invoice.js';
 import { generateBookingPDF as generateBookingPDFHelper } from '../services/pdfService.js';
 
 export const createBooking = async (req, res, next) => {
-    try {
-      console.log("Raw request body:", req.body);
-        const {
-            customer_id, 
-            package_id, 
-            travel_start_date, 
-            travel_end_date,
-            num_travelers, 
-            special_requirements, 
-            services,
-            destination
-        } = req.body;
+  try {
+    console.log("Raw request body:", req.body);
+    const {
+      customer_id,
+      package_id,
+      travel_start_date,
+      travel_end_date,
+      num_travelers,
+      package_type,
+      special_requirements,
+      services,
+      destination
+    } = req.body;
 
-        // Validate customer exists
-        const customer = await Customer.findById(customer_id);
-        if (!customer) {
-            return res.status(404).json({ error: 'Customer not found' });
-        }
-
-        // Validate package exists and is active
-        const tourPackage = await Package.findById(package_id);
-        if (!tourPackage || !tourPackage.is_active) {
-            return res.status(400).json({ error: 'Invalid or inactive package' });
-        }
-
-        // Validate that the selected destination is available in the package
-        if ( !tourPackage.destination.includes(destination)) {
-            return res.status(400).json({ 
-                error: 'Selected destination is not available for this package',
-                availableDestinations: tourPackage.destination
-            });
-        }
-
-        // Create the booking with destination
-        const booking = await Booking.create({
-            customer_id,
-            package_id,
-            destination, // Include destination in the booking
-            travel_start_date,
-            travel_end_date,
-            num_travelers,
-            status: 'confirmed',
-            booking_date: new Date(),
-            special_requirements
-        });
-
-        // Add optional services if provided
-        if (services && services.length > 0) {
-            for (const service of services) {
-                await BookingService.create({
-                    booking_id: booking._id,
-                    service_id: service.service_id,
-                    price_applied: service.price
-                });
-            }
-        }
-
-        // Create initial invoice
-        const invoice = await Invoice.create({
-            booking_id: booking._id,
-            amount: tourPackage.base_price,
-            invoice_date: new Date(),
-            status: 'sent'
-        });
-
-        res.status(201).json({
-            booking,
-            invoice
-        });
-
-    } catch (error) {
-        next(error);
+    // Validate customer exists
+    const customer = await Customer.findById(customer_id);
+    if (!customer) {
+      return res.status(404).json({ error: 'Customer not found' });
     }
+
+    // Validate package exists and is active
+    const tourPackage = await Package.findOne({ _id: package_id, is_active: true });
+    if (!tourPackage) {
+      return res.status(400).json({ error: 'Invalid or inactive package type' });
+    }
+
+
+    const validPackageTypes = ['Premium', 'Deluxe', 'Exclusive'];
+    if (package_type && !validPackageTypes.includes(package_type)) {
+      return res.status(400).json({
+        message: 'Invalid package type. Must be one of: Premium, Deluxe, Exclusive'
+      });
+    }
+
+    // Create the booking with destination
+    const booking = await Booking.create({
+      customer_id,
+      package_id,
+      destination, // Include destination in the booking
+      travel_start_date,
+      travel_end_date,
+      num_travelers,
+      package_type: package_type || 'Deluxe',
+      status: 'confirmed',
+      booking_date: new Date(),
+      special_requirements
+    });
+
+    // Add optional services if provided
+    if (services && services.length > 0) {
+      for (const service of services) {
+        await BookingService.create({
+          booking_id: booking._id,
+          service_id: service.service_id,
+          price_applied: service.price
+        });
+      }
+    }
+
+    // Create initial invoice
+    const invoice = await Invoice.create({
+      booking_id: booking._id,
+      amount: tourPackage.base_price,
+      invoice_date: new Date(),
+      status: 'sent'
+    });
+
+    res.status(201).json({
+      booking,
+      invoice
+    });
+
+  } catch (error) {
+    next(error);
+  }
 };
 
 export const getAllBookings = async (req, res, next) => {
@@ -110,82 +112,92 @@ export const getAllBookings = async (req, res, next) => {
 };
 
 export const getBooking = async (req, res, next) => {
-    try {
-        const bookingId = req.params.id.trim(); // Clean ID
+  try {
+    const bookingId = req.params.id.trim(); // Clean ID
 
-        const booking = await Booking.findById(bookingId)
-            .populate('lead_id')
-            .populate('customer_id')
-            .populate({
-                path: 'package_id',
-                populate: {
-                    path: 'packageItineraries' 
-                }
-            })
-            .populate('guide_id')
-            .populate('transport_id');
-
-        if (!booking) {
-            return res.status(404).json({ error: 'Booking not found' });
+    const booking = await Booking.findById(bookingId)
+      .populate('lead_id')
+      .populate('customer_id')
+      .populate({
+        path: 'package_id',
+        populate: {
+          path: 'packageItineraries'
         }
+      })
+      .populate('guide_id')
+      .populate('transport_id');
 
-        if (req.user.role_name === 'Sales Agent') {
-            const lead = await Lead.findById(booking.lead_id);
-            if (!lead || lead.staff_id.toString() !== req.user.staff_id.toString()) {
-                return res.status(403).json({ error: 'Unauthorized to access this booking' });
-            }
-        }
-
-        res.json(booking);
-    } catch (error) {
-        next(error);
+    if (!booking) {
+      return res.status(404).json({ error: 'Booking not found' });
     }
+
+    if (req.user.role_name === 'Sales Agent') {
+      const lead = await Lead.findById(booking.lead_id);
+      if (!lead || lead.staff_id.toString() !== req.user.staff_id.toString()) {
+        return res.status(403).json({ error: 'Unauthorized to access this booking' });
+      }
+    }
+
+    res.json(booking);
+  } catch (error) {
+    next(error);
+  }
 };
 
 export const updateBooking = async (req, res, next) => {
-    try {
-        const { guide_id, transport_id, status, travel_start_date, travel_end_date, num_travelers, travelStatus } = req.body;
+  try {
+    const { guide_id, transport_id, status, travel_start_date, travel_end_date, num_travelers, travelStatus } = req.body;
 
-        const bookingId = req.params.id.trim(); 
-        const booking = await Booking.findById(bookingId);
-        if (!booking) {
-            return res.status(404).json({ error: 'Booking not found' });
-        }
-
-        if (req.user.role_name === 'Sales Agent') {
-            const lead = await Lead.findById(booking.lead_id);
-            if (!lead || lead.staff_id.toString() !== req.user.staff_id.toString()) {
-                return res.status(403).json({ error: 'Unauthorized to update this booking' });
-            }
-        }
-
-        if (req.user.role_name === 'Operation Team') {
-            const updates = {};
-            if (guide_id) updates.guide_id = guide_id;
-            if (transport_id) updates.transport_id = transport_id;
-            if (status) updates.status = status.toLowerCase();
-
-            Object.assign(booking, updates);
-            await booking.save();
-            return res.json(booking);
-        }
-
-        const updates = {
-            guide_id,
-            transport_id,
-            status: status?.toLowerCase(), 
-            travel_start_date,
-            travel_end_date,
-            num_travelers
-        };
-
-        Object.assign(booking, updates);
-        await booking.save();
-
-        res.json(booking);
-    } catch (error) {
-        next(error);
+    const bookingId = req.params.id.trim();
+    const booking = await Booking.findById(bookingId);
+    if (!booking) {
+      return res.status(404).json({ error: 'Booking not found' });
     }
+
+    if (req.user.role_name === 'Sales Agent') {
+      const lead = await Lead.findById(booking.lead_id);
+      if (!lead || lead.staff_id.toString() !== req.user.staff_id.toString()) {
+        return res.status(403).json({ error: 'Unauthorized to update this booking' });
+      }
+    }
+
+    if (req.user.role_name === 'Operation Team') {
+      const updates = {};
+      if (guide_id) updates.guide_id = guide_id;
+      if (transport_id) updates.transport_id = transport_id;
+      if (status) updates.status = status.toLowerCase();
+
+      Object.assign(booking, updates);
+      await booking.save();
+
+      await CommunicationLog.create({
+        booking_id: booking._id,
+        staff_id: req.user.staff_id,
+        log_date: new Date(),
+        type: 'Booking Update',
+        content: `Operation team updated booking details (guide/transport/status)`,
+        status: 'Completed'
+      });
+
+      return res.json(booking);
+    }
+
+    const updates = {
+      guide_id,
+      transport_id,
+      status: status?.toLowerCase(),
+      travel_start_date,
+      travel_end_date,
+      num_travelers
+    };
+
+    Object.assign(booking, updates);
+    await booking.save();
+
+    res.json(booking);
+  } catch (error) {
+    next(error);
+  }
 };
 
 export const updateStatus = async (req, res, next) => {
@@ -213,6 +225,16 @@ export const updateStatus = async (req, res, next) => {
     booking.status = status.toLowerCase();
     await booking.save();
 
+    // Log the status change
+    await CommunicationLog.create({
+      booking_id: booking._id,
+      staff_id: req.user._id,
+      log_date: new Date(),
+      type: 'other', // update if you later extend enum to include 'Status Update'
+      content: `Booking status changed to ${status}`,
+      status: 'completed'
+    });
+
     res.json({ message: 'Booking status updated', booking });
   } catch (error) {
     next(error);
@@ -223,7 +245,7 @@ export const updateTravelStatus = async (req, res, next) => {
   try {
     const { travelStatus } = req.body;
     const bookingId = req.params.id.trim();
-    
+
     const booking = await Booking.findById(bookingId);
     if (!booking) {
       return res.status(404).json({ error: 'Booking not found' });
@@ -241,7 +263,7 @@ export const updateTravelStatus = async (req, res, next) => {
     if (travelStatus.toLowerCase() === 'cancelled') {
       booking.status = 'cancelled';
     }
-    
+
     await booking.save();
 
     res.json({ message: 'Travel status updated', booking });

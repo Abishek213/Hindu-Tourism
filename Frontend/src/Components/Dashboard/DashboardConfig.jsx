@@ -10,11 +10,6 @@ import {
   ReceiptIndianRupee,
   Package,
   ListChecks,
-
-  Bus,
-  Dock,
-  Compass,
-
   PlusIcon,
   LucideCompass,
   GroupIcon

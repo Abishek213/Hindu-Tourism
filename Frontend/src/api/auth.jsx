@@ -98,6 +98,7 @@ export const getCurrentUser = () => {
       token
     };
   } catch (error) {
+    console.error('Failed to decode token:', error);
     logout();
     return null;
   }

@@ -46,14 +46,16 @@ const bookingSchema = new mongoose.Schema({
   },
   package_type: {
     type: String,
-    enum: ['Premium','Deluxe',' Exclusive'],
+    enum: ['Premium','Deluxe','Exclusive'],
     default: 'Deluxe'
   },
+
   travelStatus: {
     type: String,
     enum: ['Not Started', 'On the Way', 'At Destination', 'Return Journey', 'Completed', 'Delayed', 'Cancelled'],
     default: 'Not Started'
   }
+
 }, { timestamps: true });
 
 export default mongoose.model('Booking', bookingSchema);
