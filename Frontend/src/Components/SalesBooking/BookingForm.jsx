@@ -44,7 +44,7 @@ export default function BookingFormOverlay({ isOpen = true, onClose, onSubmitted
         // setServicesList(serviceResponse.data);
 
       } catch (error) {
-        // console.error('Error fetching data:', error);
+        console.error('Error fetching data:', error);
         setModalMessage('Failed to load form data. Please try again later.');
         setShowErrorModal(true);
       }
@@ -243,65 +243,106 @@ export default function BookingFormOverlay({ isOpen = true, onClose, onSubmitted
     setIsSubmitting(true);
 
     try {
-      const formData = new FormData();
-      formData.append('customer_id', customer._id || customer.id);
-      formData.append('package_id', form.packageId); // Crucial: This sends the package's _id
-      formData.append('package_type', form.packageType);
-      formData.append('travel_start_date', form.startDate);
-      formData.append('travel_end_date', form.endDate);
-      formData.append('num_travelers', form.travelers);
-
+      // --- Step 1: Create the Booking ---
+      const bookingFormData = new FormData();
+      bookingFormData.append('customer_id', customer._id || customer.id);
+      bookingFormData.append('package_id', form.packageId);
+      bookingFormData.append('package_type', form.packageType);
+      bookingFormData.append('travel_start_date', form.startDate);
+      bookingFormData.append('travel_end_date', form.endDate);
+      bookingFormData.append('num_travelers', form.travelers);
+      
       const services = [];
-      // Map selected services to their actual IDs and prices from servicesList
       if (form.helicopter) {
         const service = servicesList.find(s => s.name === 'Helicopter Ride');
-        if (service) services.push({ service_id: service._id, price: service.price });
+        if (service) services.push({ service_id: service._id, price_applied: service.price });
       }
       if (form.hotelUpgrade) {
         const service = servicesList.find(s => s.name === 'Hotel Upgrade');
-        if (service) services.push({ service_id: service._id, price: service.price });
+        if (service) services.push({ service_id: service._id, price_applied: service.price });
       }
       if (form.nurseSupport) {
         const service = servicesList.find(s => s.name === 'Nurse Support');
-        if (service) services.push({ service_id: service._id, price: service.price });
+        if (service) services.push({ service_id: service._id, price_applied: service.price });
       }
 
       if (services.length > 0) {
-        formData.append('services', JSON.stringify(services));
+        bookingFormData.append('services', JSON.stringify(services));
       }
-      // Add travelers information
-      travelersInfo.forEach((traveler, index) => {
-        formData.append(`travelers[${index}][name]`, traveler.name);
-        formData.append(`travelers[${index}][documentType]`, traveler.documentType);
 
-        if (traveler.documents.passportFile) {
-          formData.append(`travelers[${index}][passport]`, traveler.documents.passportFile);
-        }
-        if (traveler.documents.aadhaarFrontFile) {
-          formData.append(`travelers[${index}][aadhaarFront]`, traveler.documents.aadhaarFrontFile);
-        }
-        if (traveler.documents.aadhaarBackFile) {
-          formData.append(`travelers[${index}][aadhaarBack]`, traveler.documents.aadhaarBackFile);
-        }
-      });
-
-      // Make the API call with proper headers
-      const response = await api.post('/booking', formData, {
+      const bookingResponse = await api.post('/booking', bookingFormData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
       });
 
-      if (response.status === 200 || response.status === 201) {
-        setModalMessage('Booking submitted successfully!');
+      if (bookingResponse.status === 200 || bookingResponse.status === 201) {
+        const bookingId = bookingResponse.data.booking._id;
+
+        // --- Step 2: Upload Documents for Travelers ---
+        const documentsToUpload = [];
+        const filesToAttach = new FormData(); // Use a separate FormData for files
+
+        travelersInfo.forEach((traveler, index) => {
+          const isMainCustomer = index === 0; // First traveler is the main customer
+          const travelerName = traveler.name.trim();
+
+          if (traveler.documentType === 'passport' && traveler.documents.passportFile) {
+            documentsToUpload.push({
+              document_type: 'Passport', // Changed to match backend enum: Capital 'P'
+              traveler_name: travelerName,
+              is_main_customer: isMainCustomer,
+              customer_id: isMainCustomer ? (customer._id || customer.id) : undefined,
+              // file_index: filesToAttach.getAll('files').length // Keep track of file order if needed
+            });
+            filesToAttach.append('files', traveler.documents.passportFile);
+          } else if (traveler.documentType === 'aadhaar') {
+            if (traveler.documents.aadhaarFrontFile) {
+              documentsToUpload.push({
+                document_type: 'Aadhaar Card', // Changed to match backend enum: 'Aadhaar Card'
+                traveler_name: travelerName,
+                is_main_customer: isMainCustomer,
+                customer_id: isMainCustomer ? (customer._id || customer.id) : undefined,
+              });
+              filesToAttach.append('files', traveler.documents.aadhaarFrontFile);
+            }
+            if (traveler.documents.aadhaarBackFile) {
+              documentsToUpload.push({
+                document_type: 'Aadhaar Card', // Changed to match backend enum: 'Aadhaar Card'
+                traveler_name: travelerName,
+                is_main_customer: isMainCustomer,
+                customer_id: isMainCustomer ? (customer._id || customer.id) : undefined,
+              });
+              filesToAttach.append('files', traveler.documents.aadhaarBackFile);
+            }
+          }
+          // Add logic for other document types if necessary
+        });
+
+        if (documentsToUpload.length > 0) {
+          filesToAttach.append('documents', JSON.stringify(documentsToUpload)); // Append metadata as JSON string
+
+          const documentUploadResponse = await api.post(`/document/bookings/${bookingId}`, filesToAttach, {
+            headers: {
+              'Content-Type': 'multipart/form-data'
+            }
+          });
+
+          if (documentUploadResponse.status !== 200 && documentUploadResponse.status !== 201) {
+            console.warn("Documents upload failed:", documentUploadResponse.data);
+            // Optionally, you might want to show an error specific to document upload,
+            // but the booking itself is successful.
+          }
+        }
+
+        setModalMessage('Booking submitted successfully and documents uploaded!');
         setShowSuccessModal(true);
 
         if (onSubmitted) {
-          onSubmitted(response.data);
+          onSubmitted(bookingResponse.data);
         }
 
         resetForm();
-        // onClose(); // Close after user dismisses success modal
       } else {
         throw new Error('Failed to submit booking');
       }
@@ -411,7 +452,6 @@ export default function BookingFormOverlay({ isOpen = true, onClose, onSubmitted
                 </div>
               </div>
             )}
-
 
             {/* Booking Details Section */}
             <BookingDetails
