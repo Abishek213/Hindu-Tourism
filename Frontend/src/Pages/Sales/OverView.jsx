@@ -1,39 +1,67 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import CompactStatsCard from '../../Components/Widgets/CompactStatCard';
 import DataTable from "../../Components/Widgets/DataTable";
 import PieChart from "../../Components/Widgets//PieChart";
 import BarChartComponent from '../../Components/Widgets//BarChart';
-import FollowUpCard from '../../Components/Widgets/FollowUp';       
+import { toast } from 'react-toastify';
 
-// Mock data
+import { Users, UserPlus, TrendingUp } from 'lucide-react';
+
 import {
-  mockLeadStats,
-  mockLeadSource,
-  mockPackagePopularity,
-  mockLeadStatusData,
-  mockRecentLeads,
-  // mockUpcomingFollowUps,
-  // mockTeamPerformance
-} from '../../api/MockData';
-
-// Icons
-import {
-  Users,
-  UserPlus,
-  TrendingUp,
-} from 'lucide-react';
-
-// Mock data for communication logs
-const mockCommunicationLogs = [
-  { name: 'Email', value: 145, color: '#FF7B25' },
-  { name: 'Call', value: 98, color: '#25d366' },
-  { name: 'Meeting', value: 67, color: '#34B7F1' },
-  { name: 'Message', value: 234, color: '#D93025' },
-  { name: 'Other', value: 45, color: '#4C8BF5' }
-];
+  fetchLeadStats,
+  fetchLeadSources,
+  fetchLeadStatusData,
+  fetchRecentLeads,
+  fetchPackagePopularity,
+  fetchCommunicationMethods
+} from '../../services/SalesOverviewService';
 
 const Overview = () => {
   const [dateRange, setDateRange] = useState('This Month');
+  const [leadStats, setLeadStats] = useState({});
+  const [leadSources, setLeadSources] = useState([]);
+  const [packagePopularity, setPackagePopularity] = useState([]);
+  const [leadStatusData, setLeadStatusData] = useState([]);
+  const [recentLeads, setRecentLeads] = useState([]);
+  const [communicationLogs, setCommunicationLogs] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const [
+          stats, 
+          sources, 
+          packages, 
+          status, 
+          leads, 
+          communications
+        ] = await Promise.all([
+          fetchLeadStats(),
+          fetchLeadSources(),
+          fetchPackagePopularity(),
+          fetchLeadStatusData(),
+          fetchRecentLeads(),
+          fetchCommunicationMethods()
+        ]);
+        
+        setLeadStats(stats);
+        setLeadSources(sources);
+        setPackagePopularity(packages);
+        setLeadStatusData(status);
+        setRecentLeads(leads);
+        setCommunicationLogs(communications);
+      } catch (error) {
+        console.error('Error fetching dashboard data:', error);
+        toast.error('Failed to load dashboard data');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [dateRange]);
 
   const leadsColumns = [
     { key: 'name', title: 'Name', sortable: true },
@@ -44,7 +72,7 @@ const Overview = () => {
       title: 'Source', 
       sortable: true,
       render: (row) => (
-        <span className="px-2 py-1 bg-orange-50 text-orange-600 rounded-full text-xs">
+        <span className="px-2 py-1 bg-orange-50 text-orange-600 rounded-full text-xs capitalize">
           {row.source}
         </span>
       )
@@ -55,18 +83,20 @@ const Overview = () => {
       sortable: true,
       render: (row) => {
         const statusColors = {
-          'New': 'bg-blue-50 text-blue-600',
-          'Contacted': 'bg-purple-50 text-purple-600',
-          'Interested': 'bg-green-50 text-green-600',
-          'Booked': 'bg-green-50 text-green-700',
-          'Not Interested': 'bg-red-50 text-red-600'
+          'new': 'bg-blue-50 text-blue-600',
+          'contacted': 'bg-purple-50 text-purple-600',
+          'qualified': 'bg-green-50 text-green-600',
+          'converted': 'bg-green-50 text-green-700',
+          'lost': 'bg-red-50 text-red-600'
         };
 
-        const statusColor = statusColors[row.status] || 'bg-gray-50 text-gray-600';
+        const status = row.status.toLowerCase();
+        const formattedStatus = status.charAt(0).toUpperCase() + status.slice(1);
+        const statusColor = statusColors[status] || 'bg-gray-50 text-gray-600';
 
         return (
           <span className={`px-2 py-1 ${statusColor} rounded-full text-xs`}>
-            {row.status}
+            {formattedStatus}
           </span>
         );
       }
@@ -75,14 +105,15 @@ const Overview = () => {
     { key: 'assignedTo', title: 'Assigned To', sortable: true }
   ];
 
-  const teamColumns = [
-    { key: 'name', title: 'Name', sortable: true },
-    { key: 'leadsAssigned', title: 'Leads Assigned', sortable: true },
-    { key: 'conversions', title: 'Conversions', sortable: true },
-    { key: 'conversionRate', title: 'Rate', sortable: true }
-  ];
-
   const dateRanges = ['Today', 'This Week', 'This Month', 'This Year'];
+
+  if (loading) {
+    return (
+      <div className="p-4 flex justify-center items-center h-64">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-orange-500"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="p-4">
@@ -110,20 +141,20 @@ const Overview = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
         <CompactStatsCard 
           title="Total Leads" 
-          value={mockLeadStats.total} 
+          value={leadStats.total || 0} 
           icon={<Users size={20} />} 
-          change={`${mockLeadStats.changePercentage}%`} 
+          change={`${leadStats.changePercentage || 0}%`} 
           changeType="increase" 
           changeText="vs last month" 
         />
         <CompactStatsCard 
           title="New Leads Today" 
-          value={mockLeadStats.newToday} 
+          value={leadStats.newToday || 0} 
           icon={<UserPlus size={20} />} 
         />
         <CompactStatsCard 
           title="Conversion Rate" 
-          value={`${mockLeadStats.conversion}%`} 
+          value={`${leadStats.conversion || 0}%`} 
           icon={<TrendingUp size={20} />} 
           change="5%" 
           changeType="increase" 
@@ -134,7 +165,7 @@ const Overview = () => {
       {/* Lead Status Bar Chart */}
       <div className="mb-6">
         <BarChartComponent 
-          data={mockLeadStatusData}
+          data={leadStatusData}
           title="Lead Status Distribution"
           xAxisKey="name"
           bars={[
@@ -147,19 +178,19 @@ const Overview = () => {
       {/* Charts Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
         <PieChart 
-          data={mockLeadSource}
+          data={leadSources}
           title="Lead Sources"
           height={300}
           colorScheme={['#FF7B25', '#25d366', '#34B7F1', '#D93025', '#4C8BF5']}
         />
         <PieChart
-          data={mockPackagePopularity}
+          data={packagePopularity}
           title="Package Popularity"
           height={300}
           colorScheme={['#EA580C', '#FF7B25', '#FF9A52']}
         />
         <PieChart
-          data={mockCommunicationLogs}
+          data={communicationLogs}
           title="Communication Methods"
           height={300}
           colorScheme={['#FF7B25', '#25d366', '#34B7F1', '#D93025', '#4C8BF5']}
@@ -170,29 +201,11 @@ const Overview = () => {
       <div className="mb-6">
         <DataTable 
           columns={leadsColumns}
-          data={mockRecentLeads}
+          data={recentLeads}
           title="Recent Leads"
           pageSize={5}
         />
       </div>
-
-      {/* FollowUps and Team Performance */}
-      {/* <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <FollowUpCard followUps={mockUpcomingFollowUps} />
-        <div className="bg-white p-6 rounded-xl shadow-md border border-gray-100">
-          <div className="flex justify-between items-center mb-4">
-            <h3 className="text-base font-medium text-gray-800">Team Performance</h3>
-            <button className="text-sm text-orange-600 hover:text-orange-800 transition-colors">
-              View Details
-            </button>
-          </div>
-          <DataTable 
-            columns={teamColumns}
-            data={mockTeamPerformance}
-            pageSize={4}
-          />
-        </div>
-      </div> */}
     </div>
   );
 };

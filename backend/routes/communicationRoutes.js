@@ -13,7 +13,6 @@ import { checkRole } from '../middleware/roleCheck.js';
 const router = express.Router();
 router.use(protect);
 
-
 router.post(
   '/createlog',
   checkRole('Admin', 'Sales Agent'),

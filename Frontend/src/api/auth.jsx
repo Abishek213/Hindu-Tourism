@@ -114,7 +114,6 @@ export const isAuthenticated = () => {
   return getCurrentUser() !== null;
 };
 
-// Export the getUserProfile function for use in other components
 export { getUserProfile };
 
 export default api;
