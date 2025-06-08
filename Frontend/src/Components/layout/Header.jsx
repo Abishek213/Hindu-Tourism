@@ -21,7 +21,6 @@ const Header = ({ title = "Dashboard", userName = "User" }) => {
     localStorage.removeItem("userName");
     localStorage.removeItem("userId");
     localStorage.removeItem("tokenExpiration");
-    alert("Logged out successfully!");
     navigate("/login");
   };
 
