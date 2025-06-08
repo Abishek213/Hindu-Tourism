@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import MainLayout from './Components/layout/Mainlayout';
 import Login from './Pages/Login';
-import Settings from './Components/layout/Settings';
+import Settings from './Pages/Settings';
 import { BookingProvider } from './context/BookingContext';
 import ProtectedRoute from './Components/protected/protectedRoute';
 
