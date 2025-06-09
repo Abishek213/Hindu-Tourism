@@ -18,7 +18,7 @@ const Booking = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 to-red-50">
+    <div className="p-4  bg-white rounded-lg shadow-md">
       {/* Always show the booking list */}
       <BookingList onAddBooking={handleAddBooking} />
       
