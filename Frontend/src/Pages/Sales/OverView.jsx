@@ -116,23 +116,22 @@ const Overview = () => {
   }
 
   return (
-    <div className="p-4">
+    <div className="p-4  bg-white rounded-lg shadow-md">
       {/* Date Filter */}
-      <div className="mb-6 flex justify-between items-center">
-        <h2 className="text-xl font-bold text-gray-800">Sales Overview</h2>
+      <div className="mb-6 flex justify-between items-center px-6 py-8 border-b border-gray-100
+       bg-primary-saffron">
+        <h2 className="text-xl font-bold text-white">Sales Overview</h2>
         <div className="flex space-x-2">
           {dateRanges.map((range) => (
-            <button
-              key={range}
-              className={`px-4 py-2 text-sm rounded-md transition-colors ${
-                dateRange === range
-                  ? 'bg-orange-500 text-white'
-                  : 'bg-white border border-gray-200 text-gray-700 hover:bg-orange-50'
-              }`}
-              onClick={() => setDateRange(range)}
-            >
-              {range}
-            </button>
+           <button
+            key={range}
+            className={`px-4 py-2 text-sm rounded-md  text-orange-600 transition-all duration-200
+                  bg-white shadow-lg sm:mt-0 hover:bg-orange-100`}
+            onClick={() => setDateRange(range)}
+          >
+            {range}
+          </button>
+
           ))}
         </div>
       </div>

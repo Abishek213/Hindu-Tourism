@@ -9,7 +9,7 @@ module.exports = {
         'secondary-green': '#16a34a',
         'white':'#FFFFFFFF',
         'light': '#F05A28',
-        'dark': '#833419',
+        'dark': '#833419'
       },
       fontFamily: {
         sans: ["var(--font-inter)", "sans-serif"],
