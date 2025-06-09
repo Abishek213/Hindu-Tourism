@@ -174,16 +174,6 @@ export const updateBooking = async (req, res, next) => {
       Object.assign(booking, updates);
       await booking.save();
 
-      // Note: CommunicationLog import is missing - you may need to add it
-      // await CommunicationLog.create({
-      //   booking_id: booking._id,
-      //   staff_id: req.user._id,
-      //   log_date: new Date(),
-      //   type: 'Booking Update',
-      //   content: `Operation team updated booking details (guide/transport/status)`,
-      //   status: 'Completed'
-      // });
-
       return res.json(booking);
     }
 
@@ -230,16 +220,6 @@ export const updateStatus = async (req, res, next) => {
 
     booking.status = status.toLowerCase();
     await booking.save();
-
-    // Note: CommunicationLog import is missing - you may need to add it
-    // await CommunicationLog.create({
-    //   booking_id: booking._id,
-    //   staff_id: req.user._id,
-    //   log_date: new Date(),
-    //   type: 'other',
-    //   content: `Booking status changed to ${status}`,
-    //   status: 'completed'
-    // });
 
     res.json({ message: 'Booking status updated', booking });
   } catch (error) {
