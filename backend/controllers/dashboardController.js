@@ -1,7 +1,6 @@
 import Lead from '../models/Lead.js';
 import CommunicationLog from '../models/CommunicationLog.js';
 import Booking from '../models/Booking.js';
-import Package  from '../models/Package.js';
 
 export const getLeadStats = async (req, res) => {
   try {

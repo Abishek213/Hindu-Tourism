@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import config from '../config/config.js';
-import Staff from '../models/Staff.js'; // Assuming Staff is in the same directory
+import Staff from '../models/Staff.js'; 
 
 export const login = async (req, res, next) => {
   try {
@@ -14,10 +14,9 @@ export const login = async (req, res, next) => {
 
     // Fetch the staff, including the role details by populating role_id
     const staff = await Staff.findOne({ username })
-      .select('+password_hash') // Ensure password is selected
-      .populate('role_id'); // Populate the role details from the Role model
+      .select('+password_hash') 
+      .populate('role_id'); 
 
-    // If the staff is not found, return an error
     if (!staff) {
       return next(new Error('Invalid credentials'));
     }
@@ -37,7 +36,7 @@ export const login = async (req, res, next) => {
 
     // If the password matches, generate a JWT token including the role
     const token = jwt.sign(
-      { id: staff._id, role: staff.role_id.role_name }, // Include role name in the payload
+      { id: staff._id, role: staff.role_id.role_name }, 
       config.JWT_SECRET,
       { expiresIn: config.JWT_EXPIRE }
     );
