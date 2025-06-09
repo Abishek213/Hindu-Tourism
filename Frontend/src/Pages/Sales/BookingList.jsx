@@ -308,7 +308,7 @@ function CustomerHeader({ onAddCustomer, onSearch }) {
         </div>
         <button
           onClick={onAddCustomer}
-          className="flex items-center gap-2 px-6 py-3 font-semibold text-white transition-all duration-200 rounded-lg shadow-lg bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 hover:shadow-xl"
+          className="flex items-center gap-2 px-6 py-3 font-semibold text-white transition-all duration-200 rounded-lg shadow-lg bg-primary-saffron hover:shadow-xl"
         >
           <Plus size={20} />
           Add New Customer
