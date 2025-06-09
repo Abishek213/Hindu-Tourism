@@ -106,7 +106,7 @@ const GenerateReport = () => {
       <h1 className="text-2xl font-bold text-gray-800 mb-4">Generate Report</h1>
 
       {/* Filters */}
-      <div className="flex flex-col md:flex-row items-center gap-4 mb-6">
+      <div className="flex flex-col md:flex-row items-center gap-2 mb-2">
         <div className="flex items-center gap-2">
           <CalendarDays className="text-orange-500 w-5 h-5" />
           <input
@@ -134,39 +134,43 @@ const GenerateReport = () => {
         </button>
       </div>
 
-      {/* Metrics Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-        <div className="bg-orange-50 border border-orange-200 rounded-xl p-4 flex items-center gap-4 shadow-sm">
-          <Users className="text-orange-500 w-8 h-8" />
-          <div>
-            <p className="text-sm text-gray-600">Total Leads</p>
-            <p className="text-xl font-bold text-gray-800">{reportData.metrics.totalLeads}</p>
+    {/* Metrics Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mb-2 w-[320px]">
+          <div className="bg-orange-50 border border-orange-200 rounded-md p-2 flex items-center gap-2 shadow-sm">
+            <Users className="text-orange-500 w-5 h-5" />
+            <div>
+              <p className="text-[11px] text-gray-600">Total Leads</p>
+              <p className="text-base font-medium text-gray-800">{reportData.metrics.totalLeads}</p>
+            </div>
+          </div>
+
+          <div className="bg-orange-50 border border-orange-200 rounded-md p-2 flex items-center gap-2 shadow-sm">
+            <TrendingUp className="text-orange-500 w-5 h-5" />
+            <div>
+              <p className="text-[11px] text-gray-600">Conversions</p>
+              <p className="text-base font-medium text-gray-800">{reportData.metrics.totalConversions}</p>
+            </div>
           </div>
         </div>
 
-        <div className="bg-orange-50 border border-orange-200 rounded-xl p-4 flex items-center gap-4 shadow-sm">
-          <TrendingUp className="text-orange-500 w-8 h-8" />
-          <div>
-            <p className="text-sm text-gray-600">Conversions</p>
-            <p className="text-xl font-bold text-gray-800">{reportData.metrics.totalConversions}</p>
-          </div>
-        </div>
-      </div>
 
-      {/* Bar Chart */}
-      <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
-        <h2 className="text-lg font-semibold text-gray-800 mb-4">Monthly Lead & Conversion Trends</h2>
-        <ResponsiveContainer width="100%" height={300}>
-          <BarChart data={reportData.monthlyData}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="month" />
-            <YAxis />
-            <Tooltip />
-            <Bar dataKey="leads" fill="#fb923c" name="Leads" />
-            <Bar dataKey="conversions" fill="#f97316" name="Conversions" />
-          </BarChart>
-        </ResponsiveContainer>
-      </div>
+
+        {/* Bar Chart */}
+        <div className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm w-[1050px]">
+          <h2 className="text-base font-medium text-gray-800 mb-3">Monthly Lead & Conversion Trends</h2>
+          <ResponsiveContainer width="100%" height={200}>
+            <BarChart data={reportData.monthlyData}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="month" fontSize={10} />
+              <YAxis fontSize={10} />
+              <Tooltip />
+              <Bar dataKey="leads" fill="#fb923c" name="Leads" />
+              <Bar dataKey="conversions" fill="#f97316" name="Conversions" />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+
+
     </div>
   );
 };
