@@ -79,37 +79,53 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen flex flex-col md:flex-row bg-gradient-to-br from-orange-50 to-orange-100">
-      {/* Left side - Branding */}
-      <div className="md:w-1/2 flex items-center justify-center bg-gradient-to-br from-light to-light p-8 md:p-16">
-        <div className="text-center md:text-left">
-          <div className="flex items-center justify-center mb-6 md:justify-start">
-            <h1 className="ml-4 text-3xl font-bold text-white md:text-4xl">
-              TheHinduTourism
-            </h1>
-          </div>
-          <h2 className="mb-6 text-2xl font-light text-white">
-            Customer Relationship Management
-          </h2>
-          <p className="max-w-md mb-8 text-orange-100">
-            Managing pilgrimage journeys to Pashupatinath and Muktinath with excellence and devotion.
-          </p>
-          <div className="hidden md:block">
-            <div className="p-6 mt-8 rounded-lg bg-white/10 backdrop-blur-sm">
-              <h3 className="mb-4 text-xl text-white">Sacred Destinations</h3>
-              <div className="flex space-x-4">
-                <div className="flex-1 p-4 text-white rounded-lg bg-orange-700/30">
-                  <p className="font-bold">Pashupatinath</p>
-                  <p className="text-sm">Kathmandu, Nepal</p>
+     {/* Left side - Branding */}
+            <div className="md:w-1/2 flex items-center justify-center bg-gradient-to-br from-light to-light p-8 md:p-16">
+              <div className="text-center md:text-left">
+
+             {/* Text section with background image */}
+                <div
+                  className="p-6 rounded-lg bg-cover bg-center bg-no-repeat mb-8"
+                  style={{ backgroundImage: "url('/aarati.jpg')" }} // Correct usage
+                >
+                  <div className="bg-black/50 p-6 rounded-lg"> {/* Optional overlay for readability */}
+                    <div className="flex items-center justify-center mb-6 md:justify-start">
+                      <h1 className="ml-4 text-3xl font-bold text-white md:text-4xl">
+                        TheHinduTourism
+                      </h1>
+                    </div>
+                    <h2 className="mb-6 text-2xl font-light text-white">
+                      Customer Relationship Management
+                    </h2>
+                    <p className="max-w-md text-orange-100">
+                      Managing pilgrimage journeys to Pashupatinath and Muktinath with excellence and devotion.
+                    </p>
+                  </div>
                 </div>
-                <div className="flex-1 p-4 text-white rounded-lg bg-orange-700/30">
-                  <p className="font-bold">Muktinath</p>
-                  <p className="text-sm">Mustang, Nepal</p>
-                </div>
+
+
+               <div className="hidden md:block">
+                    <div className="p-6 mt-8 rounded-lg bg-dark/90 backdrop-blur-sm shadow-lg">
+                      <h3 className="mb-4 text-xl font-semibold text-white">Sacred Destinations</h3>
+                      <div className="flex space-x-4">
+                        {/* Destination Card 1 - Light color base */}
+                        <div className="flex-1 p-4 rounded-lg bg-light/80 text-white border border-white/10 hover:bg-light transition">
+                          <p className="font-bold text-lg">Pashupatinath</p>
+                          <p className="text-sm text-white/90">Kathmandu, Nepal</p>
+                        </div>
+
+                        {/* Destination Card 2 - Primary saffron base */}
+                        <div className="flex-1 p-4 rounded-lg bg-primary-saffron/80 text-white border border-white/10 hover:bg-primary-saffron transition">
+                          <p className="font-bold text-lg">Muktinath</p>
+                          <p className="text-sm text-white/90">Mustang, Nepal</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
               </div>
             </div>
-          </div>
-        </div>
-      </div>
+
 
       {/* Right side - Login Form */}
       <div className="relative flex items-center justify-center p-8 overflow-hidden md:w-1/2 md:p-16">
