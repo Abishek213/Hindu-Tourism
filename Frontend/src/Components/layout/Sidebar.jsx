@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Menu, ChevronDown, ChevronRight } from 'lucide-react';
 import { useTheme } from '../../context/themeContext';
-import { useSidebar } from '../../context/sidebarContext';
+import { useSidebar } from '../../context/SidebarContext';
 import {
   adminDashboardConfig,
   operationDashboardConfig,
