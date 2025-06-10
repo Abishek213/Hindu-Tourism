@@ -151,7 +151,7 @@ const handleUpdateTravelStatus = async () => {
 
   if (isLoading) {
     return (
-      <div className="p-4 md:p-6 flex justify-center items-center min-h-screen bg-gradient-to-br from-orange-50 to-red-50">
+      <div className="p-4  bg-white rounded-lg shadow-md">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-orange-500 mx-auto"></div>
           <p className="mt-4 text-gray-700">Loading bookings...</p>
@@ -162,7 +162,7 @@ const handleUpdateTravelStatus = async () => {
 
   if (error) {
     return (
-      <div className="p-4 md:p-6 flex justify-center items-center min-h-screen bg-gradient-to-br from-orange-50 to-red-50">
+      <div className="p-4  bg-white rounded-lg shadow-md">
         <div className="text-center p-6 bg-white rounded-xl shadow-sm border max-w-md">
           <div className="text-red-500 mb-4">
             <XCircle className="w-16 h-16 mx-auto" />
@@ -181,16 +181,19 @@ const handleUpdateTravelStatus = async () => {
   }
 
   return (
-    <div className="p-4 md:p-6 space-y-6 bg-gradient-to-br from-orange-50 to-red-50 min-h-screen">
+    <div className="p-4  bg-white rounded-lg shadow-md">
       {/* Header */}
-      <div className="flex justify-between items-center">
+      <div className="mb-6 flex justify-between items-center px-6 py-8 border-b border-gray-100
+       bg-primary-saffron">
         <div>
-          <h1 className="text-xl md:text-2xl font-bold text-gray-800 mb-2">Travel Progress Updater</h1>
-          <p className="text-gray-600 text-sm">
+          <h1 className="text-xl font-bold text-white">Travel Progress Updater</h1>
+          
+        </div>
+        
+      </div>
+      <p className="text-gray-600 text-sm">
             {bookings.length} bookings • {filteredBookings.length} match your search
           </p>
-        </div>
-      </div>
 
       {/* Search and Filter */}
       <div className="bg-white p-4 rounded-xl shadow-sm border">
@@ -236,8 +239,8 @@ const handleUpdateTravelStatus = async () => {
         ) : (
           <div className="overflow-x-auto">
             <table className="min-w-full text-sm">
-              <thead className="bg-gradient-to-r from-orange-500 to-red-500 text-white">
-                <tr>
+              <thead className="bg-secondary-green border-secondary-green-700">
+                <tr className="text-white font-semibold">
                   <th className="px-4 py-3 text-left font-semibold">Customer</th>
                   <th className="px-4 py-3 text-left font-semibold">Package & Date</th>
                   <th className="px-4 py-3 text-left font-semibold">Travelers</th>
