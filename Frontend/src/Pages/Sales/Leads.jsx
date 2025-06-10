@@ -647,15 +647,10 @@ export default function LeadManagement() {
                                 {/* Options for CONTACTED leads */}
                                 {lead.status === 'contacted' && (
                                   <>
-                                    <option value="qualified">Qualified</option>
                                     <option value="lost">Lost</option>
                                   </>
                                 )}
 
-                                {/* Options for QUALIFIED leads (only Convert button should appear) */}
-                                {lead.status === 'qualified' && (
-                                  <option value="lost">Lost</option>
-                                )}
                               </select>
                               {lead.status !== 'converted' && lead.status !== 'lost' && (
                                 <ChevronDown className="absolute w-3 h-3 transform -translate-y-1/2 pointer-events-none right-2 top-1/2" />
