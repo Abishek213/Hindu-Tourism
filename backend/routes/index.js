@@ -13,6 +13,7 @@ import invoiceRoutes from './invoiceRoutes.js';
 import documentRoutes from './documentRoutes.js';
 import customerRoutes from './customerRoutes.js';
 import dashboardRoutes from './dashboardRoutes.js';
+import optionalServiceRoutes from './optionalServiceRoutes.js';
 
 
 const router = express.Router();
@@ -31,6 +32,7 @@ router.use('/invoice', invoiceRoutes);
 router.use('/document', documentRoutes);
 router.use('/customer', customerRoutes);
 router.use('/dashboard', dashboardRoutes);
+router.use('/optService', optionalServiceRoutes);
 
 // Mandatory default export
 export default router;

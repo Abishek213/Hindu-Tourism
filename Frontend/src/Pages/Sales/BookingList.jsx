@@ -45,19 +45,6 @@ const useCustomers = () => {
     fetchCustomers();
   }, []);
 
-
-  const updateCustomer = async (id, updatedCustomer) => {
-    try {
-      const response = await api.put(`/customer/${id}`, updatedCustomer);
-      setCustomers(prev => prev.map(customer =>
-        customer._id === id ? response.data : customer
-      ));
-    } catch (err) {
-      console.error('Error updating customer:', err);
-      throw err;
-    }
-  };
-
   const addCustomer = async (newCustomer) => {
     try {
       const response = await api.post('/customer', newCustomer);
@@ -79,7 +66,7 @@ const useCustomers = () => {
     }
   };
 
-  return { customers, loading, error, updateCustomer, addCustomer };
+  return { customers, loading, error, addCustomer };
 };
 
 // Add Customer Form Modal
@@ -492,7 +479,7 @@ function EmptyState({ onAddCustomer }) {
 
 // Main CustomerList Component
 export default function CustomerList({ onAddCustomer }) {
-  const { customers, updateCustomer, addCustomer } = useCustomers();
+  const { customers, addCustomer } = useCustomers();
   const [viewModalOpen, setViewModalOpen] = useState(false);
   const [bookingFormOpen, setBookingFormOpen] = useState(false);
   const [addCustomerModalOpen, setAddCustomerModalOpen] = useState(false);
@@ -553,14 +540,6 @@ export default function CustomerList({ onAddCustomer }) {
 
   const handleBookingSubmitted = (bookingData) => {
     console.log('Booking submitted for customer:', selectedCustomer.name, bookingData);
-    // Optionally update customer status after booking
-    if (selectedCustomer) {
-      updateCustomer(selectedCustomer.id, {
-        ...selectedCustomer,
-        status: 'booked',
-        lastContact: new Date().toISOString()
-      });
-    }
   };
 
   const handleAddCustomerClick = () => {

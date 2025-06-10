@@ -10,7 +10,8 @@ import {
   Package,
   PlusIcon,
   LucideCompass,
-  GroupIcon
+  GroupIcon,
+  Luggage
 
 } from 'lucide-react';
 
@@ -36,6 +37,7 @@ import ManageTeamForm from '../../Pages/Operation/ManageTeam';
 import PackageForm from '../../Pages/Operation/PackageForm';
 import TravelProgressUpdater from '../../Pages/Operation/TravelProgressUpdater';
 import OperationDashboardOverview from '../../Pages/Operation/OperationOverview';
+import OptionalServicesDashboard from '../../Pages/Operation/OptionalServices';
 
 //Accounts Dashboard components
 import InvoicesPage from "../../Pages/Account/Invoices";
@@ -74,7 +76,7 @@ export const adminDashboardConfig = {
     packages: { title: 'Packages', component: AdminPackages, icon: FileText },
     payment: { title: 'Payments', component: AdminPayment, icon: Banknote },
     reports: { title: 'Reports', component: AdminReports, icon: ClipboardList },
-    staffmanagement: { title: 'Staff Management', component: AdminStaffManagement, icon: Users },
+    staffmanagement: { title: 'Staff Management', component: AdminStaffManagement, icon: Users }
   },
 };
 
@@ -86,7 +88,8 @@ export const operationDashboardConfig = {
     manage:{title:'ManageTeam',component:ManageTeamForm, icon:GroupIcon},
     assign: { title: 'AssignTeam', component: AssignTeamForm, icon: Truck },
     travelprogress :{title:'TravelProgress',component:TravelProgressUpdater,icon:LucideCompass},
-    package: {title:'Packages', component:PackageForm, icon:Package}
+    package: {title:'Packages', component:PackageForm, icon:Package},
+    services:{title:'Optional Services',component:OptionalServicesDashboard, icon:Luggage}
   }
 };
 
