@@ -65,17 +65,17 @@ const useCustomers = () => {
   }, [fetchCustomers]); // Depend on fetchCustomers useCallback
 
   // Functions for updating/adding customers (retained from previous versions)
-  const updateCustomer = async (id, updatedCustomer) => {
-    try {
-      const response = await api.put(`/customer/${id}`, updatedCustomer);
-      setCustomers(prev => prev.map(customer =>
-        customer._id === id ? { ...response.data, has_active_booking: customer.has_active_booking } : customer // Preserve booking status
-      ));
-    } catch (err) {
-      console.error('Error updating customer:', err);
-      throw err;
-    }
-  };
+  // const updateCustomer = async (id, updatedCustomer) => {
+  //   try {
+  //     const response = await api.put(`/customer/${id}`, updatedCustomer);
+  //     setCustomers(prev => prev.map(customer =>
+  //       customer._id === id ? { ...response.data, has_active_booking: customer.has_active_booking } : customer // Preserve booking status
+  //     ));
+  //   } catch (err) {
+  //     console.error('Error updating customer:', err);
+  //     throw err;
+  //   }
+  // };
 
   const addCustomer = async (newCustomer) => {
     try {
@@ -95,7 +95,7 @@ const useCustomers = () => {
     }
   };
 
-  return { customers, loading, error, updateCustomer, addCustomer, fetchCustomers }; // Return fetchCustomers for re-fetching
+  return { customers, loading, error, addCustomer, fetchCustomers }; // Return fetchCustomers for re-fetching
 };
 
 // Add Customer Form Modal (no changes)

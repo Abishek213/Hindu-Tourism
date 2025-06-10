@@ -80,6 +80,16 @@ export default function BookingFormOverlay({ isOpen = true, onClose, onSubmitted
     }
   ]);
 
+   useEffect(() => {
+    if (customer && customer.name && travelersInfo.length > 0 && !travelersInfo[0].name) {
+      setTravelersInfo(prev => {
+        const newTravelersInfo = [...prev];
+        newTravelersInfo[0] = { ...newTravelersInfo[0], name: customer.name };
+        return newTravelersInfo;
+      });
+    }
+  }, [customer, travelersInfo]);
+
   // Errors state
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -146,7 +156,12 @@ export default function BookingFormOverlay({ isOpen = true, onClose, onSubmitted
   // Handle traveler information changes
   const handleTravelerChange = (index, field, value) => {
     setTravelersInfo(prev => {
-      const updated = [...prev];
+      const updated = [...prev]; // Prevent editing the lead traveler's name if it's pre-filled by customer
+      if (index === 0 && field === 'name' && customer && customer.name) {
+        return updated;
+      }
+
+
 
       if (field.includes('.')) {
         // Handle nested properties like 'documents.passportFile'
