@@ -29,8 +29,7 @@ const communicationLogSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ['pending', 'completed', 'follow_up'],
-    default: 'completed'
+    required: true
   }
 }, { timestamps: true });
 

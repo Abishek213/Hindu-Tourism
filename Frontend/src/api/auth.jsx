@@ -2,7 +2,6 @@ import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
 import { toast } from 'react-toastify';
 
-
 // Create axios instance
 const api = axios.create({
   baseURL: 'http://localhost:3000/api', // Match your backend URL
@@ -49,8 +48,13 @@ export const login = async (credentials) => {
     localStorage.setItem('userId', userId);
     localStorage.setItem('tokenExpiration', decoded.exp);
 
-    // Fetch additional user details if needed
-    const userDetails = await getUserDetails(userId);
+    // Fetch user profile using the new profile endpoint
+    const userDetails = await getUserProfile();
+    
+    // Store the actual username from backend
+    if (userDetails?.username) {
+      localStorage.setItem('userName', userDetails.username);
+    }
     
     return { 
       success: true, 
@@ -62,12 +66,13 @@ export const login = async (credentials) => {
   }
 };
 
-const getUserDetails = async (userId) => {
+// Use the new profile endpoint that's accessible to all authenticated users
+const getUserProfile = async () => {
   try {
-    const response = await api.get(`/staff/${userId}`);
+    const response = await api.get('/staff/profile');
     return response.data;
   } catch (error) {
-    console.error('Failed to fetch user details:', error);
+    console.error('Failed to fetch user profile:', error);
     return null;
   }
 };
@@ -76,6 +81,7 @@ export const logout = () => {
   localStorage.removeItem('token');
   localStorage.removeItem('userRole');
   localStorage.removeItem('userId');
+  localStorage.removeItem('userName');
   localStorage.removeItem('tokenExpiration');
   return api.post('/auth/logout');
 };
@@ -94,10 +100,11 @@ export const getCurrentUser = () => {
     return {
       role: localStorage.getItem('userRole'),
       userId: localStorage.getItem('userId'),
-      username: localStorage.getItem('username'),
+      username: localStorage.getItem('userName'),
       token
     };
   } catch (error) {
+    console.error('Failed to decode token:', error);
     logout();
     return null;
   }
@@ -106,5 +113,7 @@ export const getCurrentUser = () => {
 export const isAuthenticated = () => {
   return getCurrentUser() !== null;
 };
+
+export { getUserProfile };
 
 export default api;

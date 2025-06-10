@@ -24,15 +24,14 @@ export const mockLeadSource = [
 export const mockPackagePopularity = [
   { name: "Pashupatinath", value: 40, percentage: "40%" },
   { name: "Muktinath", value: 35, percentage: "35%" },
-  { name: "Combined Package", value: 25, percentage: "25%" },
+  { name: "Pashupatinath and Muktinath", value: 25, percentage: "25%" },
 ];
 
 export const mockLeadStatusData = [
   { name: "New", value: 35 },
   { name: "Contacted", value: 45 },
-  { name: "Interested", value: 25 },
-  { name: "Booked", value: 30 },
-  { name: "Rejected", value: 12 },
+  { name: "Converted", value: 30 },
+  { name: "Lost", value: 12 },
 ];
 
 export const mockMonthlyBookings = [

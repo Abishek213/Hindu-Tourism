@@ -1,645 +1,282 @@
-import React, { useState } from 'react';
-import { Plus, Edit, Eye, MapPin, Calendar, Clock, Users, X, Save } from 'lucide-react';
+import { useState, useEffect } from "react";
 
-const PackageDashboard = () => {
-  const [packages, setPackages] = useState([
-    {
-      id: 1,
-      name: "Divine Char Dham Yatra",
-      duration: "12 Days",
-      price: "₹45,000",
-      destinations: "Kedarnath, Badrinath, Gangotri, Yamunotri",
-      maxPeople: 25,
-      status: "Active",
-      itinerary: [
-        {
-          day: 1,
-          title: "Arrival in Haridwar",
-          description: "Check-in at hotel, evening Ganga Aarti at Har Ki Pauri",
-          activities: ["Hotel check-in", "Ganga Aarti", "Local sightseeing"],
-          meals: "Dinner",
-          accommodation: "Hotel Ganga Lahari"
-        }
-      ]
-    },
-    {
-      id: 2,
-      name: "Golden Triangle with Varanasi",
-      duration: "8 Days",
-      price: "₹32,000",
-      destinations: "Delhi, Agra, Jaipur, Varanasi",
-      maxPeople: 20,
-      status: "Active",
-      itinerary: []
-    },
-    {
-      id: 3,
-      name: "South India Temple Tour",
-      duration: "10 Days",
-      price: "₹38,000",
-      destinations: "Chennai, Madurai, Rameswaram, Kanyakumari",
-      maxPeople: 30,
-      status: "Draft",
-      itinerary: []
+const defaultFormData = {
+  title: "",
+  description: "",
+  duration: "",
+  destination: "",
+  price: "",
+  inclusions: "",
+  exclusions: "",
+};
+
+export default function PackageForm({ initialData = null, onSubmit = (data) => console.log('Form submitted:', data) }) {
+  const [formData, setFormData] = useState(defaultFormData);
+  const [focusedField, setFocusedField] = useState(null);
+  const [errors, setErrors] = useState({});
+
+  useEffect(() => {
+    if (initialData) {
+      setFormData(initialData);
     }
-  ]);
-  
-  const [showCreateForm, setShowCreateForm] = useState(false);
-  const [showEditForm, setShowEditForm] = useState(false);
-  const [selectedPackage, setSelectedPackage] = useState(null);
-  const [showItinerary, setShowItinerary] = useState(false);
-  const [showItineraryForm, setShowItineraryForm] = useState(false);
-  const [newPackage, setNewPackage] = useState({
-    name: '',
-    duration: '',
-    price: '',
-    destinations: '',
-    maxPeople: '',
-    status: 'Draft'
-  });
-  const [newItinerary, setNewItinerary] = useState({
-    day: 1,
-    title: '',
-    description: '',
-    activities: [''],
-    meals: '',
-    accommodation: ''
-  });
+  }, [initialData]);
 
-  const handleCreatePackage = () => {
-    if (newPackage.name && newPackage.duration && newPackage.price) {
-      const packageToAdd = {
-        ...newPackage,
-        id: packages.length + 1,
-        itinerary: []
-      };
-      setPackages([...packages, packageToAdd]);
-      setNewPackage({
-        name: '',
-        duration: '',
-        price: '',
-        destinations: '',
-        maxPeople: '',
-        status: 'Draft'
-      });
-      setShowCreateForm(false);
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+    
+    if (errors[name]) {
+      setErrors(prev => ({ ...prev, [name]: "" }));
     }
   };
 
-  const handleEditPackage = (pkg) => {
-    setSelectedPackage(pkg);
-    setNewPackage({ ...pkg });
-    setShowEditForm(true);
+  const validateForm = () => {
+    const newErrors = {};
+    
+    if (!formData.title.trim()) newErrors.title = "Package title is required";
+    if (!formData.description.trim()) newErrors.description = "Description is required";
+    if (!formData.duration.trim()) newErrors.duration = "Duration is required";
+    if (!formData.destination) newErrors.destination = "Destination is required";
+    if (!formData.price.trim()) newErrors.price = "Price is required";
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
   };
 
-  const handleUpdatePackage = () => {
-    setPackages(packages.map(pkg => 
-      pkg.id === selectedPackage.id ? { ...newPackage, id: selectedPackage.id } : pkg
-    ));
-    setShowEditForm(false);
-    setSelectedPackage(null);
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (validateForm()) {
+      onSubmit(formData);
+    }
   };
 
-  const handleViewItinerary = (pkg) => {
-    setSelectedPackage(pkg);
-    setShowItinerary(true);
-  };
+  const InputField = ({ label, name, type = "text", required = false, children, className = "", placeholder = "" }) => (
+    <div className="space-y-1">
+      <label className="block text-sm font-medium text-orange-800">
+        {label}
+        {required && <span className="text-red-500 ml-1">*</span>}
+      </label>
+      <div className="relative">
+        {children || (
+          <input
+            type={type}
+            name={name}
+            value={formData[name]}
+            onChange={handleChange}
+            onFocus={() => setFocusedField(name)}
+            onBlur={() => setFocusedField(null)}
+            placeholder={placeholder}
+            className={`w-full px-3 py-2.5 bg-white border-2 rounded-lg transition-all duration-200 ${
+              focusedField === name
+                ? 'border-orange-400 shadow-md'
+                : errors[name]
+                ? 'border-red-300'
+                : 'border-orange-200 hover:border-orange-300'
+            } focus:outline-none placeholder-gray-400 text-sm ${className}`}
+            required={required}
+          />
+        )}
+      </div>
+      {errors[name] && (
+        <p className="text-red-500 text-xs">{errors[name]}</p>
+      )}
+    </div>
+  );
 
-  const handleAddItinerary = () => {
-    const nextDay = selectedPackage.itinerary.length + 1;
-    setNewItinerary({
-      day: nextDay,
-      title: '',
-      description: '',
-      activities: [''],
-      meals: '',
-      accommodation: ''
-    });
-    setShowItinerary(false); // Close the itinerary view
-    setShowItineraryForm(true);
-  };
-
-  const handleSaveItinerary = () => {
-    const updatedPackage = {
-      ...selectedPackage,
-      itinerary: [...selectedPackage.itinerary, newItinerary]
-    };
-    setPackages(packages.map(pkg => 
-      pkg.id === selectedPackage.id ? updatedPackage : pkg
-    ));
-    setSelectedPackage(updatedPackage);
-    setShowItineraryForm(false);
-    setShowItinerary(true); // Return to itinerary view
-  };
-
-  const addActivity = () => {
-    setNewItinerary({
-      ...newItinerary,
-      activities: [...newItinerary.activities, '']
-    });
-  };
-
-  const updateActivity = (index, value) => {
-    const updatedActivities = [...newItinerary.activities];
-    updatedActivities[index] = value;
-    setNewItinerary({
-      ...newItinerary,
-      activities: updatedActivities
-    });
-  };
-
-  const removeActivity = (index) => {
-    setNewItinerary({
-      ...newItinerary,
-      activities: newItinerary.activities.filter((_, i) => i !== index)
-    });
-  };
-
-  const closeAllModals = () => {
-    setShowCreateForm(false);
-    setShowEditForm(false);
-    setShowItinerary(false);
-    setShowItineraryForm(false);
-    setSelectedPackage(null);
-  };
+  const TextareaField = ({ label, name, rows = 2, required = false, placeholder = "" }) => (
+    <InputField label={label} name={name} required={required} placeholder={placeholder}>
+      <textarea
+        name={name}
+        value={formData[name]}
+        onChange={handleChange}
+        onFocus={() => setFocusedField(name)}
+        onBlur={() => setFocusedField(null)}
+        rows={rows}
+        placeholder={placeholder}
+        className={`w-full px-3 py-2.5 bg-white border-2 rounded-lg transition-all duration-200 resize-none text-sm ${
+          focusedField === name
+            ? 'border-orange-400 shadow-md'
+            : errors[name]
+            ? 'border-red-300'
+            : 'border-orange-200 hover:border-orange-300'
+        } focus:outline-none placeholder-gray-400`}
+        required={required}
+      />
+    </InputField>
+  );
 
   return (
-    <div className="min-h-screen bg-orange-50">
-      {/* Header */}
-      <div className="bg-white shadow-sm border-b-2 border-orange-200">
-        <div className="max-w-7xl mx-auto px-4 py-6">
-          <div className="flex justify-between items-center">
-            <div>
-              <h1 className="text-3xl font-bold text-orange-900">Package Management</h1>
-            </div>
-            <button
-              onClick={() => setShowCreateForm(true)}
-              className="bg-orange-600 hover:bg-orange-700 text-white px-6 py-3 rounded-lg flex items-center gap-2 transition-colors font-medium"
-            >
-              <Plus size={20} />
-              Create Package
-            </button>
-          </div>
+    <div className="min-h-screen bg-gradient-to-br from-orange-50 to-amber-50 p-4">
+      <div className="max-w-2xl mx-auto">
+        {/* Compact Header */}
+        <div className="text-center mb-6">
+          <h1 className="text-2xl font-bold text-orange-800 mb-1">
+            {initialData ? "Edit Package" : "Create Package"}
+          </h1>
+          <p className="text-orange-600 text-sm">Hindu Travels CRM</p>
         </div>
-      </div>
 
-      {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="bg-orange-100">
-                <tr>
-                  <th className="px-6 py-4 text-left text-orange-900 font-semibold">Package Name</th>
-                  <th className="px-6 py-4 text-left text-orange-900 font-semibold">Duration</th>
-                  <th className="px-6 py-4 text-left text-orange-900 font-semibold">Price</th>
-                  <th className="px-6 py-4 text-left text-orange-900 font-semibold">Destinations</th>
-                  <th className="px-6 py-4 text-left text-orange-900 font-semibold">Max People</th>
-                  <th className="px-6 py-4 text-left text-orange-900 font-semibold">Status</th>
-                  <th className="px-6 py-4 text-left text-orange-900 font-semibold">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {packages.map((pkg, index) => (
-                  <tr key={pkg.id} className={`border-b ${index % 2 === 0 ? 'bg-orange-25' : 'bg-white'} hover:bg-orange-50 transition-colors`}>
-                    <td className="px-6 py-4 font-medium text-gray-900">{pkg.name}</td>
-                    <td className="px-6 py-4 text-gray-700">{pkg.duration}</td>
-                    <td className="px-6 py-4 text-orange-700 font-semibold">{pkg.price}</td>
-                    <td className="px-6 py-4 text-gray-700">{pkg.destinations}</td>
-                    <td className="px-6 py-4 text-gray-700">{pkg.maxPeople}</td>
-                    <td className="px-6 py-4">
-                      <span className={`px-3 py-1 rounded-full text-sm font-medium ${
-                        pkg.status === 'Active' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
-                      }`}>
-                        {pkg.status}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4">
-                      <div className="flex gap-2">
-                        <button
-                          onClick={() => handleViewItinerary(pkg)}
-                          className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-                          title="View Itinerary"
-                        >
-                          <Eye size={16} />
-                        </button>
-                        <button
-                          onClick={() => handleEditPackage(pkg)}
-                          className="p-2 text-orange-600 hover:bg-orange-50 rounded-lg transition-colors"
-                          title="Edit Package"
-                        >
-                          <Edit size={16} />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+        {/* Compact Form Card */}
+        <div className="bg-white rounded-2xl shadow-lg border border-orange-100">
+          <div className="bg-gradient-to-r from-orange-500 to-orange-600 p-4 rounded-t-2xl">
+            <h2 className="text-lg font-semibold text-white">Package Details</h2>
           </div>
-        </div>
-      </div>
 
-      {/* Create Package Modal */}
-      {showCreateForm && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl p-6 w-full max-w-lg mx-4 max-h-[85vh] overflow-y-auto">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-bold text-orange-900">Create New Package</h2>
-              <button onClick={closeAllModals} className="text-gray-500 hover:text-gray-700">
-                <X size={20} />
-              </button>
-            </div>
-            
-            <div className="space-y-3">
+          <div className="p-6 space-y-6">
+            {/* Basic Info */}
+            <div className="space-y-4">
               <div>
-                <label className="block text-orange-800 font-medium mb-1 text-sm">Package Name</label>
+                <label className="block text-sm font-medium text-orange-800 mb-1.5">
+                  Package Title <span className="text-red-500">*</span>
+                </label>
                 <input
                   type="text"
-                  value={newPackage.name}
-                  onChange={(e) => setNewPackage({...newPackage, name: e.target.value})}
-                  className="w-full p-2.5 border border-orange-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent text-sm"
-                  placeholder="Enter package name"
+                  name="title"
+                  value={formData.title}
+                  onChange={handleChange}
+                  placeholder="e.g., Sacred Journey to Pashupatinath"
+                  className="w-full px-4 py-3 bg-white border-2 border-orange-200 rounded-lg focus:border-orange-400 focus:ring-2 focus:ring-orange-100 focus:outline-none transition-all duration-200 text-gray-700 placeholder-gray-400"
+                  required
                 />
-              </div>
-              
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-orange-800 font-medium mb-1 text-sm">Duration</label>
-                  <input
-                    type="text"
-                    value={newPackage.duration}
-                    onChange={(e) => setNewPackage({...newPackage, duration: e.target.value})}
-                    className="w-full p-2.5 border border-orange-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent text-sm"
-                    placeholder="e.g., 7 Days"
-                  />
-                </div>
-                <div>
-                  <label className="block text-orange-800 font-medium mb-1 text-sm">Price</label>
-                  <input
-                    type="text"
-                    value={newPackage.price}
-                    onChange={(e) => setNewPackage({...newPackage, price: e.target.value})}
-                    className="w-full p-2.5 border border-orange-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent text-sm"
-                    placeholder="e.g., ₹25,000"
-                  />
-                </div>
+                {errors.title && <p className="text-red-500 text-xs mt-1">{errors.title}</p>}
               </div>
               
               <div>
-                <label className="block text-orange-800 font-medium mb-1 text-sm">Destinations</label>
-                <input
-                  type="text"
-                  value={newPackage.destinations}
-                  onChange={(e) => setNewPackage({...newPackage, destinations: e.target.value})}
-                  className="w-full p-2.5 border border-orange-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent text-sm"
-                  placeholder="e.g., Delhi, Agra, Jaipur"
-                />
-              </div>
-              
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-orange-800 font-medium mb-1 text-sm">Max People</label>
-                  <input
-                    type="number"
-                    value={newPackage.maxPeople}
-                    onChange={(e) => setNewPackage({...newPackage, maxPeople: e.target.value})}
-                    className="w-full p-2.5 border border-orange-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent text-sm"
-                    placeholder="e.g., 20"
-                  />
-                </div>
-                <div>
-                  <label className="block text-orange-800 font-medium mb-1 text-sm">Status</label>
-                  <select
-                    value={newPackage.status}
-                    onChange={(e) => setNewPackage({...newPackage, status: e.target.value})}
-                    className="w-full p-2.5 border border-orange-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent text-sm"
-                  >
-                    <option value="Draft">Draft</option>
-                    <option value="Active">Active</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-            
-            <div className="flex gap-3 mt-5">
-              <button
-                onClick={handleCreatePackage}
-                className="flex-1 bg-orange-600 hover:bg-orange-700 text-white py-2.5 rounded-lg font-medium transition-colors text-sm"
-              >
-                Create Package
-              </button>
-              <button
-                onClick={closeAllModals}
-                className="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-700 py-2.5 rounded-lg font-medium transition-colors text-sm"
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Edit Package Modal */}
-      {showEditForm && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl p-6 w-full max-w-lg mx-4 max-h-[85vh] overflow-y-auto">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-bold text-orange-900">Edit Package</h2>
-              <button onClick={closeAllModals} className="text-gray-500 hover:text-gray-700">
-                <X size={20} />
-              </button>
-            </div>
-            
-            <div className="space-y-3">
-              <div>
-                <label className="block text-orange-800 font-medium mb-1 text-sm">Package Name</label>
-                <input
-                  type="text"
-                  value={newPackage.name}
-                  onChange={(e) => setNewPackage({...newPackage, name: e.target.value})}
-                  className="w-full p-2.5 border border-orange-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent text-sm"
-                />
-              </div>
-              
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-orange-800 font-medium mb-1 text-sm">Duration</label>
-                  <input
-                    type="text"
-                    value={newPackage.duration}
-                    onChange={(e) => setNewPackage({...newPackage, duration: e.target.value})}
-                    className="w-full p-2.5 border border-orange-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent text-sm"
-                  />
-                </div>
-                <div>
-                  <label className="block text-orange-800 font-medium mb-1 text-sm">Price</label>
-                  <input
-                    type="text"
-                    value={newPackage.price}
-                    onChange={(e) => setNewPackage({...newPackage, price: e.target.value})}
-                    className="w-full p-2.5 border border-orange-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent text-sm"
-                  />
-                </div>
-              </div>
-              
-              <div>
-                <label className="block text-orange-800 font-medium mb-1 text-sm">Destinations</label>
-                <input
-                  type="text"
-                  value={newPackage.destinations}
-                  onChange={(e) => setNewPackage({...newPackage, destinations: e.target.value})}
-                  className="w-full p-2.5 border border-orange-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent text-sm"
-                />
-              </div>
-              
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-orange-800 font-medium mb-1 text-sm">Max People</label>
-                  <input
-                    type="number"
-                    value={newPackage.maxPeople}
-                    onChange={(e) => setNewPackage({...newPackage, maxPeople: e.target.value})}
-                    className="w-full p-2.5 border border-orange-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent text-sm"
-                  />
-                </div>
-                <div>
-                  <label className="block text-orange-800 font-medium mb-1 text-sm">Status</label>
-                  <select
-                    value={newPackage.status}
-                    onChange={(e) => setNewPackage({...newPackage, status: e.target.value})}
-                    className="w-full p-2.5 border border-orange-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent text-sm"
-                  >
-                    <option value="Draft">Draft</option>
-                    <option value="Active">Active</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-            
-            <div className="flex gap-3 mt-5">
-              <button
-                onClick={handleUpdatePackage}
-                className="flex-1 bg-orange-600 hover:bg-orange-700 text-white py-2.5 rounded-lg font-medium transition-colors text-sm"
-              >
-                Update Package
-              </button>
-              <button
-                onClick={closeAllModals}
-                className="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-700 py-2.5 rounded-lg font-medium transition-colors text-sm"
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Itinerary View Modal */}
-      {showItinerary && selectedPackage && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-xl p-6 w-full max-w-4xl mx-4 max-h-[90vh] overflow-y-auto">
-            <div className="flex justify-between items-center mb-6">
-              <div>
-                <h2 className="text-2xl font-bold text-orange-900">{selectedPackage.name} - Itinerary</h2>
-                <p className="text-orange-700">{selectedPackage.duration} • {selectedPackage.destinations}</p>
-              </div>
-              <div className="flex gap-2">
-                <button
-                  onClick={handleAddItinerary}
-                  className="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors"
-                >
-                  <Plus size={16} />
-                  Add Day {selectedPackage.itinerary.length + 1}
-                </button>
-                <button
-                  onClick={closeAllModals}
-                  className="text-gray-500 hover:text-gray-700"
-                >
-                  <X size={24} />
-                </button>
-              </div>
-            </div>
-            
-            <div className="space-y-6">
-              {selectedPackage.itinerary.length === 0 ? (
-                <div className="text-center py-12">
-                  <Calendar className="mx-auto h-12 w-12 text-orange-300 mb-4" />
-                  <h3 className="text-lg font-medium text-gray-900 mb-2">No itinerary added yet</h3>
-                  <p className="text-gray-500 mb-4">Start building your day-by-day itinerary</p>
-                  <button
-                    onClick={handleAddItinerary}
-                    className="bg-orange-600 hover:bg-orange-700 text-white px-6 py-3 rounded-lg flex items-center gap-2 mx-auto transition-colors"
-                  >
-                    <Plus size={16} />
-                    Add First Day
-                  </button>
-                </div>
-              ) : (
-                selectedPackage.itinerary.map((day, index) => (
-                  <div key={index} className="border border-orange-200 rounded-lg p-6 bg-orange-50">
-                    <div className="flex items-center gap-4 mb-4">
-                      <div className="bg-orange-600 text-white rounded-full w-10 h-10 flex items-center justify-center font-bold">
-                        {day.day}
-                      </div>
-                      <div>
-                        <h3 className="text-xl font-semibold text-orange-900">{day.title}</h3>
-                        <p className="text-orange-700">{day.description}</p>
-                      </div>
-                    </div>
-                    
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
-                      <div>
-                        <h4 className="font-medium text-orange-800 mb-2 flex items-center gap-2">
-                          <MapPin size={16} />
-                          Activities
-                        </h4>
-                        <ul className="text-gray-700 space-y-1">
-                          {day.activities.map((activity, i) => (
-                            <li key={i} className="text-sm">• {activity}</li>
-                          ))}
-                        </ul>
-                      </div>
-                      
-                      <div>
-                        <h4 className="font-medium text-orange-800 mb-2 flex items-center gap-2">
-                          <Clock size={16} />
-                          Meals
-                        </h4>
-                        <p className="text-gray-700 text-sm">{day.meals}</p>
-                      </div>
-                      
-                      <div>
-                        <h4 className="font-medium text-orange-800 mb-2 flex items-center gap-2">
-                          <Users size={16} />
-                          Accommodation
-                        </h4>
-                        <p className="text-gray-700 text-sm">{day.accommodation}</p>
-                      </div>
-                    </div>
-                  </div>
-                ))
-              )}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Add Itinerary Modal */}
-      {showItineraryForm && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-60 pt-20">
-          <div className="bg-white rounded-lg p-4 w-full max-w-md mx-4 max-h-[75vh] overflow-y-auto">
-            <div className="flex justify-between items-center mb-3">
-              <h2 className="text-base font-bold text-orange-900">Add Day {newItinerary.day}</h2>
-              <button
-                onClick={() => {
-                  setShowItineraryForm(false);
-                  setShowItinerary(true);
-                }}
-                className="text-gray-500 hover:text-gray-700"
-              >
-                <X size={18} />
-              </button>
-            </div>
-            
-            <div className="space-y-2.5">
-              <div>
-                <label className="block text-orange-800 font-medium mb-1 text-xs">Day Title</label>
-                <input
-                  type="text"
-                  value={newItinerary.title}
-                  onChange={(e) => setNewItinerary({...newItinerary, title: e.target.value})}
-                  className="w-full p-2 border border-orange-200 rounded-md focus:ring-1 focus:ring-orange-500 focus:border-transparent text-sm"
-                  placeholder="e.g., Arrival in Delhi"
-                />
-              </div>
-              
-              <div>
-                <label className="block text-orange-800 font-medium mb-1 text-xs">Description</label>
+                <label className="block text-sm font-medium text-orange-800 mb-1.5">
+                  Description <span className="text-red-500">*</span>
+                </label>
                 <textarea
-                  value={newItinerary.description}
-                  onChange={(e) => setNewItinerary({...newItinerary, description: e.target.value})}
-                  className="w-full p-2 border border-orange-200 rounded-md focus:ring-1 focus:ring-orange-500 focus:border-transparent h-12 text-sm resize-none"
-                  placeholder="Brief description"
+                  name="description"
+                  value={formData.description}
+                  onChange={handleChange}
+                  rows={3}
+                  placeholder="Brief description of the spiritual journey and what makes it special..."
+                  className="w-full px-4 py-3 bg-white border-2 border-orange-200 rounded-lg focus:border-orange-400 focus:ring-2 focus:ring-orange-100 focus:outline-none transition-all duration-200 text-gray-700 placeholder-gray-400 resize-none"
+                  required
+                />
+                {errors.description && <p className="text-red-500 text-xs mt-1">{errors.description}</p>}
+              </div>
+            </div>
+
+            {/* Package Details */}
+            <div className="bg-orange-50 rounded-xl p-4">
+              <h3 className="text-lg font-semibold text-orange-800 mb-4 flex items-center gap-2">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                Package Details
+              </h3>
+              
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-orange-800 mb-1.5">
+                    Duration <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    name="duration"
+                    value={formData.duration}
+                    onChange={handleChange}
+                    placeholder="e.g., 3 Days 2 Nights"
+                    className="w-full px-3 py-2.5 bg-white border-2 border-orange-200 rounded-lg focus:border-orange-400 focus:ring-2 focus:ring-orange-100 focus:outline-none transition-all duration-200 text-gray-700 placeholder-gray-400"
+                    required
+                  />
+                  {errors.duration && <p className="text-red-500 text-xs mt-1">{errors.duration}</p>}
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-orange-800 mb-1.5">
+                    Price <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    name="price"
+                    value={formData.price}
+                    onChange={handleChange}
+                    placeholder="e.g., ₹25,000 per person"
+                    className="w-full px-3 py-2.5 bg-white border-2 border-orange-200 rounded-lg focus:border-orange-400 focus:ring-2 focus:ring-orange-100 focus:outline-none transition-all duration-200 text-gray-700 placeholder-gray-400"
+                    required
+                  />
+                  {errors.price && <p className="text-red-500 text-xs mt-1">{errors.price}</p>}
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-orange-800 mb-1.5">
+                    Destination <span className="text-red-500">*</span>
+                  </label>
+                  <select
+                    name="destination"
+                    value={formData.destination}
+                    onChange={handleChange}
+                    className="w-full px-3 py-2.5 bg-white border-2 border-orange-200 rounded-lg focus:border-orange-400 focus:ring-2 focus:ring-orange-100 focus:outline-none transition-all duration-200 text-gray-700 cursor-pointer"
+                    required
+                  >
+                    <option value="">Select Destination</option>
+                    <option value="Pashupatinath">🕉️ Pashupatinath Temple</option>
+                    <option value="Muktinath">🙏 Muktinath Temple</option>
+                    <option value="Pashupatinath-Muktinath">✨ Both Sacred Sites</option>
+                  </select>
+                  {errors.destination && <p className="text-red-500 text-xs mt-1">{errors.destination}</p>}
+                </div>
+              </div>
+            </div>
+
+            {/* Additional Details */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-sm font-medium text-orange-800 mb-1.5 flex items-center gap-2">
+                  <svg className="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                  What's Included
+                </label>
+                <textarea
+                  name="inclusions"
+                  value={formData.inclusions}
+                  onChange={handleChange}
+                  rows={4}
+                  placeholder="• Accommodation (3-star hotels)&#10;• All meals (breakfast, lunch, dinner)&#10;• AC transportation&#10;• Professional guide&#10;• Temple entry fees"
+                  className="w-full px-4 py-3 bg-white border-2 border-orange-200 rounded-lg focus:border-orange-400 focus:ring-2 focus:ring-orange-100 focus:outline-none transition-all duration-200 text-gray-700 placeholder-gray-400 resize-none"
                 />
               </div>
               
               <div>
-                <label className="block text-orange-800 font-medium mb-1 text-xs">Activities</label>
-                {newItinerary.activities.map((activity, index) => (
-                  <div key={index} className="flex gap-1 mb-1.5">
-                    <input
-                      type="text"
-                      value={activity}
-                      onChange={(e) => updateActivity(index, e.target.value)}
-                      className="flex-1 p-2 border border-orange-200 rounded-md focus:ring-1 focus:ring-orange-500 focus:border-transparent text-sm"
-                      placeholder="Enter activity"
-                    />
-                    {newItinerary.activities.length > 1 && (
-                      <button
-                        onClick={() => removeActivity(index)}
-                        className="px-1.5 py-1 text-red-600 hover:bg-red-50 rounded-md transition-colors"
-                      >
-                        <X size={12} />
-                      </button>
-                    )}
-                  </div>
-                ))}
-                <button
-                  onClick={addActivity}
-                  className="text-orange-600 hover:text-orange-700 text-xs font-medium"
-                >
-                  + Add Activity
-                </button>
-              </div>
-              
-              <div className="grid grid-cols-2 gap-2">
-                <div>
-                  <label className="block text-orange-800 font-medium mb-1 text-xs">Meals</label>
-                  <input
-                    type="text"
-                    value={newItinerary.meals}
-                    onChange={(e) => setNewItinerary({...newItinerary, meals: e.target.value})}
-                    className="w-full p-2 border border-orange-200 rounded-md focus:ring-1 focus:ring-orange-500 focus:border-transparent text-sm"
-                    placeholder="Breakfast, Lunch"
-                  />
-                </div>
-                <div>
-                  <label className="block text-orange-800 font-medium mb-1 text-xs">Accommodation</label>
-                  <input
-                    type="text"
-                    value={newItinerary.accommodation}
-                    onChange={(e) => setNewItinerary({...newItinerary, accommodation: e.target.value})}
-                    className="w-full p-2 border border-orange-200 rounded-md focus:ring-1 focus:ring-orange-500 focus:border-transparent text-sm"
-                    placeholder="Hotel name"
-                  />
-                </div>
+                <label className="block text-sm font-medium text-orange-800 mb-1.5 flex items-center gap-2">
+                  <svg className="w-4 h-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                  What's Excluded
+                </label>
+                <textarea
+                  name="exclusions"
+                  value={formData.exclusions}
+                  onChange={handleChange}
+                  rows={4}
+                  placeholder="• Personal expenses & shopping&#10;• Travel insurance&#10;• Tips for guide/driver&#10;• Extra activities not mentioned&#10;• Flight tickets to/from Nepal"
+                  className="w-full px-4 py-3 bg-white border-2 border-orange-200 rounded-lg focus:border-orange-400 focus:ring-2 focus:ring-orange-100 focus:outline-none transition-all duration-200 text-gray-700 placeholder-gray-400 resize-none"
+                />
               </div>
             </div>
-            
-            <div className="flex gap-2 mt-3">
+
+            {/* Submit Button */}
+            <div className="pt-2">
               <button
-                onClick={handleSaveItinerary}
-                className="flex-1 bg-orange-600 hover:bg-orange-700 text-white py-2 rounded-md font-medium transition-colors flex items-center justify-center gap-1 text-sm"
+                type="button"
+                onClick={handleSubmit}
+                className="w-full py-3.5 bg-gradient-to-r from-orange-500 to-orange-600 text-white font-semibold rounded-xl hover:from-orange-600 hover:to-orange-700 transform hover:scale-[1.01] transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
               >
-                <Save size={12} />
-                Save Day {newItinerary.day}
-              </button>
-              <button
-                onClick={() => {
-                  setShowItineraryForm(false);
-                  setShowItinerary(true);
-                }}
-                className="flex-1 bg-gray-300 hover:bg-gray-400 text-gray-700 py-2 rounded-md font-medium transition-colors text-sm"
-              >
-                Cancel
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+                {initialData ? "Update Package" : "Create Package"}
               </button>
             </div>
           </div>
         </div>
-      )}
+
+        
+      </div>
     </div>
   );
 };
 
-export default PackageDashboard;

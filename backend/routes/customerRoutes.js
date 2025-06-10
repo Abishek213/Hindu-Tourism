@@ -12,7 +12,7 @@ import { checkRole } from '../middleware/roleCheck.js';
 const router = express.Router();
 
 // Create
-router.post('/', protect, checkRole('Admin'), createCustomer);
+router.post('/', protect, checkRole('Admin', 'Sales Agent'), createCustomer);
 
 // Read
 router.get('/', protect, checkRole('Admin', 'Sales Agent'), getCustomers);

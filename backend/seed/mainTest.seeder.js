@@ -206,7 +206,7 @@ if (customerCount > 0 || roleCount > 0 || staffCount > 0) {
         travel_start_date: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
         travel_end_date: new Date(Date.now() + 44 * 24 * 60 * 60 * 1000),
         num_travelers: 2,
-        status: 'confirmed',
+        status: 'completed',
         guide_id: guides[0]._id,
         transport_id: transports[0]._id,
         special_requirements: 'Vegetarian meals'
@@ -217,7 +217,7 @@ if (customerCount > 0 || roleCount > 0 || staffCount > 0) {
         travel_start_date: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000),
         travel_end_date: new Date(Date.now() + 81 * 24 * 60 * 60 * 1000),
         num_travelers: 4,
-        status: 'pending',
+        status: 'confirmed',
         special_requirements: 'Wheelchair access'
       }
     ];
@@ -320,7 +320,7 @@ if (customerCount > 0 || roleCount > 0 || staffCount > 0) {
         customer_id: customers[0]._id,
         booking_id: bookings[0]._id,
         traveler_name: 'Sandesh sth',
-        document_type: 'passport',
+        document_type: 'Passport',
         file_path: '/uploads/passports/sandesh.pdf',
         is_main_customer: true
       },
@@ -329,16 +329,16 @@ if (customerCount > 0 || roleCount > 0 || staffCount > 0) {
         customer_id: null,
         booking_id: bookings[0]._id,
         traveler_name: 'Rajesh Kumar',
-        document_type: 'passport',
-        file_path: '/uploads/passports/rajesh.pdf',
+        document_type: 'Passport',
+        file_path: '/uploads/document/rajesh.pdf',
         is_main_customer: false
       },
       {
         customer_id: null,
         booking_id: bookings[0]._id,
         traveler_name: 'Priya Sharma',
-        document_type: 'id_proof', // Use schema's enum value
-        file_path: '/uploads/ids/priya.png',
+        document_type: 'Aadhaar Card', 
+        file_path: '/uploads/document/priya.png',
         is_main_customer: false
       }
     ];

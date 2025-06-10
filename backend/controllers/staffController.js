@@ -3,8 +3,162 @@ import Role from '../models/Role.js';
 import { validationResult } from 'express-validator';
 import bcrypt from 'bcryptjs';
 
-// (Admin only)
-// @route   POST /api/staff
+
+export const getCurrentUserProfile = async (req, res) => {
+  try {
+    const staff = await Staff.findById(req.user.id)
+      .select('-password_hash')
+      .populate('role_id', 'role_name');
+
+    if (!staff) {
+      return res.status(404).json({ error: 'User profile not found' });
+    }
+
+    res.json({
+      _id: staff._id,
+      name: staff.name,
+      email: staff.email,
+      username: staff.username,
+      phone: staff.phone,
+      role: staff.role_id.role_name,
+      is_active: staff.is_active
+    });
+  } catch (error) {
+    res.status(500).json({ error: 'Server error' });
+  }
+};
+
+export const updateCurrentUserProfile = async (req, res) => {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    const { username, name, email, phone, currentPassword } = req.body;
+    const userId = req.user.id;
+
+    // Verify current password if provided (for security)
+    if (currentPassword) {
+      const staff = await Staff.findById(userId).select('+password_hash');
+      if (!staff) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+
+      const isPasswordValid = await staff.matchPassword(currentPassword);
+      if (!isPasswordValid) {
+        return res.status(400).json({ error: 'Current password is incorrect' });
+      }
+    }
+
+    // Check if username already exists (excluding current user)
+    if (username) {
+      const existingUser = await Staff.findOne({ 
+        username, 
+        _id: { $ne: userId } 
+      });
+      if (existingUser) {
+        return res.status(400).json({ error: 'Username already exists' });
+      }
+    }
+
+    // Check if email already exists (excluding current user)
+    if (email) {
+      const existingUser = await Staff.findOne({ 
+        email, 
+        _id: { $ne: userId } 
+      });
+      if (existingUser) {
+        return res.status(400).json({ error: 'Email already exists' });
+      }
+    }
+
+    // Update user profile
+    const updateData = {};
+    if (username) updateData.username = username;
+    if (name) updateData.name = name;
+    if (email) updateData.email = email;
+    if (phone) updateData.phone = phone;
+
+    const updatedStaff = await Staff.findByIdAndUpdate(
+      userId,
+      updateData,
+      { new: true, runValidators: true }
+    )
+      .select('-password_hash')
+      .populate('role_id', 'role_name');
+
+    if (!updatedStaff) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    res.json({
+      _id: updatedStaff._id,
+      name: updatedStaff.name,
+      email: updatedStaff.email,
+      username: updatedStaff.username,
+      phone: updatedStaff.phone,
+      role: updatedStaff.role_id.role_name,
+      is_active: updatedStaff.is_active
+    });
+  } catch (error) {
+    console.error('updateCurrentUserProfile error:', error);
+    res.status(400).json({ error: error.message });
+  }
+};
+
+export const changePassword = async (req, res) => {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    const { currentPassword, newPassword } = req.body;
+    const userId = req.user.id;
+
+    // Validate required fields
+    if (!currentPassword) {
+      return res.status(400).json({ error: 'Current password is required' });
+    }
+
+    if (!newPassword) {
+      return res.status(400).json({ error: 'New password is required' });
+    }
+
+    if (newPassword.length < 6) {
+      return res.status(400).json({ error: 'New password must be at least 6 characters long' });
+    }
+
+    // Get user with password
+    const staff = await Staff.findById(userId).select('+password_hash');
+    if (!staff) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    // Verify current password
+    const isCurrentPasswordValid = await staff.matchPassword(currentPassword);
+    if (!isCurrentPasswordValid) {
+      return res.status(400).json({ error: 'Current password is incorrect' });
+    }
+
+    // Check if new password is different from current
+    const isSamePassword = await staff.matchPassword(newPassword);
+    if (isSamePassword) {
+      return res.status(400).json({ error: 'New password must be different from current password' });
+    }
+
+    // Update password (the pre-save hook will handle hashing)
+    staff.password_hash = newPassword;
+    await staff.save();
+
+    res.json({ message: 'Password updated successfully' });
+  } catch (error) {
+    console.error('changePassword error:', error);
+    res.status(500).json({ error: 'Server error' });
+  }
+};
+
 export const createStaff = async (req, res) => {
   try {
     const errors = validationResult(req);
@@ -49,8 +203,6 @@ export const createStaff = async (req, res) => {
   }
 };
 
-// (Admin only)
-// @route   GET /api/staff
 export const getAllStaff = async (req, res) => {
   try {
     const { page = 1, limit = 10, role, search } = req.query;
@@ -88,8 +240,6 @@ export const getAllStaff = async (req, res) => {
   }
 };
 
-// (Admin only)
-// @route   GET /api/staff/:id
 export const getStaffById = async (req, res) => {
   try {
     const staff = await Staff.findById(req.params.id)
@@ -106,8 +256,6 @@ export const getStaffById = async (req, res) => {
   }
 };
 
-// (Admin only)
-// @route   PUT /api/staff/:id
 export const updateStaff = async (req, res) => {
   try {
     const staff = await Staff.findById(req.params.id);
@@ -142,8 +290,6 @@ export const updateStaff = async (req, res) => {
   }
 };
 
-// (Admin only)
-// @route   DELETE /api/staff/:id
 export const deleteStaff = async (req, res) => {
   try {
     const staff = await Staff.findById(req.params.id);
@@ -161,8 +307,6 @@ export const deleteStaff = async (req, res) => {
   }
 };
 
-// (Admin only)
-// @route   GET /api/staff/search
 export const searchStaff = async (req, res) => {
   try {
     const { query } = req.query;

@@ -14,7 +14,7 @@ const documentSchema = new mongoose.Schema({
   document_type: {
     type: String,
     required: true,
-    enum: ['passport', 'visa', 'id_proof', 'ticket', 'confirmation', 'other']
+    enum: ['Passport', 'Aadhaar Card']
   },
   file_path: {
     type: String,

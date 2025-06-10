@@ -10,7 +10,9 @@ import communicationRoutes from './communicationRoutes.js';
 import packageRoutes from './packageRoutes.js';
 import paymentRoutes from './paymentRoutes.js';
 import invoiceRoutes from './invoiceRoutes.js';
-import documentRoutes from './documentRoutes.js'
+import documentRoutes from './documentRoutes.js';
+import customerRoutes from './customerRoutes.js';
+import dashboardRoutes from './dashboardRoutes.js';
 
 
 const router = express.Router();
@@ -27,6 +29,8 @@ router.use('/package', packageRoutes);
 router.use('/payment', paymentRoutes);
 router.use('/invoice', invoiceRoutes);
 router.use('/document', documentRoutes);
+router.use('/customer', customerRoutes);
+router.use('/dashboard', dashboardRoutes);
 
 // Mandatory default export
 export default router;

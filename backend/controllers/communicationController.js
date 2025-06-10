@@ -1,20 +1,15 @@
 import CommunicationLog from '../models/CommunicationLog.js';
-// import Lead from '../models/Lead.js';
-// import mongoose from 'mongoose'
-// import Customer from '../models/Customer.js';
-
-
 
 export const createCommunicationLog = async (req, res) => {
   try {
     const {
       lead_id,
       customer_id,
-      staff_id,
       type,
       content,
       status
     } = req.body;
+     const staff_id = req.user._id;
 
     // Validation (ensure required fields exist)
     if (!staff_id || !type || !content) {

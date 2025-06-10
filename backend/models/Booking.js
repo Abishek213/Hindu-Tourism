@@ -11,10 +11,6 @@ const bookingSchema = new mongoose.Schema({
     ref: 'Package',
     required: true
   },
-  lead_id: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Lead'
-  },
   travel_start_date: {
     type: Date,
     required: true
@@ -30,8 +26,8 @@ const bookingSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ['pending', 'confirmed', 'completed', 'cancelled'],
-    default: 'pending'
+    enum: ['confirmed', 'completed', 'cancelled'],
+    default: 'confirmed'
   },
   guide_id: {
     type: mongoose.Schema.Types.ObjectId,
@@ -47,7 +43,19 @@ const bookingSchema = new mongoose.Schema({
   },
   special_requirements: {
     type: String
+  },
+  package_type: {
+    type: String,
+    enum: ['Premium','Deluxe','Exclusive'],
+    default: 'Deluxe'
+  },
+
+  travelStatus: {
+    type: String,
+    enum: ['Not Started', 'On the Way', 'At Destination', 'Return Journey', 'Completed', 'Delayed', 'Cancelled'],
+    default: 'Not Started'
   }
+
 }, { timestamps: true });
 
 export default mongoose.model('Booking', bookingSchema);

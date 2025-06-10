@@ -7,7 +7,6 @@ const transportSchema = new mongoose.Schema({
   },
   type: {
     type: String,
-    enum: ['bus', 'car', 'train', 'flight', 'cruise', 'other'],
     required: true
   },
   contact_info: {

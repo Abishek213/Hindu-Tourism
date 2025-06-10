@@ -6,7 +6,7 @@ const roleToDashboard = {
   admin: '/admindashboard',
   'sales agent': '/salesdashboard',
   'operation team': '/ops',
-  accounts: '/account',
+  accountant: '/account',
 };
 
 const ProtectedRoute = ({ children }) => {

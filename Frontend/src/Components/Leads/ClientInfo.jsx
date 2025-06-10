@@ -6,12 +6,10 @@ export default function ClientInfoForm({ form, handleChange }) {
   const [countries, setCountries] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  // Fetch countries list for the dropdown
   useEffect(() => {
     const fetchCountries = async () => {
       setLoading(true);
       try {
-        // Array of countries (simplified version)
         const countriesList = [
           "Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Antigua and Barbuda", 
           "Argentina", "Armenia", "Australia", "Austria", "Azerbaijan", "Bahamas", "Bahrain", 
@@ -59,7 +57,7 @@ export default function ClientInfoForm({ form, handleChange }) {
   return (
     <div className="space-y-4 lg:col-span-1">
       <h3 className="font-semibold text-gray-700 flex items-center gap-2">
-        <Users className="h-5 w-5 text-orange-500" />
+        <Users className="h-5 w-5 text-blue-500" />
         Client Information
       </h3>
       
@@ -74,7 +72,7 @@ export default function ClientInfoForm({ form, handleChange }) {
           required
           value={form.fullName}
           onChange={handleChange}
-          className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500"
+          className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
         />
       </div>
       
@@ -89,7 +87,7 @@ export default function ClientInfoForm({ form, handleChange }) {
           placeholder="client@example.com"
           value={form.email}
           onChange={handleChange}
-          className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500"
+          className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
         />
       </div>
       
@@ -103,7 +101,7 @@ export default function ClientInfoForm({ form, handleChange }) {
           required
           value={form.nationality}
           onChange={handleChange}
-          className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500"
+          className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
         >
           <option value="">Select Country</option>
           {countries.map((country) => (
@@ -125,7 +123,7 @@ export default function ClientInfoForm({ form, handleChange }) {
           required
           value={form.phone}
           onChange={handleChange}
-          className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500"
+          className="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500"
         />
       </div>
     </div>

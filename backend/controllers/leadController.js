@@ -4,9 +4,6 @@ import Customer from '../models/Customer.js';
 import CommunicationLog from '../models/CommunicationLog.js';
 import { validationResult } from 'express-validator';
 
-// @desc    Create new lead
-// @route   POST /api/leads
-// @access  Admin, Sales Agent
 export const createLead = async (req, res) => {
   try {
     const errors = validationResult(req);
@@ -51,32 +48,42 @@ export const createLead = async (req, res) => {
   }
 };
 
-// @desc    Get all leads with optional filters
-// @route   GET /api/leads
-// @access  Admin, Sales Agent
 export const getAllLeads = async (req, res) => {
   try {
-    const { status, search } = req.query;
+    const { status, search, include_converted, limit } = req.query;
     const query = {};
+
+    if (!include_converted && !status) {
+      query.status = { $ne: 'converted' };
+    }
 
     if (status) query.status = status;
     if (search) {
       query.$or = [
         { name: { $regex: search, $options: 'i' } },
         { email: { $regex: search, $options: 'i' } },
+        { phone: { $regex: search, $options: 'i' } },
       ];
     }
 
-    const leads = await Lead.find(query).sort('-created_date');
+    const leadsQuery = Lead.find(query)
+      .populate({
+        path: 'staff_id',
+        select: 'name'
+      })
+      .sort('-created_date');
+
+    if (limit) {
+      leadsQuery.limit(parseInt(limit));
+    }
+
+    const leads = await leadsQuery.exec();
     res.json(leads);
   } catch (error) {
     res.status(500).json({ error: 'Server error' });
   }
 };
 
-// @desc    Get lead by ID with staff details
-// @route   GET /api/leads/:id
-// @access  Admin, Sales Agent
 export const getLeadById = async (req, res) => {
   try {
     if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
@@ -105,9 +112,6 @@ export const getLeadById = async (req, res) => {
   }
 };
 
-// @desc    Update lead status and notes
-// @route   PUT /api/leads/:id
-// @access  Admin, Sales Agent
 export const updateLead = async (req, res) => {
   try {
     const { status, notes } = req.body;
@@ -127,9 +131,6 @@ export const updateLead = async (req, res) => {
   }
 };
 
-// @desc    Convert lead to customer
-// @route   POST /api/leads/:id/convert
-// @access  Admin, Sales Agent
 export const convertLeadToCustomer = async (req, res) => {
   try {
     const lead = await Lead.findById(req.params.id);
@@ -180,66 +181,6 @@ export const convertLeadToCustomer = async (req, res) => {
   }
 };
 
-// @desc    Add communication log to lead
-// @route   POST /api/leads/:id/logs
-// @access  Admin, Sales Agent
-export const addCommunicationLog = async (req, res) => {
-  try {
-    const { type, content } = req.body;
-    
-    // Check if req.body exists and is an object
-    if (!req.body || typeof req.body !== 'object' || Object.keys(req.body).length === 0) {
-      return res.status(400).json({ error: 'Request body is missing or empty' });
-    }
-    
-    // Validate required fields
-    if (!type) {
-      return res.status(400).json({ error: 'Communication type is required' });
-    }
-    
-    if (!content) {
-      return res.status(400).json({ error: 'Communication content is required' });
-    }
-    
-    // Validate type against enum values
-    const validTypes = ['email', 'call', 'meeting', 'message', 'other'];
-    if (!validTypes.includes(type)) {
-      return res.status(400).json({ 
-        error: 'Invalid communication type',
-        validTypes
-      });
-    }
-
-    const lead = await Lead.findById(req.params.id);
-
-    if (!lead) {
-      return res.status(404).json({ error: 'Lead not found' });
-    }
-
-    const log = await CommunicationLog.create({
-      lead_id: lead._id,
-      staff_id: req.user._id,
-      type,
-      content,
-    });
-
-    // Check if communication_logs array exists, initialize if not
-    if (!lead.communication_logs) {
-      lead.communication_logs = [];
-    }
-    
-    lead.communication_logs.push(log._id);
-    await lead.save();
-
-    res.status(201).json(log);
-  } catch (error) {
-    res.status(500).json({ error: 'Failed to add communication log' });
-  }
-};
-
-// @desc    Search leads by query, status, or source
-// @route   GET /api/leads/search
-// @access  Admin, Sales Agent
 export const searchLeads = async (req, res) => {
   try {
     const { query, status, source } = req.query;

@@ -31,7 +31,7 @@ const Sidebar = ({ config, user }) => {
     if (role.includes('operation')) return operationDashboardConfig;
     if (role.includes('accounts')) return accountDashboardConfig;
   })();
-    
+
   const currentPath = location.pathname;
   const currentTab = currentPath.split('/').pop();
 
@@ -57,22 +57,22 @@ const Sidebar = ({ config, user }) => {
   return (
     <div
       className={`fixed top-0 left-0 h-screen z-50 transition-all duration-300 
-      ${isSidebarOpen ? 'w-64' : 'w-16'} 
+      ${isSidebarOpen ? 'w-52' : 'w-16'} 
       ${isDarkMode ? 'bg-gray-900 text-gray-100 border-r border-gray-800' : 'bg-white text-gray-800 border-r border-gray-200'}`}
     >
       {/* Logo + Toggle */}
-     <div className={`flex items-center justify-between p-4 ${isDarkMode ? 'border-b border-gray-800' : 'border-b border-gray-200'}`}>
-  {isSidebarOpen && (
-    <img
-      src="/logo.png"
-      alt="TheHinduCRM Logo"
-      className="h-10 w-auto transition-all"
-    />
-  )}
-  <Menu
-    onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-    className="cursor-pointer"
-  />
+      <div className={`flex items-center justify-between p-4 ${isDarkMode ? 'border-b border-gray-800' : 'border-b border-gray-200'}`}>
+        {isSidebarOpen && (
+          <img
+            src="/logo.png"
+            alt="TheHinduCRM Logo"
+            className="h-10 w-auto transition-all"
+          />
+        )}
+        <Menu
+          onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+          className="cursor-pointer"
+        />
       </div>
 
       {/* Tabs */}
@@ -86,8 +86,12 @@ const Sidebar = ({ config, user }) => {
           return (
             <div key={key} className="relative">
               <li
-                className={`flex items-center justify-between px-4 py-3 mx-2 cursor-pointer rounded-lg transition-all
-                  ${isActive ? 'bg-blue-500 text-white' : isDarkMode ? 'text-gray-300 hover:bg-gray-800' : 'text-gray-700 hover:bg-gray-100'}`}
+                className={`flex items-center justify-between px-4 py-4 mx-2 cursor-pointer rounded-lg transition-all
+                  ${isActive
+                    ? 'bg-primary-saffron text-white'
+                    : isDarkMode
+                      ? 'text-orange-400 hover:bg-gray-800'
+                      : 'text-gray-700 hover:bg-orange-400'}`}
                 onClick={() => handleTabClick(key, hasChildren)}
               >
                 <div className="flex items-center space-x-3">
@@ -108,7 +112,7 @@ const Sidebar = ({ config, user }) => {
                       <li
                         key={childKey}
                         onClick={() => handleNavigate(childPath)}
-                        className="text-sm px-3 py-2 rounded-md cursor-pointer hover:bg-blue-100 dark:hover:bg-gray-700"
+                        className="text-sm px-3 py-2 rounded-md cursor-pointer hover:bg-orange-400 hover:text-white dark:hover:bg-gray-700"
                       >
                         {childTab.title}
                       </li>
