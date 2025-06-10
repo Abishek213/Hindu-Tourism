@@ -333,7 +333,7 @@ export default function BookingFormOverlay({ isOpen = true, onClose, onSubmitted
             console.warn("Documents upload failed:", documentUploadResponse.data);
           }
         }
-        setModalMessage('Booking submitted successfully and documents uploaded!');
+        setModalMessage('Booking successful!');
         setShowSuccessModal(true);
 
         if (onSubmitted) {
