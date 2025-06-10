@@ -33,7 +33,7 @@ import GenerateReport from '../../Pages/Sales/GenerateReports';
 
 // Operation Dashboard Components
 import AssignTeamForm from '../../Pages/Operation/AssignTeam';
-import ManageTeamForm from '../../Pages/Operation/ManageTeam';
+import ManageTeamForm from '../../Pages/Operation/ManageTeams';
 import PackageForm from '../../Pages/Operation/PackageForm';
 import TravelProgressUpdater from '../../Pages/Operation/TravelProgressUpdater';
 import OperationDashboardOverview from '../../Pages/Operation/OperationOverview';
@@ -95,7 +95,7 @@ export const operationDashboardConfig = {
 
 export const accountDashboardConfig = {
   basePath: '/account',
-  defaultTab: 'AccountOverview',
+  defaultTab: 'Overview',
   tabs: {
     Overview: { title: 'Overview', component: AccountOverview, icon: BarChart3 },
     invoices: { title: 'Invoices', component: InvoicesPage, icon: FileText },
