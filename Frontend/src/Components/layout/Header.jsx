@@ -43,7 +43,7 @@ const Header = ({ title = "Dashboard", userName = "User" }) => {
   const displayName = currentUser?.username || "User";
 
   return (
-    <header className="sticky top-0 z-30 flex items-center justify-between px-6 py-4 bg-white shadow-md dark:bg-gray-900">
+    <header className="sticky top-0 z-30 flex items-center justify-between px-6 py-3 bg-white shadow-md dark:bg-gray-900">
       <h1 className="text-2xl font-semibold text-gray-800 dark:text-white">{title}</h1>
 
       {/* User Menu */}
