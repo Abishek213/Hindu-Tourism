@@ -49,7 +49,6 @@ function TravelerCard({
   const handleDocumentTypeChange = (e) => {
     const newDocumentType = e.target.value;
     onChange(index, 'documentType', newDocumentType);
-    
     onChange(index, 'documents', {
       passportFile: null,
       aadhaarFrontFile: null,
@@ -57,22 +56,24 @@ function TravelerCard({
     });
   };
 
+  const isLeadTraveler = index === 0;
+
   return (
     <div className="w-full lg:w-[calc(50%-0.5rem)] mb-4 p-3 bg-gray-50 rounded-lg border border-gray-200">
       <div className="flex items-center justify-between mb-2">
         <h4 className="text-sm font-medium text-gray-700">
-          {index === 0 ? "Lead Traveler" : `Traveler ${index + 1}`}
+          {isLeadTraveler ? "Lead Traveler" : `Traveler ${index + 1}`}
         </h4>
       </div>
-      
       <div className="mb-3">
         <label className="block mb-1 text-xs font-medium text-gray-700">Full Name</label>
         <input
           type="text"
           placeholder="Enter traveler's full name"
-          value={traveler.name}
+          value={isLeadTraveler && customerName ? customerName : traveler.name} // Pre-fill for lead traveler
           onChange={(e) => onChange(index, 'name', e.target.value)}
-          className={`w-full p-2 text-sm border ${errors[`travelerName_${index}`] ? 'border-red-500' : 'border-gray-300'} rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500`}
+          disabled={isLeadTraveler && customerName ? true : false} // Make read-only for lead traveler if name is provided
+          className={`w-full p-2 text-sm border ${errors[`travelerName_${index}`] ? 'border-red-500' : 'border-gray-300'} rounded-md focus:ring-2 focus:ring-orange-500 focus:border-orange-500 ${isLeadTraveler && customerName ? 'bg-gray-100 cursor-not-allowed' : ''}`}
         />
         {errors[`travelerName_${index}`] && <p className="mt-1 text-xs text-red-500">{errors[`travelerName_${index}`]}</p>}
       </div>
@@ -90,11 +91,10 @@ function TravelerCard({
         </select>
         {errors[`documentType_${index}`] && <p className="mt-1 text-xs text-red-500">{errors[`documentType_${index}`]}</p>}
       </div>
-      
       {traveler.documentType && (
         <div className="grid grid-cols-1 gap-2">
           {traveler.documentType === 'passport' && (
-            <DocumentUploader 
+            <DocumentUploader
               label="Passport"
               index={index}
               documentType="passportFile"
@@ -107,7 +107,7 @@ function TravelerCard({
 
           {traveler.documentType === 'aadhaar' && (
             <>
-              <DocumentUploader 
+              <DocumentUploader
                 label="Aadhaar Card Front"
                 index={index}
                 documentType="aadhaarFrontFile"
@@ -117,7 +117,7 @@ function TravelerCard({
                 errorKey={`aadhaarFront_${index}`}
               />
 
-              <DocumentUploader 
+              <DocumentUploader
                 label="Aadhaar Card Back"
                 index={index}
                 documentType="aadhaarBackFile"
@@ -134,14 +134,14 @@ function TravelerCard({
   );
 }
 
-function DocumentUploader({ 
-  label, 
-  index, 
-  documentType, 
-  traveler, 
-  onChange, 
-  errors, 
-  errorKey 
+function DocumentUploader({
+  label,
+  index,
+  documentType,
+  traveler,
+  onChange,
+  errors,
+  errorKey
 }) {
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -160,11 +160,11 @@ function DocumentUploader({
             </svg>
             <p className="text-xs text-gray-500">Upload {label}</p>
           </div>
-          <input 
-            type="file" 
-            accept="image/*,.pdf" 
+          <input
+            type="file"
+            accept="image/*,.pdf"
             onChange={handleFileChange}
-            className="hidden" 
+            className="hidden"
           />
         </label>
       </div>
@@ -189,15 +189,15 @@ export default function TravelersInformation({
   return (
     <div className="pt-4 mt-6 border-t">
       <h3 className="mb-3 text-lg font-medium text-gray-800">Travelers Information</h3>
-      
       <div className="flex flex-wrap gap-4 mb-6">
         {travelersInfo.map((traveler, index) => (
-          <TravelerCard 
+          <TravelerCard
             key={index}
             index={index}
             traveler={traveler}
             onChange={onChange}
             errors={errors}
+            customerName={index === 0 && customer ? customer.name : null} // Pass customer name to the first traveler
           />
         ))}
       </div>

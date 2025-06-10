@@ -7,7 +7,7 @@ import api from '../../api/auth';
 export default function BookingFormOverlay({ isOpen = true, onClose, onSubmitted, customer }) {
   const [form, setForm] = useState({
     destination: '',
-    packageId: '',
+    packageId: '', 
     travelers: 1,
     startDate: '',
     endDate: '',
@@ -84,6 +84,16 @@ export default function BookingFormOverlay({ isOpen = true, onClose, onSubmitted
       }
     }
   ]);
+
+   useEffect(() => {
+    if (customer && customer.name && travelersInfo.length > 0 && !travelersInfo[0].name) {
+      setTravelersInfo(prev => {
+        const newTravelersInfo = [...prev];
+        newTravelersInfo[0] = { ...newTravelersInfo[0], name: customer.name };
+        return newTravelersInfo;
+      });
+    }
+  }, [customer, travelersInfo]);
 
   // Errors state
   const [errors, setErrors] = useState({});
@@ -165,7 +175,12 @@ export default function BookingFormOverlay({ isOpen = true, onClose, onSubmitted
   // Handle traveler information changes
   const handleTravelerChange = (index, field, value) => {
     setTravelersInfo(prev => {
-      const updated = [...prev];
+      const updated = [...prev]; // Prevent editing the lead traveler's name if it's pre-filled by customer
+      if (index === 0 && field === 'name' && customer && customer.name) {
+        return updated;
+      }
+
+
 
       if (field.includes('.')) {
         const [parentField, childField] = field.split('.');
@@ -256,6 +271,7 @@ export default function BookingFormOverlay({ isOpen = true, onClose, onSubmitted
     setIsSubmitting(true);
 
     try {
+
       const services = form.selectedServices.map(serviceId => {
         const service = servicesList.find(s => s._id === serviceId);
         return {
@@ -323,9 +339,11 @@ export default function BookingFormOverlay({ isOpen = true, onClose, onSubmitted
               'Content-Type': 'multipart/form-data'
             }
           });
+          if (documentUploadResponse.status !== 200 && documentUploadResponse.status !== 201) {
+            console.warn("Documents upload failed:", documentUploadResponse.data);
+          }
         }
-
-        setModalMessage('Booking submitted successfully and documents uploaded!');
+        setModalMessage('Booking successful!');
         setShowSuccessModal(true);
 
         if (onSubmitted) {
@@ -333,16 +351,11 @@ export default function BookingFormOverlay({ isOpen = true, onClose, onSubmitted
         }
 
         resetForm();
-      } else {
-        throw new Error('Failed to submit booking');
       }
     } catch (error) {
       console.error('Submission error:', error.response?.data || error.message);
-      setModalMessage(error.response?.data?.message || 'Failed to submit booking. Please try again.');
-      setShowErrorModal(true);
-    } finally {
-      setIsSubmitting(false);
-    }
+    } 
+  
   };
 
   // Reset form function

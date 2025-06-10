@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react'; // Added useCallback
 import {
   Users, Eye, Plus, Calendar, User, Phone,
-  MapPin, X, Search, Filter
+  MapPin, X, Search, Filter, CheckCircle // Added CheckCircle icon
 } from 'lucide-react';
 import BookingFormOverlay from '../../Components/SalesBooking/BookingForm';
 import { debounce } from 'lodash';
@@ -9,67 +9,82 @@ import api from '../../api/auth';
 
 
 const useCustomers = () => {
-
   const [customers, setCustomers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    const fetchCustomers = async () => {
-      try {
-        setLoading(true);
-        // Use '/customer' to match your backend route
-        const response = await api.get('/customer');
+  // Function to fetch customers, made into a useCallback to be stable for useEffect
+  const fetchCustomers = useCallback(async () => {
+    try {
+      setLoading(true);
+      const response = await api.get('/customer'); // Fetch initial customer data
 
-        console.log('API Response:', response); // Debug log
-
-        if (!response || !response.data) {
-          throw new Error('No data received from server');
-        }
-
-        // Handle both direct array response and paginated response
-        const customersData = Array.isArray(response.data)
-          ? response.data
-          : response.data.customers || [];
-
-        setCustomers(customersData);
-
-      } catch (err) {
-        console.error('Error fetching customers:', err);
-        setError(err.message || 'Failed to fetch customers');
-      } finally {
-        setLoading(false);
+      if (!response || !response.data) {
+        throw new Error('No data received from server');
       }
-    };
 
+      const customersData = Array.isArray(response.data)
+        ? response.data
+        : response.data.customers || [];
+
+      // For each customer, check if they have any bookings
+      const customersWithBookingStatus = await Promise.all(
+        customersData.map(async (customer) => {
+          try {
+            const customerId = customer._id || customer.id;
+            // Use the existing /customer/:id/bookings endpoint to check for bookings
+            const bookingResponse = await api.get(`/customer/${customerId}/bookings`);
+            // Assuming getCustomerBookings returns an array of bookings
+            const hasBooking = bookingResponse.data && bookingResponse.data.length > 0;
+            
+            console.log(`[fetchCustomers] Customer: ${customer.name} (${customerId}), Has Booking: ${hasBooking}`);
+            return {
+              ...customer,
+              has_active_booking: hasBooking // Add this flag to the customer object
+            };
+          } catch (bookingError) {
+            console.warn(`[fetchCustomers] Could not fetch booking status for customer ${customer.name}:`, bookingError);
+            return { ...customer, has_active_booking: false }; // Default to false if check fails
+          }
+        })
+      );
+      setCustomers(customersWithBookingStatus);
+
+    } catch (err) {
+      console.error('Error fetching customers:', err);
+      setError(err.message || 'Failed to fetch customers');
+    } finally {
+      setLoading(false);
+    }
+  }, []); // Empty dependency array ensures this function itself is stable
+
+  // Initial fetch on component mount
+  useEffect(() => {
     fetchCustomers();
-  }, []);
+  }, [fetchCustomers]); // Depend on fetchCustomers useCallback
 
   const addCustomer = async (newCustomer) => {
     try {
       const response = await api.post('/customer', newCustomer);
-      setCustomers(prev => [...prev, response.data]);
+      // New customer won't have a booking initially
+      setCustomers(prev => [...prev, { ...response.data, has_active_booking: false }]); 
       return response.data;
     } catch (err) {
       console.error('Error adding customer:', {
         status: err.response?.status,
         data: err.response?.data,
       });
-
-      // Throw a more specific error
       if (err.response?.status === 403) {
-
         throw new Error('You need admin privileges to add customers. Please contact your administrator.');
-
       }
       throw err;
     }
   };
 
-  return { customers, loading, error, addCustomer };
+  return { customers, loading, error, addCustomer, fetchCustomers }; // Return fetchCustomers for re-fetching
 };
 
-// Add Customer Form Modal
+// Add Customer Form Modal (no changes)
 function AddCustomerModal({ isOpen, onClose, onSubmit }) {
   const [formData, setFormData] = useState({
     name: '',
@@ -87,7 +102,6 @@ function AddCustomerModal({ isOpen, onClose, onSubmit }) {
       ...prev,
       [name]: value
     }));
-    // Clear error when user starts typing
     if (errors[name]) {
       setErrors(prev => ({
         ...prev,
@@ -130,7 +144,6 @@ function AddCustomerModal({ isOpen, onClose, onSubmit }) {
 
     onSubmit(formData);
 
-    // Reset form
     setFormData({
       name: '',
       phone: '',
@@ -284,7 +297,7 @@ function AddCustomerModal({ isOpen, onClose, onSubmit }) {
   );
 }
 
-// Header Component
+// Header Component (no changes)
 function CustomerHeader({ onAddCustomer, onSearch }) {
   return (
     <div className="mb-6">
@@ -305,7 +318,7 @@ function CustomerHeader({ onAddCustomer, onSearch }) {
   );
 }
 
-// Customer View Modal
+// Customer View Modal (no changes)
 function CustomerViewModal({ isOpen, onClose, customer }) {
   if (!isOpen || !customer) return null;
 
@@ -390,10 +403,8 @@ function CustomerViewModal({ isOpen, onClose, customer }) {
   );
 }
 
-// Simplified Table Component
+// Simplified Table Component - Contains the conditional button logic
 function CustomerTable({ customers, onViewCustomer, onBookNow }) {
-  // Ensure customers is always an array, default to empty array if not
-
   return (
     <div className="overflow-x-auto">
       <table className="w-full">
@@ -434,14 +445,26 @@ function CustomerTable({ customers, onViewCustomer, onBookNow }) {
                     >
                       <Eye size={16} />
                     </button>
-                    <button
-                      onClick={() => onBookNow(customer)}
-                      className="flex items-center gap-1 px-3 py-1 text-xs font-semibold text-white transition-all duration-200 rounded-md bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700"
-                      title="Create Booking"
-                    >
-                      <Calendar size={12} />
-                      Book Now
-                    </button>
+                    {/* Conditional Rendering for Book Now / Booked button */}
+                    {customer.has_active_booking ? (
+                      <button
+                        className="flex items-center gap-1 px-3 py-1 text-xs font-semibold text-white bg-gray-400 rounded-md cursor-not-allowed"
+                        title="Booking Already Exists"
+                        disabled
+                      >
+                        <CheckCircle size={12} />
+                        Booked
+                      </button>
+                    ) : (
+                      <button
+                        onClick={() => onBookNow(customer)}
+                        className="flex items-center gap-1 px-3 py-1 text-xs font-semibold text-white transition-all duration-200 rounded-md bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700"
+                        title="Create Booking"
+                      >
+                        <Calendar size={12} />
+                        Book Now
+                      </button>
+                    )}
                   </div>
                 </td>
               </tr>
@@ -459,7 +482,7 @@ function CustomerTable({ customers, onViewCustomer, onBookNow }) {
   );
 }
 
-// Empty State Component
+// Empty State Component (no changes)
 function EmptyState({ onAddCustomer }) {
   return (
     <div className="py-12 text-center">
@@ -479,7 +502,8 @@ function EmptyState({ onAddCustomer }) {
 
 // Main CustomerList Component
 export default function CustomerList({ onAddCustomer }) {
-  const { customers, addCustomer } = useCustomers();
+  // Destructure fetchCustomers from the hook return
+  const { customers, addCustomer, fetchCustomers } = useCustomers();
   const [viewModalOpen, setViewModalOpen] = useState(false);
   const [bookingFormOpen, setBookingFormOpen] = useState(false);
   const [addCustomerModalOpen, setAddCustomerModalOpen] = useState(false);
@@ -487,12 +511,12 @@ export default function CustomerList({ onAddCustomer }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredCustomers, setFilteredCustomers] = useState([]);
 
-  // Debounced search
+  // Debounced search (no changes)
   const debouncedSearch = debounce((term) => {
     setSearchTerm(term);
   }, 300);
 
-  // Filter customers based on search term
+  // Filter customers based on search term (no changes)
   useEffect(() => {
     if (!customers) return;
 
@@ -533,32 +557,48 @@ export default function CustomerList({ onAddCustomer }) {
     setSelectedCustomer(null);
   };
 
+  // Called when booking form closes
   const handleCloseBooking = () => {
     setBookingFormOpen(false);
     setSelectedCustomer(null);
+    fetchCustomers(); // CRITICAL: Re-fetch customers to update their booking status
   };
 
+  // Called after a successful booking submission from BookingFormOverlay
   const handleBookingSubmitted = (bookingData) => {
     console.log('Booking submitted for customer:', selectedCustomer.name, bookingData);
+    // Optimistically update the customer's booking status in the local state
+    setCustomers(prev => {
+      const updatedCustomers = prev.map(c => {
+        if ((c._id || c.id) === (selectedCustomer._id || selectedCustomer.id)) {
+          console.log(`[handleBookingSubmitted] Updating customer ${c.name} to has_active_booking: true`);
+          return { ...c, has_active_booking: true };
+        }
+        return c;
+      });
+      return updatedCustomers;
+    });
   };
 
   const handleAddCustomerClick = () => {
     setAddCustomerModalOpen(true);
   };
 
+  // Called when Add Customer modal closes
   const handleCloseAddCustomer = () => {
     setAddCustomerModalOpen(false);
+    fetchCustomers(); // CRITICAL: Re-fetch customers after adding a new one
   };
 
  const handleAddCustomerSubmit = async (customerData) => {
   try {
     await addCustomer(customerData);
     // Show success message
-    alert('Customer added successfully!');
+    alert('Customer added successfully!'); // Using alert for simplicity, consider a custom modal
     setAddCustomerModalOpen(false);
   } catch (err) {
     // Show user-friendly error
-    alert(err.message || 'Failed to add customer');
+    alert(err.message || 'Failed to add customer'); // Using alert for simplicity
   }
 };
 
