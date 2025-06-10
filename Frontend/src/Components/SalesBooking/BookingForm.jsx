@@ -7,7 +7,7 @@ import api from '../../api/auth';
 export default function BookingFormOverlay({ isOpen = true, onClose, onSubmitted, customer }) {
   const [form, setForm] = useState({
     destination: '',
-    packageId: '', // Will store the _id of the selected package
+    packageId: '', 
     travelers: 1,
     startDate: '',
     endDate: '',
@@ -251,7 +251,7 @@ export default function BookingFormOverlay({ isOpen = true, onClose, onSubmitted
       bookingFormData.append('travel_start_date', form.startDate);
       bookingFormData.append('travel_end_date', form.endDate);
       bookingFormData.append('num_travelers', form.travelers);
-      
+
       const services = [];
       if (form.helicopter) {
         const service = servicesList.find(s => s.name === 'Helicopter Ride');
@@ -289,11 +289,11 @@ export default function BookingFormOverlay({ isOpen = true, onClose, onSubmitted
 
           if (traveler.documentType === 'passport' && traveler.documents.passportFile) {
             documentsToUpload.push({
-              document_type: 'Passport', // Changed to match backend enum: Capital 'P'
+              document_type: 'Passport',
               traveler_name: travelerName,
               is_main_customer: isMainCustomer,
               customer_id: isMainCustomer ? (customer._id || customer.id) : undefined,
-              // file_index: filesToAttach.getAll('files').length // Keep track of file order if needed
+
             });
             filesToAttach.append('files', traveler.documents.passportFile);
           } else if (traveler.documentType === 'aadhaar') {
@@ -308,7 +308,7 @@ export default function BookingFormOverlay({ isOpen = true, onClose, onSubmitted
             }
             if (traveler.documents.aadhaarBackFile) {
               documentsToUpload.push({
-                document_type: 'Aadhaar Card', // Changed to match backend enum: 'Aadhaar Card'
+                document_type: 'Aadhaar Card',
                 traveler_name: travelerName,
                 is_main_customer: isMainCustomer,
                 customer_id: isMainCustomer ? (customer._id || customer.id) : undefined,
@@ -316,10 +316,11 @@ export default function BookingFormOverlay({ isOpen = true, onClose, onSubmitted
               filesToAttach.append('files', traveler.documents.aadhaarBackFile);
             }
           }
-          // Add logic for other document types if necessary
+
         });
 
         if (documentsToUpload.length > 0) {
+          
           filesToAttach.append('documents', JSON.stringify(documentsToUpload)); // Append metadata as JSON string
 
           const documentUploadResponse = await api.post(`/document/bookings/${bookingId}`, filesToAttach, {
@@ -330,11 +331,8 @@ export default function BookingFormOverlay({ isOpen = true, onClose, onSubmitted
 
           if (documentUploadResponse.status !== 200 && documentUploadResponse.status !== 201) {
             console.warn("Documents upload failed:", documentUploadResponse.data);
-            // Optionally, you might want to show an error specific to document upload,
-            // but the booking itself is successful.
           }
         }
-
         setModalMessage('Booking submitted successfully and documents uploaded!');
         setShowSuccessModal(true);
 
@@ -343,16 +341,11 @@ export default function BookingFormOverlay({ isOpen = true, onClose, onSubmitted
         }
 
         resetForm();
-      } else {
-        throw new Error('Failed to submit booking');
       }
     } catch (error) {
       console.error('Submission error:', error.response?.data || error.message);
-      setModalMessage(error.response?.data?.message || 'Failed to submit booking. Please try again.');
-      setShowErrorModal(true);
-    } finally {
-      setIsSubmitting(false);
-    }
+    } 
+  
   };
 
   // Reset form function

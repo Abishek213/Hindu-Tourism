@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FiEye, FiEyeOff, FiCheckCircle, FiAlertCircle, FiArrowLeft } from 'react-icons/fi';
-import api from '../../api/auth';
+import api from '../api/auth';
 import { toast } from 'react-toastify';
 
 const Settings = () => {
