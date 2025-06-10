@@ -44,7 +44,8 @@ function TravelerCard({
   index, 
   traveler, 
   onChange, 
-  errors 
+  errors ,
+   customerName 
 }) {
   const handleDocumentTypeChange = (e) => {
     const newDocumentType = e.target.value;
@@ -184,7 +185,8 @@ export default function TravelersInformation({
   onChange,
   servicesList = [],
   selectedServices = [],
-  onServiceToggle = () => {}
+  onServiceToggle = () => {},
+   customer = null 
 }) {
   return (
     <div className="pt-4 mt-6 border-t">

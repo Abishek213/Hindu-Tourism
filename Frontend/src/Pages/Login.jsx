@@ -61,81 +61,63 @@ export default function LoginPage() {
     }
   };
 
-  const backgroundImages = [
-    '/assets/images/pashupati1.jpg.jpg',
-    '/assets/images/muktinath1.jpg'
-  ];
-
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentImageIndex((prevIndex) =>
-        (prevIndex + 1) % backgroundImages.length
-      );
-    }, 5000);
-    return () => clearInterval(interval);
-  }, []);
-
   return (
-    <div className="min-h-screen flex flex-col md:flex-row bg-gradient-to-br from-orange-50 to-orange-100">
-     {/* Left side - Branding */}
-            <div className="md:w-1/2 flex items-center justify-center bg-gradient-to-br from-light to-light p-8 md:p-16">
-              <div className="text-center md:text-left">
+    <div className="h-screen flex flex-col md:flex-row bg-gradient-to-br from-orange-50 to-orange-100 relative overflow-hidden">
+      {/* Centered Logo spanning both sides */}
+      <div className="absolute top-4 left-1/2 transform -translate-x-1/2 z-20 bg-white rounded-full p-3 shadow-lg border-4 border-orange-200">
+        <img 
+          src="/logo.png" 
+          alt="TheHinduTourism Logo" 
+          className="w-12 h-12 md:w-16 md:h-16 object-contain"
+        />
+      </div>
 
-             {/* Text section with background image */}
-                <div
-                  className="p-6 rounded-lg bg-cover bg-center bg-no-repeat mb-8"
-                  style={{ backgroundImage: "url('/aarati.jpg')" }} // Correct usage
-                >
-                  <div className="bg-black/50 p-6 rounded-lg"> {/* Optional overlay for readability */}
-                    <div className="flex items-center justify-center mb-6 md:justify-start">
-                      <h1 className="ml-4 text-3xl font-bold text-white md:text-4xl">
-                        TheHinduTourism
-                      </h1>
-                    </div>
-                    <h2 className="mb-6 text-2xl font-light text-white">
-                      Customer Relationship Management
-                    </h2>
-                    <p className="max-w-md text-orange-100">
-                      Managing pilgrimage journeys to Pashupatinath and Muktinath with excellence and devotion.
-                    </p>
-                  </div>
+     {/* Left side - Branding */}
+      <div className="md:w-1/2 flex items-center justify-center bg-gradient-to-br from-light to-light p-4 md:p-8 pt-20 md:pt-16 overflow-y-auto">
+        <div className="text-center md:text-left">
+         {/* Text section with background image */}
+          <div
+            className="p-6 rounded-lg bg-cover bg-center bg-no-repeat mb-8"
+            style={{ backgroundImage: "url('/aarati.jpg')" }}
+          >
+            <div className="bg-black/50 p-6 rounded-lg">
+              <div className="flex items-center justify-center mb-6 md:justify-start">
+                <h1 className="ml-4 text-3xl font-bold text-white md:text-4xl">
+                  TheHinduTourism
+                </h1>
+              </div>
+              <h2 className="mb-6 text-2xl font-light text-white">
+                Customer Relationship Management
+              </h2>
+              <p className="max-w-md text-orange-100">
+                Managing pilgrimage journeys to Pashupatinath and Muktinath with excellence and devotion.
+              </p>
+            </div>
+          </div>
+
+          <div className="hidden md:block">
+            <div className="p-6 mt-8 rounded-lg bg-dark/90 backdrop-blur-sm shadow-lg">
+              <h3 className="mb-4 text-xl font-semibold text-white">Sacred Destinations</h3>
+              <div className="flex space-x-4">
+                {/* Destination Card 1 - Light color base */}
+                <div className="flex-1 p-4 rounded-lg bg-light/80 text-white border border-white/10 hover:bg-light transition">
+                  <p className="font-bold text-lg">Pashupatinath</p>
+                  <p className="text-sm text-white/90">Kathmandu, Nepal</p>
                 </div>
 
-
-               <div className="hidden md:block">
-                    <div className="p-6 mt-8 rounded-lg bg-dark/90 backdrop-blur-sm shadow-lg">
-                      <h3 className="mb-4 text-xl font-semibold text-white">Sacred Destinations</h3>
-                      <div className="flex space-x-4">
-                        {/* Destination Card 1 - Light color base */}
-                        <div className="flex-1 p-4 rounded-lg bg-light/80 text-white border border-white/10 hover:bg-light transition">
-                          <p className="font-bold text-lg">Pashupatinath</p>
-                          <p className="text-sm text-white/90">Kathmandu, Nepal</p>
-                        </div>
-
-                        {/* Destination Card 2 - Primary saffron base */}
-                        <div className="flex-1 p-4 rounded-lg bg-primary-saffron/80 text-white border border-white/10 hover:bg-primary-saffron transition">
-                          <p className="font-bold text-lg">Muktinath</p>
-                          <p className="text-sm text-white/90">Mustang, Nepal</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
+                {/* Destination Card 2 - Primary saffron base */}
+                <div className="flex-1 p-4 rounded-lg bg-primary-saffron/80 text-white border border-white/10 hover:bg-primary-saffron transition">
+                  <p className="font-bold text-lg">Muktinath</p>
+                  <p className="text-sm text-white/90">Mustang, Nepal</p>
+                </div>
               </div>
             </div>
-
+          </div>
+        </div>
+      </div>
 
       {/* Right side - Login Form */}
-      <div className="relative flex items-center justify-center p-8 overflow-hidden md:w-1/2 md:p-16">
-        <div
-          className="absolute inset-0 z-0 transition-opacity duration-1000 ease-in-out bg-center bg-cover"
-          style={{
-            backgroundImage: `url(${backgroundImages[currentImageIndex]})`,
-            opacity: 0.3
-          }}
-        ></div>
+      <div className="relative flex items-center justify-center p-4 md:p-8 overflow-hidden md:w-1/2 pt-20 md:pt-16">
 
         <div className="z-10 w-full max-w-xs">
           <div className="bg-white shadow-lg rounded-lg p-4">
