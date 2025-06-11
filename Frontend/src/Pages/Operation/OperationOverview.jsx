@@ -388,37 +388,20 @@ export default function EnhancedOperationDashboard() {
     </div>
   );
 
-  const tabs = [
-    { id: 'overview', label: 'Dashboard Overview', icon: TrendingUp },
-  ];
+ 
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50">
-      <div className="px-6 py-8">
-        {/* Navigation Tabs */}
-        <nav className="mb-8">
-          <div className="bg-white rounded-2xl shadow-lg p-2 border border-orange-100">
-            <div className="flex flex-wrap gap-2">
-              {tabs.map(({ id, label, icon: Icon }) => (
-                <button
-                  key={id}
-                  onClick={() => setActiveTab(id)}
-                  className={`flex items-center gap-3 px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
-                    activeTab === id
-                      ? 'bg-gradient-to-r from-orange-500 to-amber-500 text-white shadow-lg transform scale-105'
-                      : 'text-gray-600 hover:bg-orange-50 hover:text-orange-600'
-                  }`}
-                >
-                  <Icon className="w-5 h-5" />
-                  <span className="hidden md:inline">{label}</span>
-                </button>
-              ))}
-            </div>
-          </div>
-        </nav>
+    <div className=" p-4  bg-white rounded-lg shadow-md">
+      <div>
+            <div className="mb-6 flex justify-between items-center px-6 py-9 border-b border-gray-100
+
+              bg-primary-saffron">
+        <h2 className="text-xl font-bold text-white">Operation Overview</h2>
+      </div>
+      
 
         {/* Tab Content */}
-        <div className="min-h-[600px]">
+        <div className="min-h-[600px] ">
           {activeTab === 'overview' && renderOverview()}
         </div>
       </div>

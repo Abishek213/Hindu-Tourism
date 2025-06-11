@@ -197,27 +197,31 @@ export default function ManageTeamForm() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50 p-6">
+    <div className="p-4  bg-white rounded-lg shadow-md">
       {/* Header Actions */}
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold text-gray-800">Manage Guide and Transport</h1>
+      <div className="mb-6 flex justify-between items-center px-6 py-8 border-b border-gray-100
+       bg-primary-saffron">
+        <h1 className="text-xl font-bold text-white">Manage Guide and Transport</h1>
         <div className="flex space-x-4">
           <button
             onClick={refreshData}
             disabled={fetchingData}
-            className="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg disabled:opacity-50"
+            className="px-4 py-2 text-sm rounded-md  text-orange-600 transition-all duration-200
+                  bg-white shadow-lg sm:mt-0 hover:bg-orange-100"
           >
             {fetchingData ? 'Refreshing...' : 'Refresh Data'}
           </button>
           <button
             onClick={() => setShowGuideForm(!showGuideForm)}
-            className="bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 px-4 rounded-lg"
+            className="px-4 py-2 text-sm rounded-md  text-orange-600 transition-all duration-200
+                  bg-white shadow-lg sm:mt-0 hover:bg-orange-100"
           >
             {showGuideForm ? "Cancel Guide" : "Create Guide"}
           </button>
           <button
             onClick={() => setShowTransportForm(!showTransportForm)}
-            className="bg-amber-500 hover:bg-amber-600 text-white font-semibold py-2 px-4 rounded-lg"
+            className="px-4 py-2 text-sm rounded-md  text-orange-600 transition-all duration-200
+                  bg-white shadow-lg sm:mt-0 hover:bg-orange-100"
           >
             {showTransportForm ? "Cancel Transport" : "Create Transport"}
           </button>

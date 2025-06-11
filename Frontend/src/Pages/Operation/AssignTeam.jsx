@@ -227,7 +227,7 @@ export default function AssignTeamForm() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50 p-6 flex items-center justify-center">
+      <div className="p-4  bg-white rounded-lg shadow-md p-6 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-orange-500 mx-auto mb-4"></div>
           <p className="text-orange-700">Loading bookings and resources...</p>
@@ -237,16 +237,18 @@ export default function AssignTeamForm() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-amber-50 to-yellow-50 p-6">
+    <div className="p-4  bg-white rounded-lg shadow-md">
       {/* Header */}
-      <div className="flex justify-between items-center mb-8">
+      <div className="mb-6 flex justify-between items-center px-6 py-8 border-b border-gray-100
+       bg-primary-saffron">
         <div>
-          <h1 className="text-4xl font-bold text-orange-800 mb-2">Assign Team Members</h1>
+          <h1 className="text-xl font-bold text-white">Assign Team Members</h1>
         </div>
         <button
   onClick={() => fetchData(true)} 
   disabled={fetchingData}
-  className="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg disabled:opacity-50"
+  className="px-4 py-2 text-sm rounded-md  text-orange-600 transition-all duration-200
+                  bg-white shadow-lg sm:mt-0 hover:bg-orange-100"
 >
   {fetchingData && isManualRefresh ? 'Refreshing...' : 'Refresh Data'}
 </button>
@@ -274,7 +276,7 @@ export default function AssignTeamForm() {
 
       {/* Confirmed Bookings Table */}
       <div className="bg-white rounded-xl shadow-xl border border-orange-100 overflow-hidden">
-        <div className="px-8 py-6 bg-gradient-to-r from-orange-500 to-amber-500 border-b border-orange-200">
+        <div className="px-8 py-6 bg-secondary-green">
           <h2 className="text-2xl font-bold text-white">Confirmed Bookings</h2>
         </div> 
         

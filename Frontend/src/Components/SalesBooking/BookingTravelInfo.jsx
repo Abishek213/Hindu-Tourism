@@ -44,12 +44,13 @@ function TravelerCard({
   index, 
   traveler, 
   onChange, 
-  errors ,
-   customerName 
+  errors,
+  customerName 
 }) {
   const handleDocumentTypeChange = (e) => {
     const newDocumentType = e.target.value;
     onChange(index, 'documentType', newDocumentType);
+    
     onChange(index, 'documents', {
       passportFile: null,
       aadhaarFrontFile: null,
@@ -66,6 +67,8 @@ function TravelerCard({
           {isLeadTraveler ? "Lead Traveler" : `Traveler ${index + 1}`}
         </h4>
       </div>
+
+      {/* Traveler Name */}
       <div className="mb-3">
         <label className="block mb-1 text-xs font-medium text-gray-700">Full Name</label>
         <input
@@ -79,6 +82,7 @@ function TravelerCard({
         {errors[`travelerName_${index}`] && <p className="mt-1 text-xs text-red-500">{errors[`travelerName_${index}`]}</p>}
       </div>
 
+      {/* Document Type Selection */}
       <div className="mb-3">
         <label className="block mb-1 text-xs font-medium text-gray-700">Document Type</label>
         <select
@@ -92,6 +96,8 @@ function TravelerCard({
         </select>
         {errors[`documentType_${index}`] && <p className="mt-1 text-xs text-red-500">{errors[`documentType_${index}`]}</p>}
       </div>
+
+      {/* Document Upload Section */}
       {traveler.documentType && (
         <div className="grid grid-cols-1 gap-2">
           {traveler.documentType === 'passport' && (
@@ -135,14 +141,14 @@ function TravelerCard({
   );
 }
 
-function DocumentUploader({
-  label,
-  index,
-  documentType,
-  traveler,
-  onChange,
-  errors,
-  errorKey
+function DocumentUploader({ 
+  label, 
+  index, 
+  documentType, 
+  traveler, 
+  onChange, 
+  errors, 
+  errorKey 
 }) {
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -161,11 +167,11 @@ function DocumentUploader({
             </svg>
             <p className="text-xs text-gray-500">Upload {label}</p>
           </div>
-          <input
-            type="file"
-            accept="image/*,.pdf"
+          <input 
+            type="file" 
+            accept="image/*,.pdf" 
             onChange={handleFileChange}
-            className="hidden"
+            className="hidden" 
           />
         </label>
       </div>
@@ -191,15 +197,15 @@ export default function TravelersInformation({
   return (
     <div className="pt-4 mt-6 border-t">
       <h3 className="mb-3 text-lg font-medium text-gray-800">Travelers Information</h3>
+      
       <div className="flex flex-wrap gap-4 mb-6">
         {travelersInfo.map((traveler, index) => (
-          <TravelerCard
+          <TravelerCard 
             key={index}
             index={index}
             traveler={traveler}
             onChange={onChange}
             errors={errors}
-            customerName={index === 0 && customer ? customer.name : null} // Pass customer name to the first traveler
           />
         ))}
       </div>
