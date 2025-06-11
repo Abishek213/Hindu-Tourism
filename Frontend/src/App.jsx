@@ -97,9 +97,11 @@ const App = () => {
             </ProtectedRoute>
           }
         >
-          <Route index element={<Navigate to={accountDashboardConfig.defaultTab} replace />} />
+          <Route
+            index
+            element={<Navigate to={accountDashboardConfig.defaultTab} replace />}
+          />
           {renderDashboardRoutes(accountDashboardConfig)}
-          <Route path="settings" element={<Settings />} /> {/* ✅ Added */}
         </Route>
 
         {/* Redirect unknown routes to login */}

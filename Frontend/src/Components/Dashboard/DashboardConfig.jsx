@@ -10,7 +10,8 @@ import {
   Package,
   PlusIcon,
   LucideCompass,
-  GroupIcon
+  GroupIcon,
+  Luggage
 
 } from 'lucide-react';
 
@@ -32,10 +33,11 @@ import GenerateReport from '../../Pages/Sales/GenerateReports';
 
 // Operation Dashboard Components
 import AssignTeamForm from '../../Pages/Operation/AssignTeam';
-import ManageTeamForm from '../../Pages/Operation/ManageTeam';
+import ManageTeamForm from '../../Pages/Operation/ManageTeams';
 import PackageForm from '../../Pages/Operation/PackageForm';
 import TravelProgressUpdater from '../../Pages/Operation/TravelProgressUpdater';
 import OperationDashboardOverview from '../../Pages/Operation/OperationOverview';
+import OptionalServicesDashboard from '../../Pages/Operation/OptionalServices';
 
 //Accounts Dashboard components
 import InvoicesPage from "../../Pages/Account/Invoices";
@@ -74,7 +76,7 @@ export const adminDashboardConfig = {
     packages: { title: 'Packages', component: AdminPackages, icon: FileText },
     payment: { title: 'Payments', component: AdminPayment, icon: Banknote },
     reports: { title: 'Reports', component: AdminReports, icon: ClipboardList },
-    staffmanagement: { title: 'Staff Management', component: AdminStaffManagement, icon: Users },
+    staffmanagement: { title: 'Staff Management', component: AdminStaffManagement, icon: Users }
   },
 };
 
@@ -86,13 +88,14 @@ export const operationDashboardConfig = {
     manage:{title:'ManageTeam',component:ManageTeamForm, icon:GroupIcon},
     assign: { title: 'AssignTeam', component: AssignTeamForm, icon: Truck },
     travelprogress :{title:'TravelProgress',component:TravelProgressUpdater,icon:LucideCompass},
-    package: {title:'Packages', component:PackageForm, icon:Package}
+    package: {title:'Packages', component:PackageForm, icon:Package},
+    services:{title:'Optional Services',component:OptionalServicesDashboard, icon:Luggage}
   }
 };
 
 export const accountDashboardConfig = {
   basePath: '/account',
-  defaultTab: 'AccountOverview',
+  defaultTab: 'Overview',
   tabs: {
     Overview: { title: 'Overview', component: AccountOverview, icon: BarChart3 },
     invoices: { title: 'Invoices', component: InvoicesPage, icon: FileText },

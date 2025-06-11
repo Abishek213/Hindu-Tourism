@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { PlusCircle, X, Save, Calendar, User, DollarSign, FileText } from "lucide-react";
+import { PlusCircle, X, Save, Calendar, User, DollarSign, FileText, Edit, Eye } from "lucide-react";
 
 const InvoiceManagement = () => {
   const [invoices, setInvoices] = useState([]);
@@ -124,94 +124,42 @@ const InvoiceManagement = () => {
     return invoices.filter(inv => inv.status === status).length;
   };
 
-  const getTotalRevenue = () => {
-    return invoices.filter(inv => inv.status === "paid").reduce((sum, inv) => sum + inv.amount, 0);
-  };
-
-  const getPendingAmount = () => {
-    return invoices.filter(inv => inv.status === "unpaid").reduce((sum, inv) => sum + inv.amount, 0);
-  };
-
-  const getOverdueAmount = () => {
-    return invoices.filter(inv => inv.status === "overdue").reduce((sum, inv) => sum + inv.amount, 0);
-  };
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 to-yellow-50 p-4">
       <div className="max-w-7xl mx-auto">
         {/* Header Section */}
         <div className="bg-white rounded-2xl shadow-lg p-8 mb-8 border border-orange-100">
-          <div className="flex justify-between items-center mb-8">
+          <div className="flex justify-between items-center">
             <div>
               <h1 className="text-4xl font-bold bg-gradient-to-r from-orange-400 to-yellow-500 bg-clip-text text-transparent">
                 Invoice Management
               </h1>
               <p className="text-gray-600 mt-2">Manage your invoices with ease and efficiency</p>
             </div>
-            <button 
-              onClick={handleCreateInvoice}
-              className="flex items-center px-6 py-3 bg-gradient-to-r from-orange-400 to-yellow-500 hover:from-orange-500 hover:to-yellow-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
-            >
-              <PlusCircle className="w-6 h-6 mr-2" />
-              Create Invoice
-            </button>
-          </div>
-
-          {/* Stats Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-            <div className="bg-gradient-to-br from-emerald-50 to-emerald-100 p-6 rounded-xl border border-emerald-200">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-emerald-600 text-sm font-medium">Total Revenue</p>
-                  <p className="text-2xl font-bold text-emerald-700">${getTotalRevenue().toLocaleString()}</p>
-                </div>
-                <DollarSign className="w-8 h-8 text-emerald-500" />
+            <div className="flex items-center space-x-4">
+              {/* Filter Dropdown */}
+              <div className="relative">
+                <select
+                  value={filterStatus}
+                  onChange={(e) => setFilterStatus(e.target.value)}
+                  className="appearance-none bg-white border border-gray-300 rounded-xl px-4 py-3 pr-8 focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent font-medium text-gray-700"
+                >
+                  <option value="all">All ({getStatusCount("all")})</option>
+                  <option value="paid">Paid ({getStatusCount("paid")})</option>
+                  <option value="unpaid">Unpaid ({getStatusCount("unpaid")})</option>
+                  <option value="overdue">Overdue ({getStatusCount("overdue")})</option>
+                </select>
+               
               </div>
-            </div>
-            <div className="bg-gradient-to-br from-amber-50 to-amber-100 p-6 rounded-xl border border-amber-200">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-amber-600 text-sm font-medium">Pending</p>
-                  <p className="text-2xl font-bold text-amber-700">${getPendingAmount().toLocaleString()}</p>
-                </div>
-                <Calendar className="w-8 h-8 text-amber-500" />
-              </div>
-            </div>
-            <div className="bg-gradient-to-br from-red-50 to-red-100 p-6 rounded-xl border border-red-200">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-red-600 text-sm font-medium">Overdue</p>
-                  <p className="text-2xl font-bold text-red-700">${getOverdueAmount().toLocaleString()}</p>
-                </div>
-                <FileText className="w-8 h-8 text-red-500" />
-              </div>
-            </div>
-            <div className="bg-gradient-to-br from-orange-50 to-yellow-100 p-6 rounded-xl border border-orange-200">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-orange-600 text-sm font-medium">Total Invoices</p>
-                  <p className="text-2xl font-bold text-orange-700">{invoices.length}</p>
-                </div>
-                <User className="w-8 h-8 text-orange-500" />
-              </div>
-            </div>
-          </div>
-
-          {/* Filter Buttons */}
-          <div className="flex flex-wrap gap-3">
-            {["all", "paid", "unpaid", "overdue"].map((status) => (
-              <button
-                key={status}
-                onClick={() => setFilterStatus(status)}
-                className={`px-6 py-3 rounded-xl font-medium transition-all duration-200 ${
-                  filterStatus === status 
-                    ? "bg-gradient-to-r from-orange-400 to-yellow-500 text-white shadow-lg" 
-                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                }`}
+              
+              <button 
+                onClick={handleCreateInvoice}
+                className="flex items-center px-6 py-3 bg-gradient-to-r from-orange-400 to-yellow-500 hover:from-orange-500 hover:to-yellow-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
               >
-                {status.charAt(0).toUpperCase() + status.slice(1)} ({getStatusCount(status)})
+                <PlusCircle className="w-5 h-5 mr-2" />
+                Create Invoice
               </button>
-            ))}
+            </div>
           </div>
         </div>
 
@@ -240,15 +188,17 @@ const InvoiceManagement = () => {
                     <td className="px-8 py-6 whitespace-nowrap text-right text-sm font-medium space-x-4">
                       <button 
                         onClick={() => handleEditInvoice(invoice)}
-                        className="text-orange-500 hover:text-orange-700 font-semibold transition-colors duration-150"
+                        className="inline-flex items-center text-orange-500 hover:text-orange-700 font-semibold transition-colors duration-150"
                       >
-                        Edit
+                        <Edit className="w-4 h-4 mr-1" />
+                        {/* Edit */}
                       </button>
                       <button 
                         onClick={() => handleViewInvoice(invoice)}
-                        className="text-orange-500 hover:text-orange-700 font-semibold transition-colors duration-150"
+                        className="inline-flex items-center text-orange-500 hover:text-orange-700 font-semibold transition-colors duration-150"
                       >
-                        View
+                        <Eye className="w-4 h-4 mr-1" />
+                        {/* View */}
                       </button>
                     </td>
                   </tr>
@@ -268,23 +218,23 @@ const InvoiceManagement = () => {
         {/* Create/Edit Invoice Modal */}
         {(showCreateForm || showEditForm) && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-            <div className="bg-white rounded-2xl shadow-2xl max-w-lg w-full max-h-screen overflow-y-auto">
-              <div className="p-8">
-                <div className="flex justify-between items-center mb-8">
-                  <h2 className="text-3xl font-bold bg-gradient-to-r from-orange-400 to-yellow-500 bg-clip-text text-transparent">
+            <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full">
+              <div className="p-6">
+                <div className="flex justify-between items-center mb-6">
+                  <h2 className="text-2xl font-bold bg-gradient-to-r from-orange-400 to-yellow-500 bg-clip-text text-transparent">
                     {showEditForm ? 'Edit Invoice' : 'Create New Invoice'}
                   </h2>
                   <button 
                     onClick={handleCloseForm}
                     className="text-gray-400 hover:text-gray-600 transition-colors duration-150"
                   >
-                    <X className="w-8 h-8" />
+                    <X className="w-6 h-6" />
                   </button>
                 </div>
 
-                <div className="space-y-6">
+                <div className="space-y-4">
                   {showEditForm && selectedInvoice && (
-                    <div className="bg-orange-50 p-4 rounded-xl border border-orange-200 mb-6">
+                    <div className="bg-orange-50 p-3 rounded-lg border border-orange-200 mb-4">
                       <p className="text-sm text-orange-600 font-semibold">
                         Invoice Number: {selectedInvoice.invoiceNo}
                       </p>
@@ -292,25 +242,25 @@ const InvoiceManagement = () => {
                   )}
 
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-3">Customer Name</label>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">Customer Name</label>
                     <input
                       type="text"
                       name="customer"
                       value={formData.customer}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent transition-all duration-200"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent transition-all duration-200"
                       placeholder="Enter customer name"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-3">Amount</label>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">Amount</label>
                     <input
                       type="number"
                       name="amount"
                       value={formData.amount}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent transition-all duration-200"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent transition-all duration-200"
                       placeholder="0.00"
                       step="0.01"
                       min="0"
@@ -318,12 +268,12 @@ const InvoiceManagement = () => {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-3">Status</label>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">Status</label>
                     <select
                       name="status"
                       value={formData.status}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent transition-all duration-200"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent transition-all duration-200"
                     >
                       <option value="unpaid">Unpaid</option>
                       <option value="paid">Paid</option>
@@ -332,28 +282,22 @@ const InvoiceManagement = () => {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-3">Date</label>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">Date</label>
                     <input
                       type="date"
                       name="date"
                       value={formData.date}
                       onChange={handleInputChange}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent transition-all duration-200"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent transition-all duration-200"
                     />
                   </div>
 
-                  <div className="flex space-x-4 pt-6">
-                    <button
-                      onClick={handleCloseForm}
-                      className="flex-1 px-6 py-3 border border-gray-300 text-gray-700 font-semibold rounded-xl hover:bg-gray-50 transition-all duration-200"
-                    >
-                      Cancel
-                    </button>
+                  <div className="flex space-x-3 pt-4">
                     <button
                       onClick={handleSubmit}
-                      className="flex-1 flex items-center justify-center px-6 py-3 bg-gradient-to-r from-orange-400 to-yellow-500 hover:from-orange-500 hover:to-yellow-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
+                      className="flex-1 flex items-center justify-center px-4 py-2 bg-gradient-to-r from-orange-400 to-yellow-500 hover:from-orange-500 hover:to-yellow-600 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
                     >
-                      <Save className="w-5 h-5 mr-2" />
+                      <Save className="w-4 h-4 mr-2" />
                       {showEditForm ? 'Update Invoice' : 'Create Invoice'}
                     </button>
                   </div>
@@ -366,91 +310,84 @@ const InvoiceManagement = () => {
         {/* View Invoice Modal */}
         {showViewModal && selectedInvoice && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-            <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-screen overflow-y-auto">
-              <div className="p-8">
-                <div className="flex justify-between items-center mb-8">
-                  <h2 className="text-3xl font-bold bg-gradient-to-r from-orange-400 to-yellow-500 bg-clip-text text-transparent">
+            <div className="bg-white rounded-2xl shadow-2xl max-w-lg w-full">
+              <div className="p-6">
+                <div className="flex justify-between items-center mb-6">
+                  <h2 className="text-2xl font-bold bg-gradient-to-r from-orange-400 to-yellow-500 bg-clip-text text-transparent">
                     Invoice Details
                   </h2>
                   <button 
                     onClick={handleCloseForm}
                     className="text-gray-400 hover:text-gray-600 transition-colors duration-150"
                   >
-                    <X className="w-8 h-8" />
+                    <X className="w-6 h-6" />
                   </button>
                 </div>
 
-                <div className="bg-gradient-to-br from-orange-50 to-yellow-50 rounded-2xl p-8 border border-orange-200">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <div className="space-y-6">
+                <div className="bg-gradient-to-br from-orange-50 to-yellow-50 rounded-xl p-6 border border-orange-200">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-4">
                       <div>
-                        <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-2">Invoice Number</h3>
-                        <p className="text-2xl font-bold text-orange-600">{selectedInvoice.invoiceNo}</p>
+                        <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Invoice Number</h3>
+                        <p className="text-lg font-bold text-orange-600">{selectedInvoice.invoiceNo}</p>
                       </div>
                       
                       <div>
-                        <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-2">Customer</h3>
-                        <p className="text-xl font-semibold text-gray-800">{selectedInvoice.customer}</p>
+                        <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Customer</h3>
+                        <p className="text-lg font-semibold text-gray-800">{selectedInvoice.customer}</p>
                       </div>
                       
                       <div>
-                        <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-2">Status</h3>
+                        <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Status</h3>
                         <div className="flex">
                           {statusBadge(selectedInvoice.status)}
                         </div>
                       </div>
                     </div>
 
-                    <div className="space-y-6">
+                    <div className="space-y-4">
                       <div>
-                        <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-2">Amount</h3>
-                        <p className="text-3xl font-bold text-gray-800">${selectedInvoice.amount.toLocaleString()}</p>
+                        <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Amount</h3>
+                        <p className="text-2xl font-bold text-gray-800">${selectedInvoice.amount.toLocaleString()}</p>
                       </div>
                       
                       <div>
-                        <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-2">Date</h3>
-                        <p className="text-xl font-semibold text-gray-700">{selectedInvoice.date}</p>
+                        <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Date</h3>
+                        <p className="text-lg font-semibold text-gray-700">{selectedInvoice.date}</p>
                       </div>
                       
                       <div>
-                        <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-2">Invoice ID</h3>
-                        <p className="text-lg font-medium text-gray-600">#{selectedInvoice.id}</p>
+                        <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Invoice ID</h3>
+                        <p className="text-sm font-medium text-gray-600">#{selectedInvoice.id}</p>
                       </div>
                     </div>
                   </div>
 
-                  <div className="mt-8 pt-6 border-t border-orange-200">
+                  <div className="mt-6 pt-4 border-t border-orange-200">
                     <div className="flex justify-between items-center">
                       <div>
-                        <h3 className="text-lg font-semibold text-gray-700">Invoice Summary</h3>
-                        <p className="text-gray-600">Generated on {new Date().toLocaleDateString()}</p>
+                        <h3 className="text-sm font-semibold text-gray-700">Invoice Summary</h3>
+                        <p className="text-xs text-gray-600">Generated on {new Date().toLocaleDateString()}</p>
                       </div>
                       <div className="text-right">
-                        <p className="text-sm text-gray-500">Total Amount</p>
-                        <p className="text-2xl font-bold text-orange-600">${selectedInvoice.amount.toLocaleString()}</p>
+                        <p className="text-xs text-gray-500">Total Amount</p>
+                        <p className="text-xl font-bold text-orange-600">${selectedInvoice.amount.toLocaleString()}</p>
                       </div>
                     </div>
                   </div>
                 </div>
 
-                <div className="flex space-x-4 mt-8">
-                  <button
-                    onClick={handleCloseForm}
-                    className="flex-1 px-6 py-3 border border-gray-300 text-gray-700 font-semibold rounded-xl hover:bg-gray-50 transition-all duration-200"
-                  >
-                    Close
-                  </button>
+                <div className="flex space-x-3 mt-6">
                   <button
                     onClick={() => {
                       handleCloseForm();
-                      handleEditInvoice(selectedInvoice);
                     }}
-                    className="flex-1 flex items-center justify-center px-6 py-3 bg-gradient-to-r from-orange-400 to-yellow-500 hover:from-orange-500 hover:to-yellow-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
+                    className="flex-1 flex items-center justify-center px-4 py-2 bg-gradient-to-r from-orange-400 to-yellow-500 hover:from-orange-500 hover:to-yellow-600 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
                   >
-                    <FileText className="w-5 h-5 mr-2" />
-                    Edit Invoice
+                    <FileText className="w-4 h-4 mr-2" />
+                    Send Invoice
                   </button>
-                </div>
+                </div> 
               </div>
             </div>
           </div>
