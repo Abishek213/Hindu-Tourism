@@ -24,12 +24,12 @@ router.post('/',
 );
 
 router.get('/',
-    checkRole('Admin', 'Sales Agent', 'Operation Team'),
+    checkRole('Admin', 'Sales Agent', 'Operation Team', 'Accountant'),
     getAllBookings
 );
 
 router.get('/:id',
-    checkRole('Admin', 'Sales Agent', 'Operation Team'),
+    checkRole('Admin', 'Sales Agent', 'Operation Team', 'Accountant'),
     getBooking
 );
 
