@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom/client';
 import App from './App.jsx';
 import './index.css';
 import { ThemeProvider } from './context/themeContext';
-import { SidebarProvider } from './context/sidebarContext';
+import { SidebarProvider } from './context/SidebarContext.jsx';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
