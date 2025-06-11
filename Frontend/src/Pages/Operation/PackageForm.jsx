@@ -50,120 +50,6 @@ export default function PackageForm({ initialData = null, onSubmit = (data) => c
     }
   };
 
-<<<<<<< HEAD
-  const handleUpdatePackage = async () => {
-    if (!selectedPackage) return;
-
-    try {
-      await packageService.updatePackage(selectedPackage.id, {
-        title: formData.name,
-        duration_days: Number(formData.duration),
-        base_price: Number(formData.price),
-        description: formData.description,
-        inclusions: formData.inclusions,
-        exclusions: formData.exclusions
-      });
-      closeAllModals();
-      toast.success('Package updated');
-      await fetchPackages(true);
-    } catch (error) {
-      toast.error(error.message || 'Update failed');
-      console.error('Error:', error);
-    }
-  };
-
-  const handleToggleStatus = async (pkgId, isActive) => {
-    try {
-      await packageService.updatePackageStatus(pkgId, isActive);
-      toast.success('Status updated');
-      await fetchPackages(true);
-    } catch (error) {
-      toast.error('Status update failed');
-      console.error('Error:', error);
-    }
-  };
-
-  const handleViewItinerary = (pkg) => {
-    setSelectedPackage(pkg);
-    setModalState(prev => ({ ...prev, itineraryView: true }));
-  };
-
-  const prepareNewItinerary = () => {
-    const nextDay = selectedPackage.itinerary.length + 1;
-    setItineraryData({ ...emptyItinerary, day: nextDay });
-    setModalState({ itineraryView: false, itineraryForm: true });
-  };
-
-  const handleEditItinerary = (itinerary) => {
-    setItineraryData({
-      id: itinerary.id,
-      day: itinerary.day,
-      title: itinerary.title,
-      description: itinerary.description,
-      meals: itinerary.meals,
-      accommodation: itinerary.accommodation
-    });
-    setModalState({ itineraryView: false, itineraryForm: true });
-  };
-
-  const handleSaveItinerary = async () => {
-    if (!selectedPackage) return;
-
-    try {
-      if (itineraryData.id) {
-        await packageService.updateItinerary(itineraryData.id, {
-          day_number: Number(itineraryData.day),
-          title: itineraryData.title,
-          description: itineraryData.description,
-          meals: itineraryData.meals,
-          accommodation: itineraryData.accommodation
-        });
-      } else {
-        await packageService.addItinerary(selectedPackage.id, {
-          day_number: Number(itineraryData.day),
-          title: itineraryData.title,
-          description: itineraryData.description,
-          meals: itineraryData.meals,
-          accommodation: itineraryData.accommodation
-        });
-      }
-
-      await fetchPackages(true);
-      const updatedPackages = await packageService.getAllPackages();
-      const refreshedPackage = updatedPackages.find(p => p._id === selectedPackage.id);
-      
-      if (refreshedPackage) {
-        setSelectedPackage({
-          ...selectedPackage,
-          itinerary: refreshedPackage.itineraries.map(it => ({
-            id: it._id,
-            day: it.day_number,
-            title: it.title,
-            description: it.description,
-            meals: it.meals,
-            accommodation: it.accommodation
-          }))
-        });
-        setModalState({ itineraryForm: false, itineraryView: true });
-      }
-      
-      toast.success(`Itinerary ${itineraryData.id ? 'updated' : 'added'}`);
-    } catch (error) {
-      toast.error('Operation failed');
-      console.error('Error:', error);
-    }
-  };
-
-  const handleManualRefresh = () => fetchPackages(true);
-
-  if (isLoading) {
-    return (
-      <div className="p-4  bg-white rounded-lg shadow-md">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-orange-600 mx-auto mb-4"></div>
-          <p className="text-orange-800">Loading packages...</p>
-        </div>
-=======
   const InputField = ({ label, name, type = "text", required = false, children, className = "", placeholder = "" }) => (
     <div className="space-y-1">
       <label className="block text-sm font-medium text-orange-800">
@@ -190,7 +76,6 @@ export default function PackageForm({ initialData = null, onSubmit = (data) => c
             required={required}
           />
         )}
->>>>>>> b9586c5f066ff1a376602850e4317a0b930261e5
       </div>
       {errors[name] && (
         <p className="text-red-500 text-xs">{errors[name]}</p>
@@ -221,115 +106,6 @@ export default function PackageForm({ initialData = null, onSubmit = (data) => c
   );
 
   return (
-<<<<<<< HEAD
-    <div className="p-4  bg-white rounded-lg shadow-md">
-      {/* Header Section */}
-
-          <div className="mb-6 flex justify-between items-center px-6 py-8 border-b border-gray-100
-       bg-primary-saffron">
-              <h1 className="text-xl font-bold text-white">Package Management</h1>
-              {isRefreshing && (
-                <div className="flex items-center gap-2 text-orange-600">
-                  <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-orange-600"></div>
-                  <span className="text-sm">Refreshing...</span>
-                </div>
-              )}
-            <div className="flex space-x-4">
-              <button
-                onClick={handleManualRefresh}
-                disabled={isRefreshing}
-               className="px-4 py-2 text-sm rounded-md  text-orange-600 transition-all duration-200
-                  bg-white shadow-lg sm:mt-0 hover:bg-orange-100"
-          >
-                Refresh
-              </button>
-              <button
-                onClick={openCreateModal}
-                className="px-4 py-2 text-sm rounded-md  text-orange-600 transition-all duration-200
-                  bg-white shadow-lg sm:mt-0 hover:bg-orange-100"
-          >
-                
-                Create Package
-              </button>
-            </div>
-           </div>
-
-      {/* Packages Table */}
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full">
-             <thead className="bg-secondary-green border-secondary-green-700">
-                <tr className="text-white font-semibold">
-                  <th className="px-4 py-2 border-r border-green-700">Package Name</th>
-                  <th className="px-4 py-2 border-r border-green-700">Duration</th>
-                  <th className="px-4 py-2 border-r border-green-700">Price</th>
-                  <th className="px-4 py-2 border-r border-green-700">Destinations</th>
-                  <th className="px-4 py-2 border-r border-green-700">Status</th>
-                  <th className="px-4 py-2">Actions</th>
-                </tr>
-              </thead>
-
-              <tbody>
-                {packages.length > 0 ? (
-                  packages.map((pkg, index) => (
-                    <PackageRow 
-                      key={pkg.id} 
-                      pkg={pkg} 
-                      index={index}
-                      onView={handleViewItinerary}
-                      onEdit={openEditModal}
-                      onToggleStatus={handleToggleStatus}
-                    />
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan="6" className="px-6 py-4 text-center text-gray-500">
-                      No packages found. Create your first package!
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-
-      {/* Modals */}
-      <PackageFormModal
-        isEdit={false}
-        isOpen={modalState.createForm}
-        formData={formData}
-        onInputChange={handleFormInputChange}
-        onSave={handleCreatePackage}
-        onClose={closeAllModals}
-      />
-
-      <PackageFormModal
-        isEdit={true}
-        isOpen={modalState.editForm}
-        formData={formData}
-        onInputChange={handleFormInputChange}
-        onSave={handleUpdatePackage}
-        onClose={closeAllModals}
-      />
-
-      <ItineraryViewModal
-        isOpen={modalState.itineraryView}
-        selectedPackage={selectedPackage}
-        onClose={closeAllModals}
-        onAddDay={prepareNewItinerary}
-        onEditDay={handleEditItinerary}
-      />
-
-      <ItineraryFormModal
-        isOpen={modalState.itineraryForm}
-        itineraryData={itineraryData}
-        onInputChange={handleItineraryInputChange}
-        onSave={handleSaveItinerary}
-        onClose={() => setModalState({ itineraryForm: false, itineraryView: true })}
-      />
-=======
     <div className="min-h-screen bg-gradient-to-br from-orange-50 to-amber-50 p-4">
       <div className="max-w-2xl mx-auto">
         {/* Compact Header */}
@@ -500,8 +276,6 @@ export default function PackageForm({ initialData = null, onSubmit = (data) => c
 
         
       </div>
->>>>>>> b9586c5f066ff1a376602850e4317a0b930261e5
     </div>
   );
 };
-
