@@ -72,7 +72,7 @@ const upload = multer();
     // Rate limiting
     const limiter = rateLimit({
       windowMs: 15 * 60 * 1000,
-      max: 100,
+      max: 500,
       handler: (req, res) => {
         logger.warn(`Rate limit exceeded for IP: ${req.ip}`);
         res.status(429).json({
