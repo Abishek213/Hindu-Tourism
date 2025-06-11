@@ -15,18 +15,14 @@ const router = express.Router();
 // Apply protection middleware to all routes
 router.use(protect);
 
-// Accountant-only routes
-router.use(checkRole('Accountant'));
+// Accountant-only routes for write operations
+router.post('/', checkRole('Accountant'), createInvoice);
+router.put('/:id', checkRole('Accountant'), updateInvoice);
+router.delete('/:id', checkRole('Accountant'), deleteInvoice);
 
-router.route('/')
-    .post(createInvoice)
-    .get(getInvoices);
-
-router.route('/:id')
-    .get(getInvoiceById)
-    .put(updateInvoice)
-    .delete(deleteInvoice);
-
-router.get('/:id/download', downloadInvoicePDF);
+// Read operations available to more roles
+router.get('/', checkRole('Accountant', 'Admin'), getInvoices);
+router.get('/:id', checkRole('Accountant', 'Admin'), getInvoiceById);
+router.get('/:id/download', checkRole('Accountant', 'Admin'), downloadInvoicePDF);
 
 export default router;
