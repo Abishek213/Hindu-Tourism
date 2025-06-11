@@ -86,7 +86,7 @@ const Sidebar = ({ config, user }) => {
           return (
             <div key={key} className="relative">
               <li
-                className={`flex items-center justify-between px-4 py-3 mx-2 cursor-pointer rounded-lg transition-all
+                className={`flex items-center justify-between px-4 py-4 mx-2 cursor-pointer rounded-lg transition-all
                   ${isActive
                     ? 'bg-primary-saffron text-white'
                     : isDarkMode

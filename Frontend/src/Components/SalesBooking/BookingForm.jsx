@@ -7,18 +7,18 @@ import api from '../../api/auth';
 export default function BookingFormOverlay({ isOpen = true, onClose, onSubmitted, customer }) {
   const [form, setForm] = useState({
     destination: '',
-    packageId: '', 
+    packageId: '',
     travelers: 1,
     startDate: '',
     endDate: '',
-    helicopter: false,
-    hotelUpgrade: false,
-    nurseSupport: false,
+    selectedServices: [],
     packageType: 'Deluxe'
   });
+
   const [packages, setPackages] = useState([]);
   const [destinations, setDestinations] = useState([]);
-  const [servicesList, setServicesList] = useState([]); // State to store fetched services
+  const [servicesList, setServicesList] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   // State for custom alerts/modals
   const [showSuccessModal, setShowSuccessModal] = useState(false);
@@ -29,6 +29,8 @@ export default function BookingFormOverlay({ isOpen = true, onClose, onSubmitted
   useEffect(() => {
     const fetchData = async () => {
       try {
+        setIsLoading(true);
+        
         // Fetch packages
         const packageResponse = await api.get('/package', {
           params: { is_active: true }
@@ -39,14 +41,17 @@ export default function BookingFormOverlay({ isOpen = true, onClose, onSubmitted
         const uniqueDestinations = [...new Set(packageResponse.data.map(pkg => pkg.title))];
         setDestinations(uniqueDestinations);
 
-        // Fetch services
-        // const serviceResponse = await api.get('/service'); // Assuming a /service endpoint
-        // setServicesList(serviceResponse.data);
+        // Fetch active services
+        const serviceResponse = await api.get('/optService/active');
+        setServicesList(Array.isArray(serviceResponse.data.data) ? serviceResponse.data.data : []);
 
       } catch (error) {
         console.error('Error fetching data:', error);
         setModalMessage('Failed to load form data. Please try again later.');
         setShowErrorModal(true);
+        setServicesList([]);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -80,7 +85,7 @@ export default function BookingFormOverlay({ isOpen = true, onClose, onSubmitted
     }
   ]);
 
-   useEffect(() => {
+  useEffect(() => {
     if (customer && customer.name && travelersInfo.length > 0 && !travelersInfo[0].name) {
       setTravelersInfo(prev => {
         const newTravelersInfo = [...prev];
@@ -104,7 +109,6 @@ export default function BookingFormOverlay({ isOpen = true, onClose, onSubmitted
         [name]: type === 'checkbox' ? checked : value
       };
 
-      // Reset packageId when destination changes to ensure re-matching
       if (name === 'destination') {
         newForm.packageId = '';
       }
@@ -117,17 +121,34 @@ export default function BookingFormOverlay({ isOpen = true, onClose, onSubmitted
     }
   };
 
+  // Handle service selection
+  const handleServiceToggle = (serviceId) => {
+    setForm(prev => {
+      const newSelectedServices = [...prev.selectedServices];
+      const serviceIndex = newSelectedServices.indexOf(serviceId);
+
+      if (serviceIndex === -1) {
+        newSelectedServices.push(serviceId);
+      } else {
+        newSelectedServices.splice(serviceIndex, 1);
+      }
+
+      return {
+        ...prev,
+        selectedServices: newSelectedServices
+      };
+    });
+  };
+
   // Handle travelers count change and update travelers array
   const handleTravelersChange = (e) => {
     const count = parseInt(e.target.value) || 0;
     setForm(prev => ({ ...prev, travelers: count }));
 
-    // Update travelers info array
     setTravelersInfo(prev => {
       const newTravelersInfo = [...prev];
 
       if (count > prev.length) {
-        // Add new travelers
         for (let i = prev.length; i < count; i++) {
           newTravelersInfo.push({
             name: '',
@@ -140,14 +161,12 @@ export default function BookingFormOverlay({ isOpen = true, onClose, onSubmitted
           });
         }
       } else if (count < prev.length) {
-        // Remove excess travelers
         newTravelersInfo.splice(count);
       }
 
       return newTravelersInfo;
     });
 
-    // Clear travelers-related errors
     if (errors.travelers) {
       setErrors(prev => ({ ...prev, travelers: '' }));
     }
@@ -156,15 +175,13 @@ export default function BookingFormOverlay({ isOpen = true, onClose, onSubmitted
   // Handle traveler information changes
   const handleTravelerChange = (index, field, value) => {
     setTravelersInfo(prev => {
-      const updated = [...prev]; // Prevent editing the lead traveler's name if it's pre-filled by customer
+      const updated = [...prev];
+
       if (index === 0 && field === 'name' && customer && customer.name) {
         return updated;
       }
 
-
-
       if (field.includes('.')) {
-        // Handle nested properties like 'documents.passportFile'
         const [parentField, childField] = field.split('.');
         updated[index] = {
           ...updated[index],
@@ -180,7 +197,6 @@ export default function BookingFormOverlay({ isOpen = true, onClose, onSubmitted
       return updated;
     });
 
-    // Clear related errors
     const errorKey = field.includes('.') ?
       `${field.split('.')[1]}_${index}` :
       `${field}_${index}`;
@@ -194,14 +210,12 @@ export default function BookingFormOverlay({ isOpen = true, onClose, onSubmitted
   const validateForm = () => {
     const newErrors = {};
 
-    // Validate basic form fields
     if (!form.destination) newErrors.destination = 'Destination is required';
     if (!form.packageId) newErrors.packageId = 'A valid package must be selected for the destination.';
     if (!form.travelers || form.travelers < 1) newErrors.travelers = 'At least 1 traveler is required';
     if (!form.startDate) newErrors.startDate = 'Start date is required';
     if (!form.endDate) newErrors.endDate = 'End date is required';
 
-    // Validate date logic
     if (form.startDate && form.endDate) {
       const startDate = new Date(form.startDate);
       const endDate = new Date(form.endDate);
@@ -216,7 +230,6 @@ export default function BookingFormOverlay({ isOpen = true, onClose, onSubmitted
       }
     }
 
-    // Validate travelers information
     travelersInfo.forEach((traveler, index) => {
       if (!traveler.name.trim()) {
         newErrors[`travelerName_${index}`] = 'Traveler name is required';
@@ -226,7 +239,6 @@ export default function BookingFormOverlay({ isOpen = true, onClose, onSubmitted
         newErrors[`documentType_${index}`] = 'Document type is required';
       }
 
-      // Validate document uploads based on type
       if (traveler.documentType === 'passport') {
         if (!traveler.documents.passportFile) {
           newErrors[`passport_${index}`] = 'Passport document is required';
@@ -258,48 +270,34 @@ export default function BookingFormOverlay({ isOpen = true, onClose, onSubmitted
     setIsSubmitting(true);
 
     try {
-      // --- Step 1: Create the Booking ---
-      const bookingFormData = new FormData();
-      bookingFormData.append('customer_id', customer._id || customer.id);
-      bookingFormData.append('package_id', form.packageId);
-      bookingFormData.append('package_type', form.packageType);
-      bookingFormData.append('travel_start_date', form.startDate);
-      bookingFormData.append('travel_end_date', form.endDate);
-      bookingFormData.append('num_travelers', form.travelers);
-
-      const services = [];
-      if (form.helicopter) {
-        const service = servicesList.find(s => s.name === 'Helicopter Ride');
-        if (service) services.push({ service_id: service._id, price_applied: service.price });
-      }
-      if (form.hotelUpgrade) {
-        const service = servicesList.find(s => s.name === 'Hotel Upgrade');
-        if (service) services.push({ service_id: service._id, price_applied: service.price });
-      }
-      if (form.nurseSupport) {
-        const service = servicesList.find(s => s.name === 'Nurse Support');
-        if (service) services.push({ service_id: service._id, price_applied: service.price });
-      }
-
-      if (services.length > 0) {
-        bookingFormData.append('services', JSON.stringify(services));
-      }
-
-      const bookingResponse = await api.post('/booking', bookingFormData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }
+      const services = form.selectedServices.map(serviceId => {
+        const service = servicesList.find(s => s._id === serviceId);
+        return {
+          service_id: serviceId,
+          price: service.price
+        };
       });
+
+      const bookingData = {
+        customer_id: customer._id || customer.id,
+        package_id: form.packageId,
+        package_type: form.packageType,
+        travel_start_date: form.startDate,
+        travel_end_date: form.endDate,
+        num_travelers: form.travelers,
+        destination: form.destination,
+        services: services.length > 0 ? services : undefined
+      };
+
+      const bookingResponse = await api.post('/booking', bookingData);
 
       if (bookingResponse.status === 200 || bookingResponse.status === 201) {
         const bookingId = bookingResponse.data.booking._id;
-
-        // --- Step 2: Upload Documents for Travelers ---
         const documentsToUpload = [];
-        const filesToAttach = new FormData(); // Use a separate FormData for files
+        const filesToAttach = new FormData();
 
         travelersInfo.forEach((traveler, index) => {
-          const isMainCustomer = index === 0; // First traveler is the main customer
+          const isMainCustomer = index === 0;
           const travelerName = traveler.name.trim();
 
           if (traveler.documentType === 'passport' && traveler.documents.passportFile) {
@@ -308,13 +306,12 @@ export default function BookingFormOverlay({ isOpen = true, onClose, onSubmitted
               traveler_name: travelerName,
               is_main_customer: isMainCustomer,
               customer_id: isMainCustomer ? (customer._id || customer.id) : undefined,
-
             });
             filesToAttach.append('files', traveler.documents.passportFile);
           } else if (traveler.documentType === 'aadhaar') {
             if (traveler.documents.aadhaarFrontFile) {
               documentsToUpload.push({
-                document_type: 'Aadhaar Card', // Changed to match backend enum: 'Aadhaar Card'
+                document_type: 'Aadhaar Card',
                 traveler_name: travelerName,
                 is_main_customer: isMainCustomer,
                 customer_id: isMainCustomer ? (customer._id || customer.id) : undefined,
@@ -331,24 +328,18 @@ export default function BookingFormOverlay({ isOpen = true, onClose, onSubmitted
               filesToAttach.append('files', traveler.documents.aadhaarBackFile);
             }
           }
-
         });
 
         if (documentsToUpload.length > 0) {
-          
-          filesToAttach.append('documents', JSON.stringify(documentsToUpload)); // Append metadata as JSON string
-
-          const documentUploadResponse = await api.post(`/document/bookings/${bookingId}`, filesToAttach, {
+          filesToAttach.append('documents', JSON.stringify(documentsToUpload));
+          await api.post(`/document/bookings/${bookingId}`, filesToAttach, {
             headers: {
               'Content-Type': 'multipart/form-data'
             }
           });
-
-          if (documentUploadResponse.status !== 200 && documentUploadResponse.status !== 201) {
-            console.warn("Documents upload failed:", documentUploadResponse.data);
-          }
         }
-        setModalMessage('Booking successful!');
+
+        setModalMessage('Booking submitted successfully and documents uploaded!');
         setShowSuccessModal(true);
 
         if (onSubmitted) {
@@ -356,11 +347,13 @@ export default function BookingFormOverlay({ isOpen = true, onClose, onSubmitted
         }
 
         resetForm();
+      } else {
+        throw new Error('Failed to submit booking');
       }
     } catch (error) {
       console.error('Submission error:', error.response?.data || error.message);
     } 
-  
+    
   };
 
   // Reset form function
@@ -371,9 +364,7 @@ export default function BookingFormOverlay({ isOpen = true, onClose, onSubmitted
       travelers: 1,
       startDate: '',
       endDate: '',
-      helicopter: false,
-      hotelUpgrade: false,
-      nurseSupport: false,
+      selectedServices: [],
       packageType: 'Deluxe'
     });
     setTravelersInfo([
@@ -406,7 +397,7 @@ export default function BookingFormOverlay({ isOpen = true, onClose, onSubmitted
 
     if (isOpen) {
       document.addEventListener('keydown', handleEscKey);
-      document.body.style.overflow = 'hidden'; // Prevent background scrolling
+      document.body.style.overflow = 'hidden';
     }
 
     return () => {
@@ -415,7 +406,6 @@ export default function BookingFormOverlay({ isOpen = true, onClose, onSubmitted
     };
   }, [isOpen]);
 
-  // Don't render if not open
   if (!isOpen) return null;
 
   return (
@@ -478,7 +468,9 @@ export default function BookingFormOverlay({ isOpen = true, onClose, onSubmitted
                 errors={errors}
                 onChange={handleTravelerChange}
                 form={form}
-                onFormChange={handleFormChange}
+                servicesList={servicesList}
+                selectedServices={form.selectedServices}
+                onServiceToggle={handleServiceToggle}
               />
             )}
 
@@ -551,7 +543,7 @@ export default function BookingFormOverlay({ isOpen = true, onClose, onSubmitted
               onClick={() => {
                 setShowSuccessModal(false);
                 setModalMessage('');
-                onClose(); // Close the main form after success
+                onClose();
               }}
               className="px-4 py-2 text-white bg-green-500 rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
             >

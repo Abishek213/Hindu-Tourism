@@ -4,6 +4,7 @@ import Customer from '../models/Customer.js';
 import Package from '../models/Package.js';
 import BookingService from '../models/BookingService.js';
 import Invoice from '../models/Invoice.js';
+import OptionalService from '../models/OptionalService.js';
 import { generateBookingPDF as generateBookingPDFHelper } from '../services/pdfService.js';
 
 export const createBooking = async (req, res, next) => {
@@ -44,7 +45,9 @@ export const createBooking = async (req, res, next) => {
     const booking = await Booking.create({
       customer_id,
       package_id,
+
       destination, 
+
       travel_start_date,
       travel_end_date,
       num_travelers,
@@ -54,27 +57,53 @@ export const createBooking = async (req, res, next) => {
       special_requirements
     });
 
+    let totalServiceAmount = 0;
+    const createdServices = [];
+
     // Add optional services if provided
     if (services && services.length > 0) {
       for (const service of services) {
-        await BookingService.create({
+        // Validate service exists and is active
+        const optionalService = await OptionalService.findOne({
+          _id: service.service_id,
+          is_active: true
+        });
+        
+        if (!optionalService) {
+          return res.status(400).json({
+            error: `Service with ID ${service.service_id} not found or inactive`
+          });
+        }
+
+        // Validate price is not negative
+        if (service.price < 0) {
+          return res.status(400).json({
+            error: `Price for service ${optionalService.name} cannot be negative`
+          });
+        }
+
+        const bookingService = await BookingService.create({
           booking_id: booking._id,
           service_id: service.service_id,
           price_applied: service.price
         });
+
+        totalServiceAmount += service.price;
+        createdServices.push(bookingService);
       }
     }
 
-    // Create initial invoice
+    // Create initial invoice with base price and optional services
     const invoice = await Invoice.create({
       booking_id: booking._id,
-      amount: tourPackage.base_price,
+      amount: tourPackage.base_price + totalServiceAmount,
       invoice_date: new Date(),
       status: 'sent'
     });
 
     res.status(201).json({
       booking,
+      services: createdServices,
       invoice
     });
 
@@ -174,16 +203,6 @@ export const updateBooking = async (req, res, next) => {
       Object.assign(booking, updates);
       await booking.save();
 
-      // Note: CommunicationLog import is missing - you may need to add it
-      // await CommunicationLog.create({
-      //   booking_id: booking._id,
-      //   staff_id: req.user._id,
-      //   log_date: new Date(),
-      //   type: 'Booking Update',
-      //   content: `Operation team updated booking details (guide/transport/status)`,
-      //   status: 'Completed'
-      // });
-
       return res.json(booking);
     }
 
@@ -230,16 +249,6 @@ export const updateStatus = async (req, res, next) => {
 
     booking.status = status.toLowerCase();
     await booking.save();
-
-    // Note: CommunicationLog import is missing - you may need to add it
-    // await CommunicationLog.create({
-    //   booking_id: booking._id,
-    //   staff_id: req.user._id,
-    //   log_date: new Date(),
-    //   type: 'other',
-    //   content: `Booking status changed to ${status}`,
-    //   status: 'completed'
-    // });
 
     res.json({ message: 'Booking status updated', booking });
   } catch (error) {

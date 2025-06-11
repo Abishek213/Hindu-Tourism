@@ -25,7 +25,7 @@ export default function LeadManagement() {
     name: '',
     email: '',
     phone: '',
-    source: 'website',
+    source: 'sources',
     communicationType: 'email',
     notes: '',
   });
@@ -49,6 +49,7 @@ export default function LeadManagement() {
 
   // Source label mapping
   const sourceLabels = {
+    sources :'Sources',
     website: 'Website',
     referral: 'Referral',
     social_media: 'Social Media',
@@ -246,13 +247,13 @@ export default function LeadManagement() {
 
   return (
     // <div className="">
-      <div className="p-4 mx-auto max-w-7xl sm:p-2">
-        <div className="bg-white border border-orange-100 shadow-xl rounded-2xl">
+      <div className="p-4  bg-white rounded-lg shadow-md">
+        <div className="">
           {/* Header */}
-          <div className="px-6 py-8 border-b border-gray-100 bg-gradient-to-r from-orange-500 to-amber-500 rounded-t-2xl">
+          <div className="mb-6 px-6 py-8 border-b border-gray-100 bg-primary-saffron">
             <div className="flex flex-col items-center justify-between sm:flex-row">
               <div>
-                <h2 className="mb-2 text-3xl font-bold text-white">
+                <h2 className="mb-2 text-xl font-bold text-white">
                   Lead Management
                 </h2>
                 <p className="text-orange-100">Manage and track your potential customers</p>
@@ -263,7 +264,9 @@ export default function LeadManagement() {
                   resetForm();
                   setShowForm(true);
                 }}
-                className="flex items-center gap-2 px-6 py-3 mt-4 font-medium text-orange-600 transition-all duration-200 bg-white shadow-lg sm:mt-0 rounded-xl hover:bg-orange-50"
+                className="flex items-center gap-2 px-4 py-4 mt-4 font-medium
+                 text-orange-600 transition-all duration-200
+                  bg-white shadow-lg sm:mt-0 rounded-md hover:bg-orange-100"
               >
                 <Plus className="w-5 h-5" />
                 Add New Lead
@@ -360,14 +363,15 @@ export default function LeadManagement() {
                           />
                         </div>
 
-                        <div>
+                      <div>
                           <select
-                            name="source"
-                            value={form.source}
+                            name="sources"
+                            value={form.sources}
                             onChange={handleFormChange}
                             required
                             className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                           >
+                            <option value="" disabled selected hidden>Sources</option>
                             <option value="website">Website</option>
                             <option value="referral">Referral</option>
                             <option value="social_media">Social Media</option>
@@ -376,14 +380,16 @@ export default function LeadManagement() {
                           </select>
                         </div>
 
+
                         <div>
                           <select
-                            name="communicationType"
-                            value={form.communicationType}
+                            name="comm"
+                            value={form.comm}
                             onChange={handleFormChange}
                             required
                             className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                           >
+                           <option value="comm" disabled selected hidden>Communication Log</option>
                             <option value="email">Email</option>
                             <option value="call">Call</option>
                             <option value="meeting">Meeting</option>
@@ -641,15 +647,10 @@ export default function LeadManagement() {
                                 {/* Options for CONTACTED leads */}
                                 {lead.status === 'contacted' && (
                                   <>
-                                    <option value="qualified">Qualified</option>
                                     <option value="lost">Lost</option>
                                   </>
                                 )}
 
-                                {/* Options for QUALIFIED leads (only Convert button should appear) */}
-                                {lead.status === 'qualified' && (
-                                  <option value="lost">Lost</option>
-                                )}
                               </select>
                               {lead.status !== 'converted' && lead.status !== 'lost' && (
                                 <ChevronDown className="absolute w-3 h-3 transform -translate-y-1/2 pointer-events-none right-2 top-1/2" />

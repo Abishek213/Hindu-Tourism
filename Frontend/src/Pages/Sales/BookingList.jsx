@@ -48,7 +48,6 @@ const useCustomers = () => {
           }
         })
       );
-
       setCustomers(customersWithBookingStatus);
 
     } catch (err) {
@@ -63,19 +62,6 @@ const useCustomers = () => {
   useEffect(() => {
     fetchCustomers();
   }, [fetchCustomers]); // Depend on fetchCustomers useCallback
-
-  // Functions for updating/adding customers (retained from previous versions)
-  // const updateCustomer = async (id, updatedCustomer) => {
-  //   try {
-  //     const response = await api.put(`/customer/${id}`, updatedCustomer);
-  //     setCustomers(prev => prev.map(customer =>
-  //       customer._id === id ? { ...response.data, has_active_booking: customer.has_active_booking } : customer // Preserve booking status
-  //     ));
-  //   } catch (err) {
-  //     console.error('Error updating customer:', err);
-  //     throw err;
-  //   }
-  // };
 
   const addCustomer = async (newCustomer) => {
     try {
@@ -322,7 +308,7 @@ function CustomerHeader({ onAddCustomer, onSearch }) {
         </div>
         <button
           onClick={onAddCustomer}
-          className="flex items-center gap-2 px-6 py-3 font-semibold text-white transition-all duration-200 rounded-lg shadow-lg bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 hover:shadow-xl"
+          className="flex items-center gap-2 px-6 py-3 font-semibold text-white transition-all duration-200 rounded-lg shadow-lg bg-primary-saffron hover:shadow-xl"
         >
           <Plus size={20} />
           Add New Customer
@@ -517,7 +503,7 @@ function EmptyState({ onAddCustomer }) {
 // Main CustomerList Component
 export default function CustomerList({ onAddCustomer }) {
   // Destructure fetchCustomers from the hook return
-  const { customers, updateCustomer, addCustomer, fetchCustomers } = useCustomers();
+  const { customers, addCustomer, fetchCustomers } = useCustomers();
   const [viewModalOpen, setViewModalOpen] = useState(false);
   const [bookingFormOpen, setBookingFormOpen] = useState(false);
   const [addCustomerModalOpen, setAddCustomerModalOpen] = useState(false);
@@ -592,7 +578,6 @@ export default function CustomerList({ onAddCustomer }) {
       });
       return updatedCustomers;
     });
-    // The fetchCustomers() call in handleCloseBooking will act as a final sync
   };
 
   const handleAddCustomerClick = () => {
