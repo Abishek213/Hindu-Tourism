@@ -4,7 +4,9 @@ import { toast } from 'react-toastify';
 
 // Create axios instance
 const api = axios.create({
-  baseURL: 'http://localhost:3000/api', // Match your backend URL
+   baseURL: process.env.NODE_ENV === 'development'
+    ? process.env.REACT_APP_DEV_API_URL
+    : process.env.REACT_APP_PROD_API_URL,
   withCredentials: true,
 });
 

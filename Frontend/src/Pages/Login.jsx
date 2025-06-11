@@ -29,7 +29,8 @@ export default function LoginPage() {
       navigate("/ops");
     } else if (role === "Accounts") {
       navigate("/accounts");
-    } else {
+    }  
+    else {
       navigate("/salesdashboard");
     }
   };
@@ -96,17 +97,17 @@ export default function LoginPage() {
           </div>
 
           <div className="hidden md:block">
-            <div className="p-6 mt-8 rounded-lg bg-dark/90 backdrop-blur-sm shadow-lg">
+            <div className="p-6 mt-8 rounded-lg bg-dark/80 backdrop-blur-sm shadow-lg">
               <h3 className="mb-4 text-xl font-semibold text-white">Sacred Destinations</h3>
               <div className="flex space-x-4">
                 {/* Destination Card 1 - Light color base */}
-                <div className="flex-1 p-4 rounded-lg bg-light/80 text-white border border-white/10 hover:bg-light transition">
+                <div className="flex-1 p-4 rounded-lg bg-light/30 text-white border border-white/10">
                   <p className="font-bold text-lg">Pashupatinath</p>
                   <p className="text-sm text-white/90">Kathmandu, Nepal</p>
                 </div>
 
                 {/* Destination Card 2 - Primary saffron base */}
-                <div className="flex-1 p-4 rounded-lg bg-primary-saffron/80 text-white border border-white/10 hover:bg-primary-saffron transition">
+                <div className="flex-1 p-4 rounded-lg bg-primary-saffron/30 text-white border border-white/10">
                   <p className="font-bold text-lg">Muktinath</p>
                   <p className="text-sm text-white/90">Mustang, Nepal</p>
                 </div>
