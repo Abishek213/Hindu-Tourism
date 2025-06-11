@@ -18,7 +18,7 @@ const upload = multer();
 router.use(protect);
 
 router.post('/',
-    checkRole('Admin', 'Sales Agent','Accountant'),
+    checkRole('Admin', 'Sales Agent',),
      upload.any(),
     createBooking
 );
