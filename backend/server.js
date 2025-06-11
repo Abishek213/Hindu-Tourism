@@ -59,7 +59,7 @@ const upload = multer();
 
     // Middleware setup
     app.use(cors({
-      origin: 'CORS_ORIGIN',
+       origin: process.env.CORS_ORIGIN,
       credentials: true,
       methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
       allowedHeaders: ['Content-Type', 'Authorization', 'Cookie']
