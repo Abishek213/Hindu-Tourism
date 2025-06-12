@@ -1,31 +1,42 @@
 import { useState, useEffect } from "react";
-import { PlusCircle, X, Save, Calendar, User, DollarSign, FileText, Edit, Eye } from "lucide-react";
+import { X, Calendar, User, DollarSign, FileText, Edit, Eye } from "lucide-react";
+import api, { getCurrentUser } from "../../api/auth";
 
 const InvoiceManagement = () => {
   const [invoices, setInvoices] = useState([]);
   const [filterStatus, setFilterStatus] = useState("all");
-  const [showCreateForm, setShowCreateForm] = useState(false);
-  const [showEditForm, setShowEditForm] = useState(false);
   const [showViewModal, setShowViewModal] = useState(false);
   const [selectedInvoice, setSelectedInvoice] = useState(null);
-  const [formData, setFormData] = useState({
-    customer: "",
-    amount: "",
-    status: "unpaid",
-    date: new Date().toISOString().split('T')[0]
-  });
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [bookings, setBookings] = useState([]);
 
-  // Dummy invoice data
+  // Fetch invoices and bookings from backend
   useEffect(() => {
-    const dummyInvoices = [
-      { id: 1, invoiceNo: "INV-2025-001", customer: "Jane Smith", amount: 1500, status: "paid", date: "2025-05-01" },
-      { id: 2, invoiceNo: "INV-2025-002", customer: "John Doe", amount: 2300, status: "unpaid", date: "2025-05-05" },
-      { id: 3, invoiceNo: "INV-2025-003", customer: "Alex Johnson", amount: 1800, status: "paid", date: "2025-05-10" },
-      { id: 4, invoiceNo: "INV-2025-004", customer: "Maria Garcia", amount: 2500, status: "overdue", date: "2025-04-28" },
-      { id: 5, invoiceNo: "INV-2025-005", customer: "David Wilson", amount: 1200, status: "unpaid", date: "2025-05-15" },
-      { id: 6, invoiceNo: "INV-2025-006", customer: "Sarah Brown", amount: 3200, status: "paid", date: "2025-05-12" },
-    ];
-    setInvoices(dummyInvoices);
+    const fetchData = async () => {
+      setIsLoading(true);
+      try {
+        // Check authentication
+        const user = getCurrentUser();
+        if (!user) {
+          throw new Error('Not authenticated');
+        }
+
+        // Fetch invoices
+        const invoicesResponse = await api.get('/invoice');
+        setInvoices(invoicesResponse.data);
+
+        // Fetch bookings for reference
+        const bookingsResponse = await api.get('/booking');
+        setBookings(bookingsResponse.data);
+      } catch (err) {
+        setError(err.response?.data?.message || err.message);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
   }, []);
 
   const filteredInvoices = invoices.filter((invoice) => {
@@ -35,42 +46,22 @@ const InvoiceManagement = () => {
   const statusBadge = (status) => {
     switch (status) {
       case "paid":
-        return <span className="px-3 py-1 text-xs font-semibold rounded-full bg-emerald-100 text-emerald-700 border border-emerald-200">Paid</span>;
-      case "unpaid":
-        return <span className="px-3 py-1 text-xs font-semibold rounded-full bg-amber-100 text-amber-700 border border-amber-200">Unpaid</span>;
-      case "overdue":
-        return <span className="px-3 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-700 border border-red-200">Overdue</span>;
+        return <span className="px-3 py-1 text-xs font-semibold border rounded-full bg-emerald-100 text-emerald-700 border-emerald-200">Paid</span>;
+      case "draft":
+        return <span className="px-3 py-1 text-xs font-semibold text-gray-700 bg-gray-100 border border-gray-200 rounded-full">Draft</span>;
+      case "sent":
+        return <span className="px-3 py-1 text-xs font-semibold text-blue-700 bg-blue-100 border border-blue-200 rounded-full">Sent</span>;
+      case "cancelled":
+        return <span className="px-3 py-1 text-xs font-semibold text-red-700 bg-red-100 border border-red-200 rounded-full">Cancelled</span>;
       default:
-        return <span className="px-3 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-700 border border-gray-200">{status}</span>;
+        return <span className="px-3 py-1 text-xs font-semibold text-gray-700 bg-gray-100 border border-gray-200 rounded-full">{status}</span>;
     }
   };
 
-  const handleCreateInvoice = () => {
-    setShowCreateForm(true);
-  };
-
   const handleCloseForm = () => {
-    setShowCreateForm(false);
-    setShowEditForm(false);
     setShowViewModal(false);
     setSelectedInvoice(null);
-    setFormData({
-      customer: "",
-      amount: "",
-      status: "unpaid",
-      date: new Date().toISOString().split('T')[0]
-    });
-  };
-
-  const handleEditInvoice = (invoice) => {
-    setSelectedInvoice(invoice);
-    setFormData({
-      customer: invoice.customer,
-      amount: invoice.amount.toString(),
-      status: invoice.status,
-      date: invoice.date
-    });
-    setShowEditForm(true);
+    setError(null);
   };
 
   const handleViewInvoice = (invoice) => {
@@ -78,45 +69,23 @@ const InvoiceManagement = () => {
     setShowViewModal(true);
   };
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  };
-
-  const handleSubmit = () => {
-    if (!formData.customer || !formData.amount) return;
-
-    if (showEditForm && selectedInvoice) {
-      // Update existing invoice
-      const updatedInvoice = {
-        ...selectedInvoice,
-        customer: formData.customer,
-        amount: parseFloat(formData.amount),
-        status: formData.status,
-        date: formData.date
-      };
-
-      setInvoices(prev => prev.map(inv => 
-        inv.id === selectedInvoice.id ? updatedInvoice : inv
-      ));
-    } else {
-      // Create new invoice
-      const newInvoice = {
-        id: invoices.length + 1,
-        invoiceNo: `INV-2025-${String(invoices.length + 1).padStart(3, '0')}`,
-        customer: formData.customer,
-        amount: parseFloat(formData.amount),
-        status: formData.status,
-        date: formData.date
-      };
-
-      setInvoices(prev => [newInvoice, ...prev]);
+  const handleDownloadPDF = async (invoiceId) => {
+    try {
+      const response = await api.get(`/invoice/${invoiceId}/download`, {
+        responseType: 'blob'
+      });
+      
+      // Create a blob URL for the PDF
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', `invoice_${invoiceId}.pdf`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    } catch (err) {
+      setError(err.response?.data?.message || 'Failed to download invoice');
     }
-
-    handleCloseForm();
   };
 
   const getStatusCount = (status) => {
@@ -124,17 +93,49 @@ const InvoiceManagement = () => {
     return invoices.filter(inv => inv.status === status).length;
   };
 
+  const getCustomerName = (invoice) => {
+    return invoice.booking_id?.customer_id?.name || 'Unknown Customer';
+  };
+
+  if (isLoading && invoices.length === 0) {
+    return (
+      <div className="flex items-center justify-center min-h-screen p-4 bg-gradient-to-br from-orange-50 to-yellow-50">
+        <div className="text-center">
+          <div className="w-12 h-12 mx-auto mb-4 border-t-2 border-b-2 border-orange-500 rounded-full animate-spin"></div>
+          <p className="text-gray-600">Loading invoices...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-center justify-center min-h-screen p-4 bg-gradient-to-br from-orange-50 to-yellow-50">
+        <div className="w-full max-w-md p-6 text-center bg-white shadow-lg rounded-xl">
+          <h2 className="mb-2 text-xl font-bold text-red-500">Error</h2>
+          <p className="mb-4 text-gray-600">{error}</p>
+          <button 
+            onClick={() => window.location.reload()} 
+            className="px-4 py-2 text-white transition-colors bg-orange-500 rounded-lg hover:bg-orange-600"
+          >
+            Try Again
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 to-yellow-50 p-4">
-      <div className="max-w-7xl mx-auto">
+    <div className="min-h-screen p-4 bg-gradient-to-br from-orange-50 to-yellow-50">
+      <div className="mx-auto max-w-7xl">
         {/* Header Section */}
-        <div className="bg-white rounded-2xl shadow-lg p-8 mb-8 border border-orange-100">
-          <div className="flex justify-between items-center">
+        <div className="p-8 mb-8 bg-white border border-orange-100 shadow-lg rounded-2xl">
+          <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-4xl font-bold bg-gradient-to-r from-orange-400 to-yellow-500 bg-clip-text text-transparent">
+              <h1 className="text-4xl font-bold text-transparent bg-gradient-to-r from-orange-400 to-yellow-500 bg-clip-text">
                 Invoice Management
               </h1>
-              <p className="text-gray-600 mt-2">Manage your invoices with ease and efficiency</p>
+              <p className="mt-2 text-gray-600">View and manage your invoices</p>
             </div>
             <div className="flex items-center space-x-4">
               {/* Filter Dropdown */}
@@ -142,63 +143,51 @@ const InvoiceManagement = () => {
                 <select
                   value={filterStatus}
                   onChange={(e) => setFilterStatus(e.target.value)}
-                  className="appearance-none bg-white border border-gray-300 rounded-xl px-4 py-3 pr-8 focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent font-medium text-gray-700"
+                  className="px-4 py-3 pr-8 font-medium text-gray-700 bg-white border border-gray-300 appearance-none rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent"
                 >
                   <option value="all">All ({getStatusCount("all")})</option>
+                  <option value="draft">Draft ({getStatusCount("draft")})</option>
+                  <option value="sent">Sent ({getStatusCount("sent")})</option>
                   <option value="paid">Paid ({getStatusCount("paid")})</option>
-                  <option value="unpaid">Unpaid ({getStatusCount("unpaid")})</option>
-                  <option value="overdue">Overdue ({getStatusCount("overdue")})</option>
+                  <option value="cancelled">Cancelled ({getStatusCount("cancelled")})</option>
                 </select>
-               
               </div>
-              
-              <button 
-                onClick={handleCreateInvoice}
-                className="flex items-center px-6 py-3 bg-gradient-to-r from-orange-400 to-yellow-500 hover:from-orange-500 hover:to-yellow-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
-              >
-                <PlusCircle className="w-5 h-5 mr-2" />
-                Create Invoice
-              </button>
             </div>
           </div>
         </div>
 
         {/* Invoice Table */}
-        <div className="bg-white rounded-2xl shadow-lg border border-orange-100 overflow-hidden">
+        <div className="overflow-hidden bg-white border border-orange-100 shadow-lg rounded-2xl">
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gradient-to-r from-orange-50 to-yellow-50">
                 <tr>
-                  <th className="px-8 py-6 text-left text-sm font-bold text-gray-700 uppercase tracking-wider">Invoice No.</th>
-                  <th className="px-8 py-6 text-left text-sm font-bold text-gray-700 uppercase tracking-wider">Customer</th>
-                  <th className="px-8 py-6 text-left text-sm font-bold text-gray-700 uppercase tracking-wider">Amount</th>
-                  <th className="px-8 py-6 text-left text-sm font-bold text-gray-700 uppercase tracking-wider">Status</th>
-                  <th className="px-8 py-6 text-left text-sm font-bold text-gray-700 uppercase tracking-wider">Date</th>
-                  <th className="px-8 py-6 text-right text-sm font-bold text-gray-700 uppercase tracking-wider">Actions</th>
+                  <th className="px-8 py-6 text-sm font-bold tracking-wider text-left text-gray-700 uppercase">Customer</th>
+                  <th className="px-8 py-6 text-sm font-bold tracking-wider text-left text-gray-700 uppercase">Amount</th>
+                  <th className="px-8 py-6 text-sm font-bold tracking-wider text-left text-gray-700 uppercase">Status</th>
+                  <th className="px-8 py-6 text-sm font-bold tracking-wider text-left text-gray-700 uppercase">Date</th>
+                  <th className="px-8 py-6 text-sm font-bold tracking-wider text-right text-gray-700 uppercase">Actions</th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-100">
                 {filteredInvoices.map((invoice, index) => (
-                  <tr key={invoice.id} className={`hover:bg-orange-25 transition-colors duration-150 ${index % 2 === 0 ? 'bg-gray-25' : ''}`}>
-                    <td className="px-8 py-6 whitespace-nowrap font-bold text-orange-600">{invoice.invoiceNo}</td>
-                    <td className="px-8 py-6 whitespace-nowrap font-medium text-gray-800">{invoice.customer}</td>
-                    <td className="px-8 py-6 whitespace-nowrap font-semibold text-gray-700">${invoice.amount.toLocaleString()}</td>
+                  <tr key={invoice._id} className={`hover:bg-orange-25 transition-colors duration-150 ${index % 2 === 0 ? 'bg-gray-25' : ''}`}>
+                    <td className="px-8 py-6 font-medium text-gray-800 whitespace-nowrap">{getCustomerName(invoice)}</td>
+                    <td className="px-8 py-6 font-semibold text-gray-700 whitespace-nowrap">${invoice.amount.toLocaleString()}</td>
                     <td className="px-8 py-6 whitespace-nowrap">{statusBadge(invoice.status)}</td>
-                    <td className="px-8 py-6 whitespace-nowrap text-gray-700">{invoice.date}</td>
-                    <td className="px-8 py-6 whitespace-nowrap text-right text-sm font-medium space-x-4">
-                      <button 
-                        onClick={() => handleEditInvoice(invoice)}
-                        className="inline-flex items-center text-orange-500 hover:text-orange-700 font-semibold transition-colors duration-150"
-                      >
-                        <Edit className="w-4 h-4 mr-1" />
-                        {/* Edit */}
-                      </button>
+                    <td className="px-8 py-6 text-gray-700 whitespace-nowrap">{new Date(invoice.invoice_date).toLocaleDateString()}</td>
+                    <td className="px-8 py-6 space-x-4 text-sm font-medium text-right whitespace-nowrap">
                       <button 
                         onClick={() => handleViewInvoice(invoice)}
-                        className="inline-flex items-center text-orange-500 hover:text-orange-700 font-semibold transition-colors duration-150"
+                        className="inline-flex items-center font-semibold text-orange-500 transition-colors duration-150 hover:text-orange-700"
                       >
                         <Eye className="w-4 h-4 mr-1" />
-                        {/* View */}
+                      </button>
+                      <button 
+                        onClick={() => handleDownloadPDF(invoice._id)}
+                        className="inline-flex items-center font-semibold text-blue-500 transition-colors duration-150 hover:text-blue-700"
+                      >
+                        <FileText className="w-4 h-4 mr-1" />
                       </button>
                     </td>
                   </tr>
@@ -207,138 +196,41 @@ const InvoiceManagement = () => {
             </table>
 
             {filteredInvoices.length === 0 && (
-              <div className="text-center py-16">
-                <FileText className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-                <p className="text-gray-500 text-lg">No invoices found for the selected filter</p>
+              <div className="py-16 text-center">
+                <FileText className="w-16 h-16 mx-auto mb-4 text-gray-300" />
+                <p className="text-lg text-gray-500">No invoices found for the selected filter</p>
               </div>
             )}
           </div>
         </div>
 
-        {/* Create/Edit Invoice Modal */}
-        {(showCreateForm || showEditForm) && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-            <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full">
-              <div className="p-6">
-                <div className="flex justify-between items-center mb-6">
-                  <h2 className="text-2xl font-bold bg-gradient-to-r from-orange-400 to-yellow-500 bg-clip-text text-transparent">
-                    {showEditForm ? 'Edit Invoice' : 'Create New Invoice'}
-                  </h2>
-                  <button 
-                    onClick={handleCloseForm}
-                    className="text-gray-400 hover:text-gray-600 transition-colors duration-150"
-                  >
-                    <X className="w-6 h-6" />
-                  </button>
-                </div>
-
-                <div className="space-y-4">
-                  {showEditForm && selectedInvoice && (
-                    <div className="bg-orange-50 p-3 rounded-lg border border-orange-200 mb-4">
-                      <p className="text-sm text-orange-600 font-semibold">
-                        Invoice Number: {selectedInvoice.invoiceNo}
-                      </p>
-                    </div>
-                  )}
-
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Customer Name</label>
-                    <input
-                      type="text"
-                      name="customer"
-                      value={formData.customer}
-                      onChange={handleInputChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent transition-all duration-200"
-                      placeholder="Enter customer name"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Amount</label>
-                    <input
-                      type="number"
-                      name="amount"
-                      value={formData.amount}
-                      onChange={handleInputChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent transition-all duration-200"
-                      placeholder="0.00"
-                      step="0.01"
-                      min="0"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Status</label>
-                    <select
-                      name="status"
-                      value={formData.status}
-                      onChange={handleInputChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent transition-all duration-200"
-                    >
-                      <option value="unpaid">Unpaid</option>
-                      <option value="paid">Paid</option>
-                      <option value="overdue">Overdue</option>
-                    </select>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Date</label>
-                    <input
-                      type="date"
-                      name="date"
-                      value={formData.date}
-                      onChange={handleInputChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent transition-all duration-200"
-                    />
-                  </div>
-
-                  <div className="flex space-x-3 pt-4">
-                    <button
-                      onClick={handleSubmit}
-                      className="flex-1 flex items-center justify-center px-4 py-2 bg-gradient-to-r from-orange-400 to-yellow-500 hover:from-orange-500 hover:to-yellow-600 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
-                    >
-                      <Save className="w-4 h-4 mr-2" />
-                      {showEditForm ? 'Update Invoice' : 'Create Invoice'}
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
         {/* View Invoice Modal */}
         {showViewModal && selectedInvoice && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-            <div className="bg-white rounded-2xl shadow-2xl max-w-lg w-full">
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50">
+            <div className="w-full max-w-lg bg-white shadow-2xl rounded-2xl">
               <div className="p-6">
-                <div className="flex justify-between items-center mb-6">
-                  <h2 className="text-2xl font-bold bg-gradient-to-r from-orange-400 to-yellow-500 bg-clip-text text-transparent">
+                <div className="flex items-center justify-between mb-6">
+                  <h2 className="text-2xl font-bold text-transparent bg-gradient-to-r from-orange-400 to-yellow-500 bg-clip-text">
                     Invoice Details
                   </h2>
                   <button 
                     onClick={handleCloseForm}
-                    className="text-gray-400 hover:text-gray-600 transition-colors duration-150"
+                    className="text-gray-400 transition-colors duration-150 hover:text-gray-600"
                   >
                     <X className="w-6 h-6" />
                   </button>
                 </div>
 
-                <div className="bg-gradient-to-br from-orange-50 to-yellow-50 rounded-xl p-6 border border-orange-200">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="p-6 border border-orange-200 bg-gradient-to-br from-orange-50 to-yellow-50 rounded-xl">
+                  <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                     <div className="space-y-4">
                       <div>
-                        <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Invoice Number</h3>
-                        <p className="text-lg font-bold text-orange-600">{selectedInvoice.invoiceNo}</p>
+                        <h3 className="mb-1 text-xs font-semibold tracking-wider text-gray-500 uppercase">Customer</h3>
+                        <p className="text-lg font-semibold text-gray-800">{getCustomerName(selectedInvoice)}</p>
                       </div>
                       
                       <div>
-                        <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Customer</h3>
-                        <p className="text-lg font-semibold text-gray-800">{selectedInvoice.customer}</p>
-                      </div>
-                      
-                      <div>
-                        <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Status</h3>
+                        <h3 className="mb-1 text-xs font-semibold tracking-wider text-gray-500 uppercase">Status</h3>
                         <div className="flex">
                           {statusBadge(selectedInvoice.status)}
                         </div>
@@ -347,24 +239,28 @@ const InvoiceManagement = () => {
 
                     <div className="space-y-4">
                       <div>
-                        <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Amount</h3>
+                        <h3 className="mb-1 text-xs font-semibold tracking-wider text-gray-500 uppercase">Amount</h3>
                         <p className="text-2xl font-bold text-gray-800">${selectedInvoice.amount.toLocaleString()}</p>
                       </div>
                       
                       <div>
-                        <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Date</h3>
-                        <p className="text-lg font-semibold text-gray-700">{selectedInvoice.date}</p>
+                        <h3 className="mb-1 text-xs font-semibold tracking-wider text-gray-500 uppercase">Date</h3>
+                        <p className="text-lg font-semibold text-gray-700">{new Date(selectedInvoice.invoice_date).toLocaleDateString()}</p>
                       </div>
                       
                       <div>
-                        <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Invoice ID</h3>
-                        <p className="text-sm font-medium text-gray-600">#{selectedInvoice.id}</p>
+                        <h3 className="mb-1 text-xs font-semibold tracking-wider text-gray-500 uppercase">Booking Date</h3>
+                        <p className="text-sm font-medium text-gray-600">
+                          {selectedInvoice.booking_id?.booking_date ? 
+                            new Date(selectedInvoice.booking_id.booking_date).toLocaleDateString() : 
+                            'N/A'}
+                        </p>
                       </div>
                     </div>
                   </div>
 
-                  <div className="mt-6 pt-4 border-t border-orange-200">
-                    <div className="flex justify-between items-center">
+                  <div className="pt-4 mt-6 border-t border-orange-200">
+                    <div className="flex items-center justify-between">
                       <div>
                         <h3 className="text-sm font-semibold text-gray-700">Invoice Summary</h3>
                         <p className="text-xs text-gray-600">Generated on {new Date().toLocaleDateString()}</p>
@@ -377,15 +273,13 @@ const InvoiceManagement = () => {
                   </div>
                 </div>
 
-                <div className="flex space-x-3 mt-6">
+                <div className="flex mt-6 space-x-3">
                   <button
-                    onClick={() => {
-                      handleCloseForm();
-                    }}
-                    className="flex-1 flex items-center justify-center px-4 py-2 bg-gradient-to-r from-orange-400 to-yellow-500 hover:from-orange-500 hover:to-yellow-600 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
+                    onClick={() => handleDownloadPDF(selectedInvoice._id)}
+                    className="flex items-center justify-center flex-1 px-4 py-2 font-semibold text-white transition-all duration-200 transform rounded-lg shadow-lg bg-gradient-to-r from-orange-400 to-yellow-500 hover:from-orange-500 hover:to-yellow-600 hover:shadow-xl hover:scale-105"
                   >
                     <FileText className="w-4 h-4 mr-2" />
-                    Send Invoice
+                    Download Invoice
                   </button>
                 </div> 
               </div>

@@ -4,7 +4,8 @@ import {
     getPaymentsByBooking,
     updatePaymentStatus,
      updatePayment,
-     getAllPayments 
+     getAllPayments ,
+     getPaymentSummaryByBookingId
 } from '../controllers/paymentController.js';
 import { protect } from '../middleware/auth.js';
 import { checkRole } from '../middleware/roleCheck.js';
@@ -30,6 +31,12 @@ router.get('/booking/:booking_id',
     protect, 
     checkRole('Admin', 'Accountant', 'Sales Agent'), 
     getPaymentsByBooking
+);
+
+router.get('/summary/:booking_id',
+    protect,
+    checkRole('Admin', 'Accountant', 'Sales Agent', 'Operation Team'), // Anyone who can view payments should see summary
+    getPaymentSummaryByBookingId
 );
 
 // Update payment status (accessible by admin, accountant)

@@ -2,8 +2,8 @@ import Booking from '../models/Booking.js';
 import Lead from '../models/Lead.js';
 import Customer from '../models/Customer.js';
 import Package from '../models/Package.js';
-import BookingService from '../models/BookingService.js';
 import Invoice from '../models/Invoice.js';
+import BookingService from '../models/BookingService.js';
 import OptionalService from '../models/OptionalService.js';
 import { generateBookingPDF as generateBookingPDFHelper } from '../services/pdfService.js';
 
@@ -93,19 +93,23 @@ export const createBooking = async (req, res, next) => {
       }
     }
 
-    // Create initial invoice with base price and optional services
+    const packagePrice = tourPackage.base_price || 0;
+    const totalAmount = packagePrice + totalServiceAmount;
+
+    // Create invoice automatically
     const invoice = await Invoice.create({
       booking_id: booking._id,
-      amount: tourPackage.base_price + totalServiceAmount,
-      invoice_date: new Date(),
-      status: 'sent'
+      amount: totalAmount,
+      status: 'draft'
     });
 
+    // Return both booking and invoice in response
     res.status(201).json({
       booking,
       services: createdServices,
       invoice
     });
+
 
   } catch (error) {
     next(error);
@@ -300,7 +304,6 @@ export const generateBookingPDF = async (req, res, next) => {
       return res.status(404).json({ error: 'Booking not found' });
     }
 
-    const invoice = await Invoice.findOne({ booking_id: booking._id });
     const bookingServices = await BookingService.find({ booking_id: booking._id }).populate('service_id');
 
     // Check authorization for Sales Agent
@@ -328,7 +331,6 @@ export const generateBookingPDF = async (req, res, next) => {
         service_id: bs.service_id,
         price_applied: bs.price_applied
       })),
-      invoice: invoice
     };
 
     console.log("PDF Data:\n", JSON.stringify(pdfData, null, 2));

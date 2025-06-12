@@ -67,7 +67,7 @@ const App = () => {
         >
           <Route index element={<Navigate to={adminDashboardConfig.defaultTab} replace />} />
           {renderDashboardRoutes(adminDashboardConfig)}
-          <Route path="settings" element={<Settings />} /> {/* ✅ Added */}
+          <Route path="settings" element={<Settings />} />  
         </Route>
 
         {/* Operation Dashboard */}
@@ -83,7 +83,7 @@ const App = () => {
         >
           <Route index element={<Navigate to={operationDashboardConfig.defaultTab} replace />} />
           {renderDashboardRoutes(operationDashboardConfig)}
-          <Route path="settings" element={<Settings />} /> {/* ✅ Added */}
+          <Route path="settings" element={<Settings />} /> 
         </Route>
 
         {/* Accounts Dashboard */}
@@ -102,6 +102,7 @@ const App = () => {
             element={<Navigate to={accountDashboardConfig.defaultTab} replace />}
           />
           {renderDashboardRoutes(accountDashboardConfig)}
+          <Route path="settings" element={<Settings />} /> 
         </Route>
 
         {/* Redirect unknown routes to login */}

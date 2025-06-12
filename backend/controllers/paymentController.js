@@ -1,6 +1,7 @@
 import Payment from '../models/Payment.js';
 import Booking from '../models/Booking.js';
 import Invoice from '../models/Invoice.js';
+import Package from '../models/Package.js';
 
 // Create a new payment
 export const createPayment = async (req, res) => {
@@ -92,6 +93,47 @@ export const getPaymentsByBooking = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 };
+
+export const getPaymentSummaryByBookingId = async (req, res) => {
+    try {
+        const { booking_id } = req.params;
+
+        // 1. Find the booking to get package_id
+        const booking = await Booking.findById(booking_id).populate('package_id');
+
+        if (!booking) {
+            return res.status(404).json({ error: 'Booking not found' });
+        }
+
+        // 2. Get total package amount from the associated package
+        const total_amount = booking.package_id ? booking.package_id.base_price : 0;
+
+        // 3. Get all completed payments for this booking
+        const payments = await Payment.find({ booking_id, status: 'completed' });
+
+        // 4. Calculate total paid amount
+        const total_paid_amount = payments.reduce((sum, payment) => sum + payment.amount, 0);
+
+        // 5. Calculate due amount
+        const due_amount = total_amount - total_paid_amount;
+
+        res.json({
+            booking_id: booking._id,
+            total_amount,
+            total_paid_amount,
+            due_amount,
+            payments_count: payments.length // Optional: number of completed payments
+        });
+
+    } catch (error) {
+        console.error('Error getting payment summary:', error);
+        res.status(500).json({
+            error: error.message,
+            details: process.env.NODE_ENV === 'development' ? error.stack : undefined
+        });
+    }
+};
+
 
 // Update payment status
 export const updatePaymentStatus = async (req, res) => {
