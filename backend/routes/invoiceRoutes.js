@@ -1,6 +1,5 @@
 import express from 'express';
 import {
-    createInvoice,
     getInvoices,
     getInvoiceById,
     updateInvoice,
@@ -9,6 +8,7 @@ import {
 } from '../controllers/invoiceController.js';
 import { protect } from '../middleware/auth.js';
 import { checkRole } from '../middleware/roleCheck.js';
+import { handleInvoiceEmail } from '../middleware/invoiceEmailMiddleware.js';
 
 const router = express.Router();
 
@@ -16,8 +16,7 @@ const router = express.Router();
 router.use(protect);
 
 // Accountant-only routes for write operations
-router.post('/', checkRole('Accountant'), createInvoice);
-router.put('/:id', checkRole('Accountant'), updateInvoice);
+router.put('/:id', checkRole('Accountant'), handleInvoiceEmail, updateInvoice);
 router.delete('/:id', checkRole('Accountant'), deleteInvoice);
 
 // Read operations available to more roles

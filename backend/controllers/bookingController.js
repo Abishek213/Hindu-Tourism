@@ -6,6 +6,7 @@ import Invoice from '../models/Invoice.js';
 import BookingService from '../models/BookingService.js';
 import OptionalService from '../models/OptionalService.js';
 import { generateBookingPDF as generateBookingPDFHelper } from '../services/pdfService.js';
+import { sendBookingConfirmationEmail } from '../services/emailService.js';
 
 export const createBooking = async (req, res, next) => {
   try {
@@ -101,13 +102,23 @@ export const createBooking = async (req, res, next) => {
       status: 'draft'
     });
 
+    // Send booking confirmation email (don't await to avoid blocking the response)
+    sendBookingConfirmationEmail(booking._id)
+      .then(result => {
+        if (!result.success) {
+          console.error('Failed to send booking confirmation email:', result.error);
+        }
+      })
+      .catch(err => {
+        console.error('Error sending booking confirmation email:', err);
+      });
+
     // Return both booking and invoice in response
     res.status(201).json({
       booking,
       services: createdServices,
       invoice
     });
-
 
   } catch (error) {
     next(error);

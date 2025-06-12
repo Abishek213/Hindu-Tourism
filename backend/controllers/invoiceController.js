@@ -1,30 +1,6 @@
 import Invoice from '../models/Invoice.js';
-import Booking from '../models/Booking.js';
 import { generateInvoicePDF as generatePDF } from '../services/pdfService.js';
 import { NotFoundError, ValidationError } from '../utils/validators.js';
-
-export const createInvoice = async (req, res, next) => {
-    try {
-        const { booking_id, amount } = req.body;
-        
-        // Verify booking exists
-        const booking = await Booking.findById(booking_id);
-        if (!booking) {
-            throw new NotFoundError('Booking not found');
-        }
-
-        const newInvoice = new Invoice({
-            booking_id,
-            amount,
-            status: 'draft'
-        });
-
-        const savedInvoice = await newInvoice.save();
-        res.status(201).json(savedInvoice);
-    } catch (error) {
-        next(error);
-    }
-};
 
 export const getInvoices = async (req, res, next) => {
     try {
@@ -35,7 +11,13 @@ export const getInvoices = async (req, res, next) => {
         if (booking_id) filters.booking_id = booking_id;
 
         const invoices = await Invoice.find(filters)
-            .populate('booking_id', 'booking_date travel_start_date num_travelers')
+            .populate({
+                path: 'booking_id',
+                populate: {
+                    path: 'customer_id',
+                    select: 'name email phone'
+                }
+            })
             .sort({ invoice_date: -1 });
 
         res.json(invoices);
