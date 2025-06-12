@@ -299,19 +299,20 @@ function AddCustomerModal({ isOpen, onClose, onSubmit }) {
 // Header Component (no changes)
 function CustomerHeader({ onAddCustomer }) {
   return (
-    <div className="mb-6 px-6 py-6 ">
-      <div className="flex flex-col items-center justify-between sm:flex-row">
-        <div>
-          <h1 className="text-xl font-bold text-black">Booking Management</h1>
-          <p className=" text-clack">Select Customer for Booking</p>
+    <div className="mb-6 px-6 py-6 border-b border-gray-100 bg-primary-saffron">
+      <div  className="flex flex-col items-center justify-between sm:flex-row">
+
+         <div >
+          <h1 className="text-xl font-bold text-white">Booking Management</h1>
+          <p className=" text-white">Select Customer for Booking</p>
         </div>
         <button
           onClick={onAddCustomer}
-           className="flex items-center gap-2 px-4 py-2 mt-4 font-medium
-                 text-white transition-all duration-200 bg-primary-saffron
-               shadow-lg sm:mt-0 rounded-md hover:bg-black"
+            className="flex items-center gap-2 px-4 py-2 mt-4 font-medium
+                 text-orange-600 transition-all duration-200
+                  bg-white shadow-lg sm:mt-0 rounded-md hover:bg-orange-100"
               >
-          <Plus size={20} />
+          <Plus className="w-5 h-5" />
           Add New Customer
         </button>
       </div>
@@ -609,19 +610,20 @@ export default function CustomerList({ onAddCustomer }) {
       {/* Header */}
       <CustomerHeader onAddCustomer={handleAddCustomerClick} />
 
-      {/* Search Bar */}
-      <div className="relative flex-grow">
-        <Search className="absolute w-5 h-5 text-gray-400 transform -translate-y-1/2 left-6 top-1/2" />
-        <input
-          type="text"
-          placeholder="Search customers by name, email, phone, or lead ID..."
-          onChange={(e) => debouncedSearch(e.target.value)}
-          className=" w-full p-3 pl-20 border border-gray-400 rounded-xl"
-        />
-      </div>
+     {/* Search Bar */}
+            <div className="p-6 relative flex flex-col gap-4 mb-0 lg:flex-row">
+          <Search className="absolute w-5 h-5 text-gray-400 transform -translate-y-1/2 left-9 top-1/2" />
+          <input
+            type="text"
+            placeholder="Search customers by name, email, phone, or lead ID..."
+            onChange={(e) => debouncedSearch(e.target.value)}
+            className="w-full p-3 pl-10 border border-gray-400 rounded-xl"
+          />
+        </div>
+
 
       {/* Main Content */}
-      <div className=" p-6 overflow-hidden bg-white rounded-lg ">
+      <div className="px-6 overflow-hidden bg-white rounded-lg ">
         {filteredCustomers.length === 0 ? (
           <EmptyState onAddCustomer={handleAddCustomerClick} />
         ) : (

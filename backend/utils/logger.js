@@ -16,4 +16,13 @@ const logger = winston.createLogger({
 ]
 });
 
+// Create helper functions for logging
+export const logInfo = (message, meta) => {
+  logger.info(message, meta);
+};
+
+export const logError = (message, error) => {
+  logger.error(message, error);
+};
+
 export default logger;

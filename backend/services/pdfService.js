@@ -76,7 +76,7 @@ const exclusions = Array.isArray(pkg.exclusions) ? pkg.exclusions.map(String) : 
       const numTravelers = booking.num_travelers || 1;
 
       // Logo handling
-      const logoPath = path.join(process.cwd(), 'public', 'logo.png');
+      const logoPath = path.join(process.cwd(), 'uploads', 'logo', 'logo.png');
       try {
         const logo = fs.readFileSync(logoPath);
         doc.image(logo, 50, 45, { width: 50 });
