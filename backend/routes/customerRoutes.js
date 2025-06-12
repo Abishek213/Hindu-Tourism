@@ -15,7 +15,7 @@ const router = express.Router();
 router.post('/', protect, checkRole('Admin', 'Sales Agent'), createCustomer);
 
 // Read
-router.get('/', protect, checkRole('Admin', 'Sales Agent'), getCustomers);
+router.get('/', protect, checkRole('Admin', 'Sales Agent','Accountant'), getCustomers);
 router.get('/:id', protect, checkRole('Admin', 'Sales Agent'), getCustomer);
 router.get('/:id/bookings', protect, checkRole('Admin', 'Sales Agent'), getCustomerBookings);
 

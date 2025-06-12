@@ -45,7 +45,9 @@ export const createBooking = async (req, res, next) => {
     const booking = await Booking.create({
       customer_id,
       package_id,
-      destination,
+
+      destination, 
+
       travel_start_date,
       travel_end_date,
       num_travelers,
