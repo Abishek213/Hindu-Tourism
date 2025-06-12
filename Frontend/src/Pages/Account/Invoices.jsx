@@ -149,9 +149,9 @@ const InvoiceManagement = () => {
 
   if (isLoading && invoices.length === 0) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-orange-50 to-yellow-50 p-4 flex items-center justify-center">
+      <div className="flex items-center justify-center min-h-screen p-4 bg-gradient-to-br from-orange-50 to-yellow-50">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-orange-500 mx-auto mb-4"></div>
+          <div className="w-12 h-12 mx-auto mb-4 border-t-2 border-b-2 border-orange-500 rounded-full animate-spin"></div>
           <p className="text-gray-600">Loading invoices...</p>
         </div>
       </div>
@@ -160,13 +160,13 @@ const InvoiceManagement = () => {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-orange-50 to-yellow-50 p-4 flex items-center justify-center">
-        <div className="bg-white rounded-xl p-6 shadow-lg max-w-md w-full text-center">
-          <h2 className="text-xl font-bold text-red-500 mb-2">Error</h2>
-          <p className="text-gray-600 mb-4">{error}</p>
+      <div className="flex items-center justify-center min-h-screen p-4 bg-gradient-to-br from-orange-50 to-yellow-50">
+        <div className="w-full max-w-md p-6 text-center bg-white shadow-lg rounded-xl">
+          <h2 className="mb-2 text-xl font-bold text-red-500">Error</h2>
+          <p className="mb-4 text-gray-600">{error}</p>
           <button 
             onClick={() => window.location.reload()} 
-            className="px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition-colors"
+            className="px-4 py-2 text-white transition-colors bg-orange-500 rounded-lg hover:bg-orange-600"
           >
             Try Again
           </button>
@@ -176,16 +176,16 @@ const InvoiceManagement = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 to-yellow-50 p-4">
-      <div className="max-w-7xl mx-auto">
+    <div className="min-h-screen p-4 bg-gradient-to-br from-orange-50 to-yellow-50">
+      <div className="mx-auto max-w-7xl">
         {/* Header Section */}
-        <div className="bg-white rounded-2xl shadow-lg p-8 mb-8 border border-orange-100">
-          <div className="flex justify-between items-center">
+        <div className="p-8 mb-8 bg-white border border-orange-100 shadow-lg rounded-2xl">
+          <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-4xl font-bold bg-gradient-to-r from-orange-400 to-yellow-500 bg-clip-text text-transparent">
+              <h1 className="text-4xl font-bold text-transparent bg-gradient-to-r from-orange-400 to-yellow-500 bg-clip-text">
                 Invoice Management
               </h1>
-              <p className="text-gray-600 mt-2">View and manage your invoices</p>
+              <p className="mt-2 text-gray-600">View and manage your invoices</p>
             </div>
             <div className="flex items-center space-x-4">
               {/* Filter Dropdown */}
@@ -193,7 +193,7 @@ const InvoiceManagement = () => {
                 <select
                   value={filterStatus}
                   onChange={(e) => setFilterStatus(e.target.value)}
-                  className="appearance-none bg-white border border-gray-300 rounded-xl px-4 py-3 pr-8 focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent font-medium text-gray-700"
+                  className="px-4 py-3 pr-8 font-medium text-gray-700 bg-white border border-gray-300 appearance-none rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent"
                 >
                   <option value="all">All ({getStatusCount("all")})</option>
                   <option value="draft">Draft ({getStatusCount("draft")})</option>
@@ -207,7 +207,7 @@ const InvoiceManagement = () => {
         </div>
 
         {/* Invoice Table */}
-        <div className="bg-white rounded-2xl shadow-lg border border-orange-100 overflow-hidden">
+        <div className="overflow-hidden bg-white border border-orange-100 shadow-lg rounded-2xl">
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gradient-to-r from-orange-50 to-yellow-50">
@@ -253,7 +253,7 @@ const InvoiceManagement = () => {
                     <td className="px-8 py-6 whitespace-nowrap text-right text-sm font-medium space-x-4">
                       <button 
                         onClick={() => handleDownloadPDF(invoice._id)}
-                        className="inline-flex items-center text-blue-500 hover:text-blue-700 font-semibold transition-colors duration-150"
+                        className="inline-flex items-center font-semibold text-blue-500 transition-colors duration-150 hover:text-blue-700"
                       >
                         <FileText className="w-4 h-4 mr-1" />
                         PDF
@@ -265,9 +265,9 @@ const InvoiceManagement = () => {
             </table>
 
             {filteredInvoices.length === 0 && (
-              <div className="text-center py-16">
-                <FileText className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-                <p className="text-gray-500 text-lg">No invoices found for the selected filter</p>
+              <div className="py-16 text-center">
+                <FileText className="w-16 h-16 mx-auto mb-4 text-gray-300" />
+                <p className="text-lg text-gray-500">No invoices found for the selected filter</p>
               </div>
             )}
           </div>
