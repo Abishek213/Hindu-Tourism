@@ -233,9 +233,9 @@ const PackageDashboard = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-orange-50 flex items-center justify-center">
+      <div className="p-4 bg-white rounded-lg shadow-md">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-orange-600 mx-auto mb-4"></div>
+          <div className="w-12 h-12 mx-auto mb-4 border-t-2 border-b-2 border-orange-600 rounded-full animate-spin"></div>
           <p className="text-orange-800">Loading packages...</p>
         </div>
       </div>
@@ -245,51 +245,46 @@ const PackageDashboard = () => {
   return (
     <div className="min-h-screen bg-orange-50">
       {/* Header Section */}
-      <div className="bg-white shadow-sm border-b-2 border-orange-200">
-        <div className="max-w-7xl mx-auto px-4 py-6">
-          <div className="flex justify-between items-center">
-            <div className="flex items-center gap-4">
-              <h1 className="text-3xl font-bold text-orange-900">Package Management</h1>
-              {isRefreshing && (
-                <div className="flex items-center gap-2 text-orange-600">
-                  <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-orange-600"></div>
-                  <span className="text-sm">Refreshing...</span>
-                </div>
-              )}
+      <div className="px-4 py-8">
+        <div className="flex items-center justify-between px-6 py-8 mb-6 border-b border-gray-100 bg-primary-saffron">
+          <h1 className="text-xl font-bold text-white">Package Management</h1>
+          {isRefreshing && (
+            <div className="flex items-center gap-2 text-orange-600">
+              <div className="w-4 h-4 border-t-2 border-b-2 border-orange-600 rounded-full animate-spin"></div>
+              <span className="text-sm">Refreshing...</span>
             </div>
-            <div className="flex gap-3">
-              <button
-                onClick={handleManualRefresh}
-                disabled={isRefreshing}
-                className="bg-orange-100 hover:bg-orange-200 text-orange-700 px-4 py-2 rounded-lg transition-colors font-medium disabled:opacity-50"
-              >
-                Refresh
-              </button>
-              <button
-                onClick={openCreateModal}
-                className="bg-orange-600 hover:bg-orange-700 text-white px-6 py-3 rounded-lg flex items-center gap-2 transition-colors font-medium"
-              >
-                <Plus size={20} />
-                Create Package
-              </button>
-            </div>
-          </div>
+          )}
+        </div>
+        <div className="flex gap-3">
+          <button
+            onClick={handleManualRefresh}
+            disabled={isRefreshing}
+            className="px-4 py-2 text-sm text-orange-600 transition-all duration-200 bg-white rounded-md shadow-lg sm:mt-0 hover:bg-orange-100"
+          >
+            Refresh
+          </button>
+          <button
+            onClick={openCreateModal}
+            className="px-4 py-2 text-sm text-orange-600 transition-all duration-200 bg-white rounded-md shadow-lg sm:mt-0 hover:bg-orange-100"
+          >
+            Create Package
+          </button>
         </div>
       </div>
 
       {/* Packages Table */}
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+      <div className="px-4 py-8 mx-auto max-w-7xl">
+        <div className="overflow-hidden bg-white shadow-lg rounded-xl">
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-orange-100">
-                <tr>
-                  <th className="px-6 py-4 text-left text-orange-900 font-semibold">Package Name</th>
-                  <th className="px-6 py-4 text-left text-orange-900 font-semibold">Duration</th>
-                  <th className="px-6 py-4 text-left text-orange-900 font-semibold">Price</th>
-                  <th className="px-6 py-4 text-left text-orange-900 font-semibold">Destinations</th>
-                  <th className="px-6 py-4 text-left text-orange-900 font-semibold">Status</th>
-                  <th className="px-6 py-4 text-left text-orange-900 font-semibold">Actions</th>
+              <thead className="bg-secondary-green border-secondary-green-700">
+                <tr className="font-semibold text-white">
+                  <th className="px-4 py-2 border-r border-green-700">Package Name</th>
+                  <th className="px-4 py-2 border-r border-green-700">Duration</th>
+                  <th className="px-4 py-2 border-r border-green-700">Price</th>
+                  <th className="px-4 py-2 border-r border-green-700">Destinations</th>
+                  <th className="px-4 py-2 border-r border-green-700">Status</th>
+                  <th className="px-4 py-2">Actions</th>
                 </tr>
               </thead>
               <tbody>

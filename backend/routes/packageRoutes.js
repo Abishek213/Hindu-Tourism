@@ -20,7 +20,7 @@ const router = express.Router();
 // Admin-only routes
 router.route('/')
     .post(protect, checkRole('Admin'), brochureUpload.single('brochure'), validatePackage, createPackage)
-    .get(protect, checkRole('Admin', 'Operation Team','Sales Agent'), getAllPackages);
+    .get(protect, checkRole('Admin', 'Operation Team','Sales Agent','Accountant'), getAllPackages);
 
 // Status route MUST come before /:id route to avoid conflicts
 router.route('/:id/status')
