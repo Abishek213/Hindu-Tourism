@@ -170,9 +170,9 @@ function AddCustomerModal({ isOpen, onClose, onSubmit }) {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50 backdrop-blur-sm">
       <div className="bg-white rounded-lg max-w-md w-full max-h-[90vh] overflow-y-auto">
-        <div className="px-6 py-4 rounded-t-lg bg-gradient-to-r from-yellow-500 to-orange-500">
+        <div className="px-6 py-4 rounded-t-lg bg-primary-saffron">
           <div className="flex items-center justify-between">
             <h2 className="text-xl font-bold text-white">Add New Customer</h2>
             <button
@@ -184,7 +184,7 @@ function AddCustomerModal({ isOpen, onClose, onSubmit }) {
           </div>
         </div>
 
-        <div className="p-6 space-y-4">
+        <div className="p-6 space-y-2">
           <div>
             <label htmlFor="name" className="block mb-1 text-sm font-medium text-gray-700">
               Full Name *
@@ -195,8 +195,7 @@ function AddCustomerModal({ isOpen, onClose, onSubmit }) {
               name="name"
               value={formData.name}
               onChange={handleChange}
-              className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent ${errors.name ? 'border-red-500' : 'border-gray-300'
-                }`}
+              className={`w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500`}
               placeholder="Enter full name"
             />
             {errors.name && <p className="mt-1 text-xs text-red-500">{errors.name}</p>}
@@ -212,8 +211,8 @@ function AddCustomerModal({ isOpen, onClose, onSubmit }) {
               name="phone"
               value={formData.phone}
               onChange={handleChange}
-              className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent ${errors.phone ? 'border-red-500' : 'border-gray-300'
-                }`}
+                         className={`w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500`}
+
               placeholder="Enter contact number"
             />
             {errors.phone && <p className="mt-1 text-xs text-red-500">{errors.phone}</p>}
@@ -229,8 +228,8 @@ function AddCustomerModal({ isOpen, onClose, onSubmit }) {
               name="email"
               value={formData.email}
               onChange={handleChange}
-              className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent ${errors.email ? 'border-red-500' : 'border-gray-300'
-                }`}
+                           className={`w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500`}
+
               placeholder="Enter email address"
             />
             {errors.email && <p className="mt-1 text-xs text-red-500">{errors.email}</p>}
@@ -245,8 +244,8 @@ function AddCustomerModal({ isOpen, onClose, onSubmit }) {
               name="source"
               value={formData.source}
               onChange={handleChange}
-              className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent ${errors.source ? 'border-red-500' : 'border-gray-300'
-                }`}
+                          className={`w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500`}
+
             >
               <option value="">Select source</option>
               <option value="Website">Website</option>
@@ -270,12 +269,12 @@ function AddCustomerModal({ isOpen, onClose, onSubmit }) {
               value={formData.notes}
               onChange={handleChange}
               rows={3}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+              className={`w-full px-3 py-1 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500`}
               placeholder="Enter any additional notes"
             />
           </div>
 
-          <div className="flex gap-3 pt-4">
+          <div className="flex gap-1 pt-2">
             <button
               type="button"
               onClick={handleClose}
@@ -286,7 +285,7 @@ function AddCustomerModal({ isOpen, onClose, onSubmit }) {
             <button
               type="button"
               onClick={handleSubmit}
-              className="flex-1 px-4 py-2 font-semibold text-white transition-all duration-200 rounded-lg bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600"
+              className="flex-1 px-4 py-2 font-semibold text-white transition-all duration-200 rounded-lg bg-primary-saffron"
             >
               Add Customer
             </button>
@@ -298,18 +297,20 @@ function AddCustomerModal({ isOpen, onClose, onSubmit }) {
 }
 
 // Header Component (no changes)
-function CustomerHeader({ onAddCustomer, onSearch }) {
+function CustomerHeader({ onAddCustomer }) {
   return (
-    <div className="mb-6">
-      <div className="flex items-center justify-between">
+    <div className="mb-6 px-6 py-6 ">
+      <div className="flex flex-col items-center justify-between sm:flex-row">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Booking Management</h1>
-          <p className="mt-1 text-gray-600">Select Customer for Booking</p>
+          <h1 className="text-xl font-bold text-black">Booking Management</h1>
+          <p className=" text-clack">Select Customer for Booking</p>
         </div>
         <button
           onClick={onAddCustomer}
-          className="flex items-center gap-2 px-6 py-3 font-semibold text-white transition-all duration-200 rounded-lg shadow-lg bg-primary-saffron hover:shadow-xl"
-        >
+           className="flex items-center gap-2 px-4 py-2 mt-4 font-medium
+                 text-white transition-all duration-200 bg-primary-saffron
+               shadow-lg sm:mt-0 rounded-md hover:bg-black"
+              >
           <Plus size={20} />
           Add New Customer
         </button>
@@ -406,13 +407,13 @@ function CustomerViewModal({ isOpen, onClose, customer }) {
 // Simplified Table Component - Contains the conditional button logic
 function CustomerTable({ customers, onViewCustomer, onBookNow }) {
   return (
-    <div className="overflow-x-auto">
-      <table className="w-full">
-        <thead className="bg-gradient-to-r from-yellow-100 to-orange-100">
+    <div className="overflow-hidden border border-gray-200 rounded-2xl">
+      <table className=" overflow-x-auto w-full">
+        <thead className="bg-secondary-green">
           <tr>
-            <th className="px-6 py-4 text-sm font-semibold text-left text-gray-700">Customer</th>
-            <th className="px-6 py-4 text-sm font-semibold text-left text-gray-700">Contact</th>
-            <th className="px-6 py-4 text-sm font-semibold text-center text-gray-700">Actions</th>
+            <th className="px-6 py-4 text-xs font-semibold text-left text-white uppercase">Customer</th>
+            <th className="px-6 py-4 text-xs font-semibold text-left text-white uppercase">Contact</th>
+            <th className="px-6 py-4 text-xs font-semibold text-center text-white uppercase">Actions</th>
           </tr>
         </thead>
         <tbody className="divide-y divide-gray-200">
@@ -421,7 +422,7 @@ function CustomerTable({ customers, onViewCustomer, onBookNow }) {
               <tr key={customer.id || customer._id} className="transition-colors duration-150 hover:bg-yellow-50">
                 <td className="px-6 py-4">
                   <div className="flex items-center gap-3">
-                    <div className="flex items-center justify-center w-10 h-10 text-sm font-medium text-white rounded-full bg-gradient-to-r from-yellow-400 to-orange-400">
+                    <div className="flex items-center justify-center w-10 h-10 text-sm font-medium text-white rounded-full bg-primary-saffron">
                       {customer.name?.charAt(0) || '?'}
                     </div>
                     <div>
@@ -491,7 +492,8 @@ function EmptyState({ onAddCustomer }) {
       <p className="mb-6 text-gray-500">Get started by adding your first customer lead.</p>
       <button
         onClick={onAddCustomer}
-        className="flex items-center gap-2 px-6 py-3 mx-auto font-semibold text-white transition-all duration-200 rounded-lg bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600"
+        className="flex items-center gap-2 px-6 py-3 mx-auto font-semibold
+         text-white transition-all duration-200 rounded-lg bg-primary-saffron"
       >
         <Plus size={20} />
         Add Customer
@@ -603,23 +605,23 @@ export default function CustomerList({ onAddCustomer }) {
 };
 
   return (
-    <div className="p-6 mx-auto max-w-7xl">
+    <div className="p-4 mx-auto max-w-7xl">
       {/* Header */}
       <CustomerHeader onAddCustomer={handleAddCustomerClick} />
 
       {/* Search Bar */}
-      <div className="relative mb-6">
-        <Search className="absolute w-5 h-5 text-gray-400 transform -translate-y-1/2 left-3 top-1/2" />
+      <div className="relative flex-grow">
+        <Search className="absolute w-5 h-5 text-gray-400 transform -translate-y-1/2 left-6 top-1/2" />
         <input
           type="text"
           placeholder="Search customers by name, email, phone, or lead ID..."
           onChange={(e) => debouncedSearch(e.target.value)}
-          className="w-full p-3 pl-10 border border-gray-200 rounded-xl focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+          className=" w-full p-3 pl-20 border border-gray-400 rounded-xl"
         />
       </div>
 
       {/* Main Content */}
-      <div className="overflow-hidden bg-white rounded-lg shadow-lg">
+      <div className=" p-6 overflow-hidden bg-white rounded-lg ">
         {filteredCustomers.length === 0 ? (
           <EmptyState onAddCustomer={handleAddCustomerClick} />
         ) : (
@@ -658,4 +660,4 @@ export default function CustomerList({ onAddCustomer }) {
       )}
     </div>
   );
-}
+}   

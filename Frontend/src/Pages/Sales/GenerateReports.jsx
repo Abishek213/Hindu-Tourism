@@ -128,7 +128,7 @@ const GenerateReport = () => {
         <button
           onClick={handleFilter}
           disabled={loading}
-          className="bg-orange-500 hover:bg-orange-600 disabled:bg-orange-300 text-white px-4 py-2 rounded-md"
+          className=" bg-primary-saffron hover:bg-black text-white px-4 py-2 rounded-md"
         >
           {loading ? "Loading..." : "Apply Filter"}
         </button>

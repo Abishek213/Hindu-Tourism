@@ -202,8 +202,8 @@ export default function EnhancedOperationDashboard() {
           </div>
 
           {/* Travel Status Monitor Section */}
-          <div className="bg-white rounded-2xl shadow-lg border border-orange-100 overflow-hidden">
-            <div className="p-4 border-b border-orange-100 flex justify-between items-center">
+          <div className="bg-white rounded-2xl shadow-lg border border-secondary-green overflow-hidden">
+            <div className="p-4 border-b border-orange-400 flex justify-between items-center">
               <h2 className="text-xl font-bold text-gray-800 flex items-center">
                 <Map className="mr-2 text-blue-500" />
                 Travel Status Monitor
