@@ -25,6 +25,8 @@ const renderDashboardRoutes = (config) => {
           {Object.entries(tab.children).map(([childKey, childTab]) => (
             <Route key={childKey} path={childKey} element={<childTab.component />} />
           ))}
+          {/* Catch-all route for invalid child paths */}
+          <Route path="*" element={<Navigate to={`../${key}/${Object.keys(tab.children)[0]}`} replace />} />
         </Route>
       );
     }
@@ -52,6 +54,8 @@ const App = () => {
           <Route index element={<Navigate to={salesDashboardConfig.defaultTab} replace />} />
           {renderDashboardRoutes(salesDashboardConfig)}
           <Route path="settings" element={<Settings />} />
+          {/* Catch-all for invalid salesdashboard routes */}
+          <Route path="*" element={<Navigate to={salesDashboardConfig.defaultTab} replace />} />
         </Route>
 
         {/* Admin Dashboard */}
@@ -67,7 +71,9 @@ const App = () => {
         >
           <Route index element={<Navigate to={adminDashboardConfig.defaultTab} replace />} />
           {renderDashboardRoutes(adminDashboardConfig)}
-          <Route path="settings" element={<Settings />} />  
+          <Route path="settings" element={<Settings />} />
+          {/* Catch-all for invalid admindashboard routes */}
+          <Route path="*" element={<Navigate to={adminDashboardConfig.defaultTab} replace />} />
         </Route>
 
         {/* Operation Dashboard */}
@@ -83,7 +89,9 @@ const App = () => {
         >
           <Route index element={<Navigate to={operationDashboardConfig.defaultTab} replace />} />
           {renderDashboardRoutes(operationDashboardConfig)}
-          <Route path="settings" element={<Settings />} /> 
+          <Route path="settings" element={<Settings />} />
+          {/* Catch-all for invalid ops routes */}
+          <Route path="*" element={<Navigate to={operationDashboardConfig.defaultTab} replace />} />
         </Route>
 
         {/* Accounts Dashboard */}
@@ -102,7 +110,9 @@ const App = () => {
             element={<Navigate to={accountDashboardConfig.defaultTab} replace />}
           />
           {renderDashboardRoutes(accountDashboardConfig)}
-          <Route path="settings" element={<Settings />} /> 
+          <Route path="settings" element={<Settings />} />
+          {/* Catch-all for invalid account routes */}
+          <Route path="*" element={<Navigate to={accountDashboardConfig.defaultTab} replace />} />
         </Route>
 
         {/* Redirect unknown routes to login */}

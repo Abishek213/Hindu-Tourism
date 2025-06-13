@@ -262,16 +262,16 @@ const handleStatusChange = async (invoiceId, newStatus) => {
         <div className="overflow-hidden bg-white border border-orange-100 shadow-lg rounded-2xl">
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-gradient-to-r from-orange-50 to-yellow-50">
+              <thead className="bg-secondary-green bg-gray-50 px-8 py-6">
                 <tr>
-                  <th className="px-4 py-4 text-left text-sm font-bold text-gray-700 uppercase tracking-wider whitespace-nowrap">Booking Ref</th>
-                  <th className="px-4 py-4 text-left text-sm font-bold text-gray-700 uppercase tracking-wider whitespace-nowrap">Customer</th>
-                  <th className="px-4 py-4 text-left text-sm font-bold text-gray-700 uppercase tracking-wider whitespace-nowrap">Booking Status</th>
-                  <th className="px-4 py-4 text-left text-sm font-bold text-gray-700 uppercase tracking-wider whitespace-nowrap">Guide</th>
-                  <th className="px-4 py-4 text-left text-sm font-bold text-gray-700 uppercase tracking-wider whitespace-nowrap">Transport</th>
-                  <th className="px-4 py-4 text-left text-sm font-bold text-gray-700 uppercase tracking-wider whitespace-nowrap">Payment</th>
-                  <th className="px-4 py-4 text-left text-sm font-bold text-gray-700 uppercase tracking-wider whitespace-nowrap">Invoice</th>
-                  <th className="px-4 py-4 text-right text-sm font-bold text-gray-700 uppercase tracking-wider whitespace-nowrap">Actions</th>
+                  <th className="px-4 py-4 text-left text-sm font-bold text-gray-100 uppercase tracking-wider whitespace-nowrap">Booking Ref</th>
+                  <th className="px-4 py-4 text-left text-sm font-bold text-gray-100 uppercase tracking-wider whitespace-nowrap">Customer</th>
+                  <th className="px-4 py-4 text-left text-sm font-bold text-gray-100 uppercase tracking-wider whitespace-nowrap">Booking Status</th>
+                  <th className="px-4 py-4 text-left text-sm font-bold text-gray-100 uppercase tracking-wider whitespace-nowrap">Guide</th>
+                  <th className="px-4 py-4 text-left text-sm font-bold text-gray-100 uppercase tracking-wider whitespace-nowrap">Transport</th>
+                  <th className="px-4 py-4 text-left text-sm font-bold text-gray-100 uppercase tracking-wider whitespace-nowrap">Payment</th>
+                  <th className="px-4 py-4 text-left text-sm font-bold text-gray-100 uppercase tracking-wider whitespace-nowrap">Invoice</th>
+                  <th className="px-4 py-4 text-right text-sm font-bold text-gray-100 uppercase tracking-wider whitespace-nowrap">Actions</th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-100">

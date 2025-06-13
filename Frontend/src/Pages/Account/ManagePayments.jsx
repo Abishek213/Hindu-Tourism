@@ -171,7 +171,8 @@ const PaymentOverlay = ({
                 </h2>
               </div>
               {/* Display booking status here - using the overall payment status from selectedBooking */}
-              {getStatusBadge(paymentSummary?.overall_payment_status || selectedBooking.overallPaymentStatus || 'pending')}              </div>
+              {getStatusBadge(paymentSummary?.overall_payment_status || selectedBooking.overallPaymentStatus || 'pending')}          
+               </div>
 
             <div className="grid grid-cols-1 gap-6 mb-8 md:grid-cols-2">
               {/* Customer Information */}
@@ -537,7 +538,7 @@ const ManagePayments = () => {
     );
   }
 
-  // Main list view
+ 
   return (
     <div className="min-h-screen p-6 bg-gradient-to-br from-amber-50 to-orange-100 font-inter">
       <div className="p-8 mx-auto border shadow-xl bg-white/90 backdrop-blur-sm rounded-2xl border-amber-200 max-w-7xl">
@@ -604,15 +605,14 @@ const ManagePayments = () => {
         {!loading && !error && (
           <div className="overflow-x-auto border shadow-md rounded-xl border-amber-200">
             <table className="min-w-full divide-y divide-amber-200">
-              <thead className="bg-gradient-to-r from-amber-100 to-orange-100">
+              <thead className="bg-gray-50 px-8 py-6 bg-secondary-green">
                 <tr>
-                  <th className="px-6 py-4 text-xs font-semibold tracking-wider text-left uppercase text-amber-800">Customer Name</th>
-                  <th className="px-6 py-4 text-xs font-semibold tracking-wider text-left uppercase text-amber-800">Contact</th>
-                  <th className="px-6 py-4 text-xs font-semibold tracking-wider text-left uppercase text-amber-800">Destination</th>
-                  <th className="px-6 py-4 text-xs font-semibold tracking-wider text-left uppercase text-amber-800">Total Amount</th>
-                  <th className="px-6 py-4 text-xs font-semibold tracking-wider text-left uppercase text-amber-800">Payment Status</th>
-                  <th className="px-6 py-4 text-xs font-semibold tracking-wider text-left uppercase text-amber-800">Latest Payment Date</th>
-                  <th className="px-6 py-4 text-xs font-semibold tracking-wider text-right uppercase text-amber-800">Actions</th>
+                  <th className="px-8 py-4 text-left text-sm font-semibold text-white uppercase tracking-wider">Customer Name</th>
+                  <th className="px-8 py-4 text-left text-sm font-semibold text-white uppercase tracking-wider">Contact</th>
+                  <th className="px-8 py-4 text-left text-sm font-semibold text-white uppercase tracking-wider">Destination</th>
+                  <th className="px-8 py-4 text-left text-sm font-semibold text-white uppercase tracking-wider">Payment Status</th>
+                  <th className="px-8 py-4 text-left text-sm font-semibold text-white uppercase tracking-wider">Latest Payment Date</th>
+                  <th className="px-8 py-4 text-left text-sm font-semibold text-white uppercase tracking-wider">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y bg-white/50 backdrop-blur-sm divide-amber-100">
@@ -624,17 +624,18 @@ const ManagePayments = () => {
                         <td className="px-6 py-4 whitespace-nowrap">
                           <span className="font-medium text-amber-900">{payment.booking_id.customer_id.name}</span>
                         </td>
-                        <td className="px-6 py-4 text-sm whitespace-nowrap text-amber-800">
-                          <p>{payment.booking_id.customer_id.phone}</p>
-                          <p className="text-xs text-amber-600">{payment.booking_id.customer_id.email}</p>
+                        <td className="px-6 py-4 text-sm whitespace-nowrap text-amber-800 w-40 max-w-40">
+                          <div className="overflow-hidden">
+                            <p className="truncate" title={payment.booking_id.customer_id.phone}>
+                              {payment.booking_id.customer_id.phone}
+                            </p>
+                            <p className="text-xs truncate text-amber-600" title={payment.booking_id.customer_id.email}>
+                              {payment.booking_id.customer_id.email}
+                            </p>
+                          </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <span className="text-amber-800">{payment.booking_id.package_id.title}</span>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <span className="font-semibold text-amber-900">
-                            ${payment.booking_id.package_id.base_price?.toFixed(2) || "0.00"}
-                          </span>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           {/* Use the overallPaymentStatus from the populated booking_id */}
@@ -661,7 +662,7 @@ const ManagePayments = () => {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="7" className="py-12 text-center bg-white/50">
+                    <td colSpan="6" className="py-12 text-center bg-white/50">
                       <CreditCard className="mx-auto mb-4 text-amber-400" size={48} />
                       <p className="text-lg text-amber-600">No payments found</p>
                       <p className="text-sm text-amber-500">Try adjusting your filter.</p>
