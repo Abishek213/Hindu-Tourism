@@ -170,12 +170,10 @@ export const sendInvoiceEmail = async (invoiceId) => {
   };
 
   try {
-    // Validate invoice ID
     if (!invoiceId || !mongoose.Types.ObjectId.isValid(invoiceId)) {
       throw new Error('Invalid invoice ID');
     }
 
-    // Get complete invoice data
     const invoice = await Invoice.findById(invoiceId)
       .populate({
         path: 'booking_id',
@@ -187,6 +185,14 @@ export const sendInvoiceEmail = async (invoiceId) => {
           {
             path: 'package_id',
             select: 'title duration_days base_price'
+          },
+          {
+            path: 'guide_id',
+            select: 'name phone'
+          },
+          {
+            path: 'transport_id',
+            select: 'name type'
           }
         ]
       });
@@ -195,7 +201,6 @@ export const sendInvoiceEmail = async (invoiceId) => {
       throw new Error('Invoice not found');
     }
 
-    // Validate required data
     if (!invoice.booking_id?.customer_id?.email) {
       throw new Error('Customer email is required');
     }
@@ -203,6 +208,8 @@ export const sendInvoiceEmail = async (invoiceId) => {
     const customer = invoice.booking_id.customer_id;
     const booking = invoice.booking_id;
     const tourPackage = invoice.booking_id.package_id;
+    const guide = invoice.booking_id.guide_id || {};
+    const transport = invoice.booking_id.transport_id || {};
 
     // Generate PDF
     const pdfBuffer = await generateInvoicePDF(invoice);
@@ -215,20 +222,34 @@ export const sendInvoiceEmail = async (invoiceId) => {
     const invoiceNumber = invoice._id.toString().slice(-6).toUpperCase();
     const bookingReference = booking._id.toString().slice(-6).toUpperCase();
 
+    // Build assigned services HTML
+    let assignedServicesHtml = '';
+    if (guide.name || transport.name) {
+      assignedServicesHtml = `
+        <div style="background: #f0fff4; padding: 16px; border-radius: 8px; margin: 16px 0; border: 1px solid #c6f6d5;">
+          <h3 style="margin-top: 0; color: #2d3748;">Assigned Services</h3>
+          ${guide.name ? `<p><strong>Guide:</strong> ${guide.name} (${guide.phone || 'No phone'})</p>` : ''}
+          ${transport.name ? `<p><strong>Transport:</strong> ${transport.name} (${transport.type || 'No type'})</p>` : ''}
+        </div>
+      `;
+    }
+
     // Email content
     const mailOptions = {
       from: `"${process.env.EMAIL_FROM_NAME || 'The Hindu Tourism'}" <${process.env.EMAIL_FROM || 'thehindutourism@gmail.com'}>`,
       to: customer.email,
-      subject: `Your Tour Invoice #${invoiceNumber}`,
-      text: `Dear ${customer.name},\n\nPlease find attached your invoice for ${tourPackage.title} tour.\n\nAmount Due: ₹${amountDue.toLocaleString()}\nDue Date: ${dueDate}\n\nThank you for choosing The Hindu Tourism!`,
+      subject: `Your Tour Invoice for Booking #${bookingReference}`,
+      text: `Dear ${customer.name},\n\nPlease find attached your invoice for booking #${bookingReference} (${tourPackage.title}).\n\nAmount Due: ₹${amountDue.toLocaleString()}\nDue Date: ${dueDate}\n\nThank you for choosing The Hindu Tourism!`,
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; color: #333;">
-          <h2 style="color: #2d3748;">Invoice for ${tourPackage.title} Tour</h2>
+          <h2 style="color: #2d3748;">Invoice for Booking #${bookingReference}</h2>
           <p>Dear ${customer.name},</p>
-          <p>Please find attached your invoice for booking reference <strong>${bookingReference}</strong>.</p>
+          <p>Please find attached your invoice for booking reference <strong>#${bookingReference}</strong> (${tourPackage.title}).</p>
           
           <div style="background: #f7fafc; padding: 16px; border-radius: 8px; margin: 16px 0; border: 1px solid #e2e8f0;">
+            <h3 style="margin-top: 0; color: #2d3748;">Invoice Details</h3>
             <p><strong>Invoice Number:</strong> ${invoiceNumber}</p>
+            <p><strong>Booking Reference:</strong> #${bookingReference}</p>
             <p><strong>Tour Package:</strong> ${tourPackage.title} (${tourPackage.duration_days} days)</p>
             <p><strong>Total Amount:</strong> ₹${invoice.amount.toLocaleString()}</p>
             <p><strong>Paid Amount:</strong> ₹${(invoice.paid_amount || 0).toLocaleString()}</p>
@@ -236,10 +257,12 @@ export const sendInvoiceEmail = async (invoiceId) => {
             <p><strong>Due Date:</strong> ${dueDate}</p>
           </div>
 
+          ${assignedServicesHtml}
+
           <p style="margin-top: 24px; color: #4a5568;">
             For any questions, please contact our support team at 
-            <a href="mailto:support@thehindutourism.com" style="color: #3182ce;">
-              support@thehindutourism.com
+            <a href="mailto:thehindutourism@gmail.com" style="color: #3182ce;">
+              thehindutourism@gmail.com
             </a>
           </p>
           <p>Thank you for choosing The Hindu Tourism!</p>
@@ -262,12 +285,6 @@ export const sendInvoiceEmail = async (invoiceId) => {
     result.success = true;
     result.messageId = info.messageId;
     result.customerEmail = customer.email;
-
-    // Update invoice status if needed
-    if (invoice.status === 'draft') {
-      invoice.status = 'sent';
-      await invoice.save();
-    }
 
     return result;
 
