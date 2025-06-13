@@ -1,36 +1,33 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
+import { CalendarDays, XCircle, Users, Search, Filter } from "lucide-react";
 import {
-  CalendarDays,
-  XCircle,
-  Users,
-  Search,
-  Filter,
-} from 'lucide-react';
-import { fetchBookings, updateTravelStatus } from '../../services/transportProgressService';
+  fetchBookings,
+  updateTravelStatus,
+} from "../../services/transportProgressService";
 
 const statusColors = {
-  Confirmed: 'bg-emerald-100 text-emerald-700 border-emerald-200',
-  Completed: 'bg-gray-100 text-gray-700 border-gray-200',
-  Cancelled: 'bg-red-100 text-red-700 border-red-200',
+  Confirmed: "bg-emerald-100 text-emerald-700 border-emerald-200",
+  Completed: "bg-gray-100 text-gray-700 border-gray-200",
+  Cancelled: "bg-red-100 text-red-700 border-red-200",
 };
 
 const travelStatusColors = {
-  'Not Started': 'bg-gray-100 text-gray-700 border-gray-200',
-  'On the Way': 'bg-blue-100 text-blue-700 border-blue-200',
-  'At Destination': 'bg-yellow-100 text-yellow-700 border-yellow-200',
-  'Return Journey': 'bg-purple-100 text-purple-700 border-purple-200',
-  'Completed': 'bg-green-100 text-green-700 border-green-200',
-  'Delayed': 'bg-amber-100 text-amber-700 border-amber-200',
-  'Cancelled': 'bg-red-100 text-red-700 border-red-200',
+  "Not Started": "bg-gray-100 text-gray-700 border-gray-200",
+  "On the Way": "bg-blue-100 text-blue-700 border-blue-200",
+  "At Destination": "bg-yellow-100 text-yellow-700 border-yellow-200",
+  "Return Journey": "bg-purple-100 text-purple-700 border-purple-200",
+  Completed: "bg-green-100 text-green-700 border-green-200",
+  Delayed: "bg-amber-100 text-amber-700 border-amber-200",
+  Cancelled: "bg-red-100 text-red-700 border-red-200",
 };
 
 export default function BookingMonitor() {
   const [bookings, setBookings] = useState([]);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState('All');
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState("All");
   const [selectedBooking, setSelectedBooking] = useState(null);
   const [isStatusModalOpen, setIsStatusModalOpen] = useState(false);
-  const [currentTravelStatus, setCurrentTravelStatus] = useState('');
+  const [currentTravelStatus, setCurrentTravelStatus] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -40,45 +37,47 @@ export default function BookingMonitor() {
       try {
         setIsLoading(true);
         const data = await fetchBookings();
-        
+
         // Transform backend data to match frontend structure
-        const transformedBookings = data.map(booking => ({
+        const transformedBookings = data.map((booking) => ({
           id: booking._id,
-          customer: booking.customer_id?.name || 'Unknown Customer',
-          email: booking.customer_id?.email || 'No email',
-          package: booking.package_id?.title || 'Unknown Package',
-          date: new Date(booking.travel_start_date).toISOString().split('T')[0],
+          customer: booking.customer_id?.name || "Unknown Customer",
+          email: booking.customer_id?.email || "No email",
+          package: booking.package_id?.title || "Unknown Package",
+          date: new Date(booking.travel_start_date).toISOString().split("T")[0],
           travelers: booking.num_travelers,
           status: booking.status,
-          guide: booking.guide_id?.name || '',
-          transport: booking.transport_id?.name || '',
-          travelStatus: booking.travelStatus || 'Not Started',
+          guide: booking.guide_id?.name || "",
+          transport: booking.transport_id?.name || "",
+          travelStatus: booking.travelStatus || "Not Started",
           // Store additional required fields
           originalData: {
             travel_start_date: booking.travel_start_date,
             travel_end_date: booking.travel_end_date,
-            num_travelers: booking.num_travelers
-          }
+            num_travelers: booking.num_travelers,
+          },
         }));
-        
+
         setBookings(transformedBookings);
         setError(null);
       } catch (err) {
-        console.error('Failed to load bookings:', err);
-        setError('Failed to load bookings. Please try again later.');
+        console.error("Failed to load bookings:", err);
+        setError("Failed to load bookings. Please try again later.");
       } finally {
         setIsLoading(false);
       }
     };
-    
+
     loadBookings();
   }, []);
 
-  const filteredBookings = bookings.filter(booking => {
-    const matchesSearch = booking.customer.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         booking.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         booking.package.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesStatus = statusFilter === 'All' || booking.status === statusFilter;
+  const filteredBookings = bookings.filter((booking) => {
+    const matchesSearch =
+      booking.customer.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      booking.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      booking.package.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesStatus =
+      statusFilter === "All" || booking.status === statusFilter;
     return matchesSearch && matchesStatus;
   });
 
@@ -88,66 +87,66 @@ export default function BookingMonitor() {
     setIsStatusModalOpen(true);
   };
 
-//   const handleUpdateTravelStatus = async () => {
-//   if (selectedBooking) {
-//     try {
-//       // Only send travelStatus now
-//       await updateTravelStatus(selectedBooking.id, currentTravelStatus);
-      
-//       // Update local state
-//       setBookings(prev => 
-//         prev.map(booking => 
-//           booking.id === selectedBooking.id 
-//             ? { ...booking, travelStatus: currentTravelStatus } 
-//             : booking
-//         )
-//       );
-      
-//       setIsStatusModalOpen(false);
-//     } catch (err) {
-//       console.error('Update failed:', err);
-//       setError('Failed to update travel status. Please try again.');
-//     }
-//   }
-// };
+  //   const handleUpdateTravelStatus = async () => {
+  //   if (selectedBooking) {
+  //     try {
+  //       // Only send travelStatus now
+  //       await updateTravelStatus(selectedBooking.id, currentTravelStatus);
 
-const handleUpdateTravelStatus = async () => {
-  if (selectedBooking) {
-    try {
-      setIsLoading(true); // Show loading state during update
-      await updateTravelStatus(selectedBooking.id, currentTravelStatus);
-      
-      // Refresh bookings after successful update
-      const data = await fetchBookings();
-      const transformedBookings = data.map(booking => ({
-        id: booking._id,
-        customer: booking.customer_id?.name || 'Unknown Customer',
-        email: booking.customer_id?.email || 'No email',
-        package: booking.package_id?.title || 'Unknown Package',
-        date: new Date(booking.travel_start_date).toISOString().split('T')[0],
-        travelers: booking.num_travelers,
-        status: booking.status,
-        guide: booking.guide_id?.name || '',
-        transport: booking.transport_id?.name || '',
-        travelStatus: booking.travelStatus || 'Not Started',
-        originalData: {
-          travel_start_date: booking.travel_start_date,
-          travel_end_date: booking.travel_end_date,
-          num_travelers: booking.num_travelers
-        }
-      }));
-      
-      setBookings(transformedBookings);
-      setIsStatusModalOpen(false);
-      setError(null);
-    } catch (err) {
-      console.error('Update failed:', err);
-      setError('Failed to update travel status. Please try again.');
-    } finally {
-      setIsLoading(false);
+  //       // Update local state
+  //       setBookings(prev =>
+  //         prev.map(booking =>
+  //           booking.id === selectedBooking.id
+  //             ? { ...booking, travelStatus: currentTravelStatus }
+  //             : booking
+  //         )
+  //       );
+
+  //       setIsStatusModalOpen(false);
+  //     } catch (err) {
+  //       console.error('Update failed:', err);
+  //       setError('Failed to update travel status. Please try again.');
+  //     }
+  //   }
+  // };
+
+  const handleUpdateTravelStatus = async () => {
+    if (selectedBooking) {
+      try {
+        setIsLoading(true); // Show loading state during update
+        await updateTravelStatus(selectedBooking.id, currentTravelStatus);
+
+        // Refresh bookings after successful update
+        const data = await fetchBookings();
+        const transformedBookings = data.map((booking) => ({
+          id: booking._id,
+          customer: booking.customer_id?.name || "Unknown Customer",
+          email: booking.customer_id?.email || "No email",
+          package: booking.package_id?.title || "Unknown Package",
+          date: new Date(booking.travel_start_date).toISOString().split("T")[0],
+          travelers: booking.num_travelers,
+          status: booking.status,
+          guide: booking.guide_id?.name || "",
+          transport: booking.transport_id?.name || "",
+          travelStatus: booking.travelStatus || "Not Started",
+          originalData: {
+            travel_start_date: booking.travel_start_date,
+            travel_end_date: booking.travel_end_date,
+            num_travelers: booking.num_travelers,
+          },
+        }));
+
+        setBookings(transformedBookings);
+        setIsStatusModalOpen(false);
+        setError(null);
+      } catch (err) {
+        console.error("Update failed:", err);
+        setError("Failed to update travel status. Please try again.");
+      } finally {
+        setIsLoading(false);
+      }
     }
-  }
-};
+  };
 
   if (isLoading) {
     return (
@@ -167,9 +166,11 @@ const handleUpdateTravelStatus = async () => {
           <div className="text-red-500 mb-4">
             <XCircle className="w-16 h-16 mx-auto" />
           </div>
-          <h3 className="text-xl font-bold text-gray-800 mb-2">Error Loading Data</h3>
+          <h3 className="text-xl font-bold text-gray-800 mb-2">
+            Error Loading Data
+          </h3>
           <p className="text-gray-600 mb-4">{error}</p>
-          <button 
+          <button
             onClick={() => window.location.reload()}
             className="px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600"
           >
@@ -183,17 +184,23 @@ const handleUpdateTravelStatus = async () => {
   return (
     <div className="p-4  bg-white rounded-lg shadow-md">
       {/* Header */}
-    <div className="mb-6 flex justify-between items-center px-6 py-9 border-b border-gray-100
-              bg-primary-saffron">
+
+      <div
+        className="mb-6 flex justify-between items-center px-6 py-8 border-b border-gray-100
+       bg-primary-saffron"
+      >
+
         <div>
-          <h1 className="text-xl font-bold text-white">Travel Progress Updater</h1>
-          
+          <h1 className="text-xl font-bold text-white">
+            Travel Progress Updater
+          </h1>
         </div>
-        
       </div>
-      {/* <p className="text-gray-600 text-sm">
-            {bookings.length} bookings • {filteredBookings.length} match your search
-          </p> */}
+
+      <p className="text-gray-600 text-sm">
+        {bookings.length} bookings • {filteredBookings.length} match your search
+      </p>
+
 
       {/* Search and Filter */}
       <div className="mb-6">
@@ -231,7 +238,9 @@ const handleUpdateTravelStatus = async () => {
             <div className="text-gray-400 mb-2">
               <Search className="w-12 h-12 mx-auto" />
             </div>
-            <h3 className="text-lg font-medium text-gray-700 mb-1">No bookings found</h3>
+            <h3 className="text-lg font-medium text-gray-700 mb-1">
+              No bookings found
+            </h3>
             <p className="text-gray-500 text-sm">
               Try adjusting your search or filter criteria
             </p>
@@ -248,6 +257,7 @@ const handleUpdateTravelStatus = async () => {
                   <th className="px-4 py-3 text-left text-sm font-semibold text-white uppercase tracking-wider">Travel Status</th>
                   <th className="px-4 py-3 text-left text-sm font-semibold text-white uppercase tracking-wider">Assignments</th>
                   <th className="px-4 py-3 text-left text-sm font-semibold text-white uppercase tracking-wider">Actions</th>
+
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">
@@ -264,7 +274,9 @@ const handleUpdateTravelStatus = async () => {
                       </div>
                     </td>
                     <td className="px-4 py-3">
-                      <div className="font-medium text-gray-900 text-xs md:text-sm">{b.package}</div>
+                      <div className="font-medium text-gray-900 text-xs md:text-sm">
+                        {b.package}
+                      </div>
                       <div className="text-gray-600 flex items-center gap-1 mt-1 text-xs">
                         <CalendarDays className="w-3 h-3" />
                         {b.date}
@@ -277,23 +289,43 @@ const handleUpdateTravelStatus = async () => {
                       </div>
                     </td>
                     <td className="px-4 py-3">
-                      <span className={`px-2 py-1 rounded-full text-xs font-medium border ${statusColors[b.status]}`}>
+                      <span
+                        className={`px-2 py-1 rounded-full text-xs font-medium border ${
+                          statusColors[b.status]
+                        }`}
+                      >
                         {b.status}
                       </span>
                     </td>
                     <td className="px-4 py-3">
-                      <span className={`px-2 py-1 rounded-full text-xs font-medium border ${travelStatusColors[b.travelStatus]}`}>
+                      <span
+                        className={`px-2 py-1 rounded-full text-xs font-medium border ${
+                          travelStatusColors[b.travelStatus]
+                        }`}
+                      >
                         {b.travelStatus}
                       </span>
                     </td>
                     <td className="px-4 py-3">
                       <div className="text-xs md:text-sm">
-                        <div className="text-gray-900">{b.guide || <span className="text-red-500 text-xs">No Guide</span>}</div>
-                        <div className="text-gray-600">{b.transport || <span className="text-red-500 text-xs">No Transport</span>}</div>
+                        <div className="text-gray-900">
+                          {b.guide || (
+                            <span className="text-red-500 text-xs">
+                              No Guide
+                            </span>
+                          )}
+                        </div>
+                        <div className="text-gray-600">
+                          {b.transport || (
+                            <span className="text-red-500 text-xs">
+                              No Transport
+                            </span>
+                          )}
+                        </div>
                       </div>
                     </td>
                     <td className="px-4 py-3">
-                      <button 
+                      <button
                         onClick={() => openStatusUpdateModal(b)}
                         className="bg-blue-500 hover:bg-blue-600 text-white text-xs px-2 py-1 rounded transition flex items-center"
                       >
@@ -314,26 +346,38 @@ const handleUpdateTravelStatus = async () => {
           <div className="bg-white rounded-xl shadow-xl max-w-md w-full">
             <div className="p-6 border-b border-gray-200">
               <div className="flex justify-between items-center">
-                <h3 className="text-lg font-bold text-gray-900">Update Travel Status</h3>
-                <button 
+                <h3 className="text-lg font-bold text-gray-900">
+                  Update Travel Status
+                </h3>
+                <button
                   onClick={() => setIsStatusModalOpen(false)}
                   className="text-gray-400 hover:text-gray-600"
                 >
                   <XCircle className="w-5 h-5" />
                 </button>
               </div>
-              <div className="mt-1 text-xs text-gray-600">Booking ID: {selectedBooking.id}</div>
+              <div className="mt-1 text-xs text-gray-600">
+                Booking ID: {selectedBooking.id}
+              </div>
             </div>
             <div className="p-6 space-y-4">
               <div>
-                <h4 className="font-semibold text-gray-900 text-sm">Current Travel Status</h4>
-                <span className={`px-3 py-1 rounded-full text-xs font-medium border ${travelStatusColors[selectedBooking.travelStatus]}`}>
+                <h4 className="font-semibold text-gray-900 text-sm">
+                  Current Travel Status
+                </h4>
+                <span
+                  className={`px-3 py-1 rounded-full text-xs font-medium border ${
+                    travelStatusColors[selectedBooking.travelStatus]
+                  }`}
+                >
                   {selectedBooking.travelStatus}
                 </span>
               </div>
 
               <div>
-                <label className="block font-medium text-gray-700 text-sm mb-1">Update Travel Status</label>
+                <label className="block font-medium text-gray-700 text-sm mb-1">
+                  Update Travel Status
+                </label>
                 <select
                   className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent text-sm"
                   value={currentTravelStatus}
@@ -348,7 +392,7 @@ const handleUpdateTravelStatus = async () => {
                   <option value="Cancelled">Cancelled</option>
                 </select>
               </div>
-              
+
               <div className="flex justify-end gap-3 pt-2">
                 <button
                   onClick={() => setIsStatusModalOpen(false)}
@@ -374,7 +418,7 @@ const handleUpdateTravelStatus = async () => {
           <div className="flex items-center">
             <XCircle className="w-5 h-5 mr-2" />
             <span>{error}</span>
-            <button 
+            <button
               onClick={() => setError(null)}
               className="ml-4 text-white hover:text-gray-200"
             >

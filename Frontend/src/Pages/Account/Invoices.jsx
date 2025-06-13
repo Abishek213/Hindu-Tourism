@@ -127,52 +127,6 @@ const InvoiceManagement = () => {
     }
   };
 
-const handleStatusChange = async (invoiceId, newStatus) => {
-  try {
-    setIsLoading(true);
-    
-    // Get current status before optimistic update
-    const currentInvoice = invoices.find(inv => inv._id === invoiceId);
-    const currentStatus = currentInvoice.status;
-    
-    // Only show optimistic UI update for non-email transitions
-    if (newStatus !== 'sent') {
-      setInvoices(prev => 
-        prev.map(inv => 
-          inv._id === invoiceId ? { ...inv, status: newStatus } : inv
-        )
-      );
-    }
-    
-    const updatedInvoice = await invoiceService.updateInvoiceStatus(invoiceId, newStatus);
-    
-    // Always update with server response
-    setInvoices(prev => 
-      prev.map(inv => 
-        inv._id === invoiceId ? updatedInvoice : inv
-      )
-    );
-    
-    if (newStatus !== 'sent') {
-      toast.success('Invoice status updated successfully');
-    } else {
-      toast.success('Invoice sent successfully');
-    }
-  } catch (err) {
-    // Revert only if we did optimistic update
-    if (newStatus !== 'sent') {
-      setInvoices(prev => 
-        prev.map(inv => 
-          inv._id === invoiceId ? { ...inv, status: currentStatus } : inv
-        )
-      );
-    }
-    toast.error(err.message);
-  } finally {
-    setIsLoading(false);
-  }
-};
-
   const getStatusCount = (status) => {
     if (status === "all") return invoices.length;
     return invoices.filter(inv => inv.status === status).length;
@@ -264,20 +218,21 @@ const handleStatusChange = async (invoiceId, newStatus) => {
             <table className="w-full">
               <thead className="bg-secondary-green bg-gray-50 px-8 py-6">
                 <tr>
-                  <th className="px-4 py-4 text-left text-sm font-bold text-gray-100 uppercase tracking-wider whitespace-nowrap">Booking Ref</th>
-                  <th className="px-4 py-4 text-left text-sm font-bold text-gray-100 uppercase tracking-wider whitespace-nowrap">Customer</th>
-                  <th className="px-4 py-4 text-left text-sm font-bold text-gray-100 uppercase tracking-wider whitespace-nowrap">Booking Status</th>
-                  <th className="px-4 py-4 text-left text-sm font-bold text-gray-100 uppercase tracking-wider whitespace-nowrap">Guide</th>
-                  <th className="px-4 py-4 text-left text-sm font-bold text-gray-100 uppercase tracking-wider whitespace-nowrap">Transport</th>
-                  <th className="px-4 py-4 text-left text-sm font-bold text-gray-100 uppercase tracking-wider whitespace-nowrap">Payment</th>
-                  <th className="px-4 py-4 text-left text-sm font-bold text-gray-100 uppercase tracking-wider whitespace-nowrap">Invoice</th>
-                  <th className="px-4 py-4 text-right text-sm font-bold text-gray-100 uppercase tracking-wider whitespace-nowrap">Actions</th>
+
+                  <th className="px-4 py-4 text-left text-sm font-bold text-gray-700 uppercase tracking-wider whitespace-nowrap">Booking Ref</th>
+                  <th className="px-4 py-4 text-left text-sm font-bold text-gray-700 uppercase tracking-wider whitespace-nowrap">Customer</th>
+                  <th className="px-4 py-4 text-left text-sm font-bold text-gray-700 uppercase tracking-wider whitespace-nowrap">Booking Status</th>
+                  <th className="px-4 py-4 text-left text-sm font-bold text-gray-700 uppercase tracking-wider whitespace-nowrap">Guide</th>
+                  <th className="px-4 py-4 text-left text-sm font-bold text-gray-700 uppercase tracking-wider whitespace-nowrap">Transport</th>
+                  <th className="px-4 py-4 text-left text-sm font-bold text-gray-700 uppercase tracking-wider whitespace-nowrap">Payment</th>
+                  <th className="px-4 py-4 text-left text-sm font-bold text-gray-700 uppercase tracking-wider whitespace-nowrap">Invoice Status</th>
+                  <th className="px-4 py-4 text-right text-sm font-bold text-gray-700 uppercase tracking-wider whitespace-nowrap">Actions</th>
+
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-100">
                 {filteredInvoices.map((invoice, index) => (
                   <tr key={invoice._id} className={`hover:bg-orange-25 transition-colors duration-150 ${index % 2 === 0 ? 'bg-gray-25' : ''}`}>
-
                     <td className="px-4 py-4 whitespace-nowrap">
                       <span className="text-sm font-mono text-gray-600 bg-gray-100 px-2 py-1 rounded">
                         {getBookingReference(invoice)}
@@ -299,22 +254,8 @@ const handleStatusChange = async (invoiceId, newStatus) => {
                       {paymentStatusBadge(getPaymentStatus(invoice))}
                     </td>
                     <td className="px-4 py-4 whitespace-nowrap">
-  <select
-    value={invoice.status}
-    onChange={(e) => handleStatusChange(invoice._id, e.target.value)}
-    className={`appearance-none bg-transparent border rounded-md px-3 py-1 text-xs font-semibold ${statusColors[invoice.status] || 'bg-gray-100 text-gray-700 border-gray-200'}`}
-    disabled={invoice.status === 'paid' || invoice.status === 'cancelled'}
-  >
-    {['draft', 'sent', 'paid', 'cancelled'].includes(invoice.status) && (
-      <option value={invoice.status} disabled>
-        {invoice.status.charAt(0).toUpperCase() + invoice.status.slice(1)}
-      </option>
-    )}
-    {invoice.status !== 'sent' && <option value="sent">Sent</option>}
-    {invoice.status !== 'paid' && <option value="paid">Paid</option>}
-    {invoice.status !== 'cancelled' && <option value="cancelled">Cancel Invoice</option>}
-  </select>
-</td>
+                      {statusBadge(invoice.status)}
+                    </td>
                     <td className="px-4 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
                       <button 
                         onClick={() => handleDownloadPDF(invoice._id)}
