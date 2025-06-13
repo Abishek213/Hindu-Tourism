@@ -275,21 +275,19 @@ export default function AssignTeamForm() {
       </div>
 
       {/* Confirmed Bookings Table */}
-      <div className="bg-white rounded-xl shadow-xl border border-orange-100 overflow-hidden">
-        <div className="px-8 py-6 bg-secondary-green">
-          <h2 className="text-2xl font-bold text-white">Confirmed Bookings</h2>
-        </div> 
+      <div className="bg-white rounded-xl border-orange-100 overflow-hidden">
+       <h2 className="text-2xl font-bold text-black">Confirmed Bookings</h2>
         
-        <div className="overflow-x-auto">
+        <div className="overflow-x-auto ">
           <table className="w-full">
-            <thead className="bg-gray-50">
+            <thead className="bg-gray-50 px-8 py-6 bg-secondary-green">
               <tr>
-                <th className="px-8 py-4 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider">Booking Details</th>
-                <th className="px-8 py-4 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider">Customer</th>
-                <th className="px-8 py-4 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider">Schedule</th>
-                <th className="px-8 py-4 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider">Guide</th>
-                <th className="px-8 py-4 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider">Transport</th>
-                <th className="px-8 py-4 text-left text-sm font-semibold text-gray-700 uppercase tracking-wider">Action</th>
+                <th className="px-8 py-4 text-left text-sm font-semibold text-white uppercase tracking-wider">Booking Details</th>
+                <th className="px-8 py-4 text-left text-sm font-semibold text-white uppercase tracking-wider">Customer</th>
+                <th className="px-8 py-4 text-left text-sm font-semibold text-white uppercase tracking-wider">Schedule</th>
+                <th className="px-8 py-4 text-left text-sm font-semibold text-white uppercase tracking-wider">Guide</th>
+                <th className="px-8 py-4 text-left text-sm font-semibold text-white uppercase tracking-wider">Transport</th>
+                <th className="px-8 py-4 text-left text-sm font-semibold text-white uppercase tracking-wider">Action</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
@@ -418,7 +416,7 @@ export default function AssignTeamForm() {
                               <select
                                 onChange={(e) => e.target.value && handleAssignTransport(booking._id, e.target.value)}
                                 value=""
-                                className="w-full p-3 border border-amber-200 rounded-lg text-sm focus:ring-2 focus:ring-amber-300 focus:border-transparent shadow-sm bg-white"
+                                className=" w-auto p-3 border border-amber-200 rounded-lg text-sm focus:ring-2 focus:ring-amber-300 focus:border-transparent shadow-sm bg-white"
                               >
                                 <option value="">Select Transport</option>
                                 {availableTransports.map(transport => (
