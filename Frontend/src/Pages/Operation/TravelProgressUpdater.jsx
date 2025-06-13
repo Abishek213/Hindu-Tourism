@@ -184,22 +184,26 @@ export default function BookingMonitor() {
   return (
     <div className="p-4  bg-white rounded-lg shadow-md">
       {/* Header */}
+
       <div
         className="mb-6 flex justify-between items-center px-6 py-8 border-b border-gray-100
        bg-primary-saffron"
       >
+
         <div>
           <h1 className="text-xl font-bold text-white">
             Travel Progress Updater
           </h1>
         </div>
       </div>
+
       <p className="text-gray-600 text-sm">
         {bookings.length} bookings • {filteredBookings.length} match your search
       </p>
 
+
       {/* Search and Filter */}
-      <div className="bg-white p-4 rounded-xl shadow-sm border">
+      <div className="mb-6">
         <div className="flex flex-col sm:flex-row gap-4">
           <div className="flex-1 relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
@@ -244,25 +248,16 @@ export default function BookingMonitor() {
         ) : (
           <div className="overflow-x-auto">
             <table className="min-w-full text-sm">
-              <thead className="bg-secondary-green border-secondary-green-700">
+              <thead className=" px-8 py-6 bg-secondary-green border-secondary-green-700">
                 <tr className="text-white font-semibold">
-                  <th className="px-4 py-3 text-left font-semibold">
-                    Customer
-                  </th>
-                  <th className="px-4 py-3 text-left font-semibold">
-                    Package & Date
-                  </th>
-                  <th className="px-4 py-3 text-left font-semibold">
-                    Travelers
-                  </th>
-                  <th className="px-4 py-3 text-left font-semibold">Status</th>
-                  <th className="px-4 py-3 text-left font-semibold">
-                    Travel Status
-                  </th>
-                  <th className="px-4 py-3 text-left font-semibold">
-                    Assignments
-                  </th>
-                  <th className="px-4 py-3 text-left font-semibold">Actions</th>
+                  <th className="px-4 py-3 text-left text-sm font-semibold text-white uppercase tracking-wider">Customer</th>
+                  <th className="px-4 py-3 text-left text-sm font-semibold text-white uppercase tracking-wider">Package & Date</th>
+                  <th className="px-4 py-3 text-left text-sm font-semibold text-white uppercase tracking-wider">Travelers</th>
+                  <th className="px-4 py-3 text-left text-sm font-semibold text-white uppercase tracking-wider">Status</th>
+                  <th className="px-4 py-3 text-left text-sm font-semibold text-white uppercase tracking-wider">Travel Status</th>
+                  <th className="px-4 py-3 text-left text-sm font-semibold text-white uppercase tracking-wider">Assignments</th>
+                  <th className="px-4 py-3 text-left text-sm font-semibold text-white uppercase tracking-wider">Actions</th>
+
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">

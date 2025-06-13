@@ -227,16 +227,16 @@ export const ProcessRefunds = () => {
       <div className="bg-yellow-50 rounded-lg overflow-hidden shadow-sm">
         <div className="overflow-x-auto">
           <table className="min-w-full">
-            <thead className="bg-yellow-100">
+            <thead className="bg-gray-50 px-8 py-6 bg-secondary-green">
               <tr>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-yellow-800">Refund #</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-yellow-800">Booking ID</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-yellow-800">Customer</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-yellow-800">Amount</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-yellow-800">Status</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-yellow-800">Request Date</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-yellow-800 w-48">Reason</th>
-                <th className="px-6 py-4 text-center text-sm font-semibold text-yellow-800">Actions</th>
+                <th className="px-8 py-4 text-left text-sm font-semibold text-white uppercase tracking-wider">Refund #</th>
+                <th className="px-8 py-4 text-left text-sm font-semibold text-white uppercase tracking-wider">Booking ID</th>
+                <th className="px-8 py-4 text-left text-sm font-semibold text-white uppercase tracking-wider">Customer</th>
+                <th className="px-8 py-4 text-left text-sm font-semibold text-white uppercase tracking-wider">Amount</th>
+                <th className="px-8 py-4 text-left text-sm font-semibold text-white uppercase tracking-wider">Status</th>
+                <th className="px-8 py-4 text-left text-sm font-semibold text-white uppercase tracking-wider">Request Date</th>
+                <th className="px-8 py-4 text-left text-sm font-semibold text-white uppercase tracking-wider">Reason</th>
+                <th className="px-8 py-4 text-left text-sm font-semibold text-white uppercase tracking-wider">Actions</th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-yellow-100">
