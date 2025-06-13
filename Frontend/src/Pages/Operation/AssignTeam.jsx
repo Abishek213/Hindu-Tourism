@@ -227,7 +227,7 @@ export default function AssignTeamForm() {
 
   if (isLoading) {
     return (
-      <div className="p-4  bg-white rounded-lg shadow-md p-6 flex items-center justify-center">
+      <div className="p-4  bg-white rounded-lg shadow-md  flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-orange-500 mx-auto mb-4"></div>
           <p className="text-orange-700">Loading bookings and resources...</p>
@@ -263,31 +263,36 @@ export default function AssignTeamForm() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
             </div>
-            <input
+          
+
+                  <input
               type="text"
+              placeholder="Search by customer, email, or package..."
+              className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent text-sm"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search bookings by reference, customer, tour, or date..."
-              className="block w-full pl-10 pr-3 py-3 border border-orange-200 rounded-lg text-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent bg-white shadow-sm"
             />
+
           </div>
         </div>
       </div>
 
       {/* Confirmed Bookings Table */}
+      <h2 className="p-1 text-2xl font-bold text-black">Confirmed Bookings</h2>
+      
       <div className="bg-white rounded-xl border-orange-100 overflow-hidden">
-       <h2 className="text-2xl font-bold text-black">Confirmed Bookings</h2>
+       
         
         <div className="overflow-x-auto ">
           <table className="w-full">
-            <thead className="bg-gray-50 px-8 py-6 bg-secondary-green">
+            <thead className=" px-8 py-6 bg-secondary-green">
               <tr>
-                <th className="px-8 py-4 text-left text-sm font-semibold text-white uppercase tracking-wider">Booking Details</th>
-                <th className="px-8 py-4 text-left text-sm font-semibold text-white uppercase tracking-wider">Customer</th>
-                <th className="px-8 py-4 text-left text-sm font-semibold text-white uppercase tracking-wider">Schedule</th>
-                <th className="px-8 py-4 text-left text-sm font-semibold text-white uppercase tracking-wider">Guide</th>
-                <th className="px-8 py-4 text-left text-sm font-semibold text-white uppercase tracking-wider">Transport</th>
-                <th className="px-8 py-4 text-left text-sm font-semibold text-white uppercase tracking-wider">Action</th>
+                <th className="px-4 py-3 text-left text-sm font-semibold text-white uppercase tracking-wider">Booking Details</th>
+                <th className="px-4 py-3 text-left text-sm font-semibold text-white uppercase tracking-wider">Customer</th>
+                <th className="px-4 py-3 text-left text-sm font-semibold text-white uppercase tracking-wider">Schedule</th>
+                <th className="px-4 py-3 text-left text-sm font-semibold text-white uppercase tracking-wider">Guide</th>
+                <th className="px-4 py-3 text-left text-sm font-semibold text-white uppercase tracking-wider">Transport</th>
+                <th className="px-4 py-3 text-left text-sm font-semibold text-white uppercase tracking-wider">Action</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
