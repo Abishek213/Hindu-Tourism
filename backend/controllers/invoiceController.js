@@ -1,4 +1,3 @@
-// invoiceController.js
 import Invoice from '../models/Invoice.js';
 import { generateInvoicePDF } from '../services/pdfService.js';
 import { NotFoundError, ValidationError } from '../utils/validators.js';
@@ -47,47 +46,44 @@ export const getInvoiceById = async (req, res, next) => {
 };
 
 export const updateInvoiceStatus = async (req, res, next) => {
-  try {
-    const invoice = await Invoice.findById(req.params.id);
-    if (!invoice) throw new NotFoundError('Invoice not found');
+    try {
+        const invoice = await Invoice.findById(req.params.id);
+        if (!invoice) throw new NotFoundError('Invoice not found');
 
-    const { status } = req.body;
-    if (!status) throw new ValidationError('Status is required');
+        const { status } = req.body;
+        if (!status) throw new ValidationError('Status is required');
 
-    const originalStatus = invoice.status;
-    if (originalStatus === status) return res.json(invoice);
+        const originalStatus = invoice.status;
+        if (originalStatus === status) return res.json(invoice);
 
-    // Add email sent flag
-    if (originalStatus === 'draft' && status === 'sent' && invoice.emailSent) {
-      return res.status(400).json({ message: 'Email already sent for this invoice' });
+        // Prevent email sending if status is changing between non-draft states
+        const shouldSendEmail = originalStatus === 'draft' && status === 'sent' && !invoice.emailSent;
+
+        invoice.status = status;
+        
+        if (shouldSendEmail) {
+            invoice.emailSent = true;
+        }
+
+        await invoice.save();
+
+        const updatedInvoice = await Invoice.findById(invoice._id)
+            .populate({
+                path: 'booking_id',
+                populate: { path: 'customer_id', select: 'name email phone' }
+            });
+
+        res.json(updatedInvoice);
+
+        if (shouldSendEmail) {
+            sendInvoiceEmail(req.params.id)
+                .catch(err => {
+                    logError('Error sending invoice email:', err);
+                });
+        }
+    } catch (error) {
+        next(error);
     }
-
-    invoice.status = status;
-    
-    // Track email sending
-    if (originalStatus === 'draft' && status === 'sent') {
-      invoice.emailSent = true;
-    }
-
-    await invoice.save();
-
-    const updatedInvoice = await Invoice.findById(invoice._id)
-      .populate({
-        path: 'booking_id',
-        populate: { path: 'customer_id', select: 'name email phone' }
-      });
-
-    res.json(updatedInvoice);
-
-    if (originalStatus === 'draft' && status === 'sent' && !invoice.emailSent) {
-      sendInvoiceEmail(req.params.id)
-        .catch(err => {
-          logError('Error sending invoice email:', err);
-        });
-    }
-  } catch (error) {
-    next(error);
-  }
 };
 
 export const downloadInvoicePDF = async (req, res, next) => {

@@ -18,7 +18,7 @@ const invoiceSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ['draft', 'sent', 'paid', 'cancelled'],
+    enum: ['draft', 'sent', 'paid', 'advance', 'cancelled'],
     default: 'draft'
   }
 }, { timestamps: true });
