@@ -60,7 +60,7 @@ const InvoiceManagement = () => {
     if (totalPaid > 0) return 'partial';
     return 'pending';
   };
-
+  
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
@@ -277,6 +277,7 @@ const handleStatusChange = async (invoiceId, newStatus) => {
               <tbody className="bg-white divide-y divide-gray-100">
                 {filteredInvoices.map((invoice, index) => (
                   <tr key={invoice._id} className={`hover:bg-orange-25 transition-colors duration-150 ${index % 2 === 0 ? 'bg-gray-25' : ''}`}>
+
                     <td className="px-4 py-4 whitespace-nowrap">
                       <span className="text-sm font-mono text-gray-600 bg-gray-100 px-2 py-1 rounded">
                         {getBookingReference(invoice)}

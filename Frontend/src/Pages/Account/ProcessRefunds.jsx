@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
-import { RefreshCcw, AlertTriangle, Check, Plus, Eye, Edit, X } from "lucide-react";
+import { RefreshCcw, AlertTriangle, Check, Plus, Eye, Edit, X, ChevronDown, Filter } from "lucide-react";
 
 export const ProcessRefunds = () => {
   const [refunds, setRefunds] = useState([]);
   const [filter, setFilter] = useState("all");
+  const [showFilterDropdown, setShowFilterDropdown] = useState(false);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showViewModal, setShowViewModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
@@ -26,7 +27,7 @@ export const ProcessRefunds = () => {
         status: "approved", 
         requestDate: "2025-05-08", 
         processedDate: "2025-05-10",
-        reason: "Trip cancellation due to weather"
+        reason: "Trip cancellation due to weather conditions and safety concerns"
       },
       { 
         id: 202, 
@@ -56,7 +57,7 @@ export const ProcessRefunds = () => {
         status: "processing", 
         requestDate: "2025-05-18", 
         processedDate: null,
-        reason: "Service not as described"
+        reason: "Service not as described, multiple issues reported"
       }
     ];
     setRefunds(dummyRefunds);
@@ -109,19 +110,16 @@ export const ProcessRefunds = () => {
     setFormData({ bookingId: "", customer: "", amount: "", reason: "" });
   };
 
-  const handleApproveRefund = (id) => {
+  const handleStatusChange = (id, newStatus) => {
     const updatedRefunds = refunds.map(refund => 
       refund.id === id 
-        ? { ...refund, status: "approved", processedDate: new Date().toISOString().split('T')[0] }
-        : refund
-    );
-    setRefunds(updatedRefunds);
-  };
-
-  const handleRejectRefund = (id) => {
-    const updatedRefunds = refunds.map(refund => 
-      refund.id === id 
-        ? { ...refund, status: "rejected", processedDate: new Date().toISOString().split('T')[0] }
+        ? { 
+            ...refund, 
+            status: newStatus, 
+            processedDate: newStatus === "approved" || newStatus === "rejected" 
+              ? new Date().toISOString().split('T')[0] 
+              : null 
+          }
         : refund
     );
     setRefunds(updatedRefunds);
@@ -141,6 +139,17 @@ export const ProcessRefunds = () => {
       reason: refund.reason
     });
     setShowEditModal(true);
+  };
+
+  const getFilterLabel = () => {
+    switch(filter) {
+      case "all": return "All Refunds";
+      case "pending": return "Pending";
+      case "processing": return "Processing";
+      case "approved": return "Approved";
+      case "rejected": return "Rejected";
+      default: return "All Refunds";
+    }
   };
 
   const Modal = ({ isOpen, onClose, title, children }) => {
@@ -169,64 +178,50 @@ export const ProcessRefunds = () => {
         <h1 className="text-3xl font-bold text-gray-800">Process Refunds</h1>
         <button
           onClick={() => setShowCreateModal(true)}
-          className="bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2 rounded-lg flex items-center space-x-2 transition-colors duration-200"
+          className="bg-yellow-600 hover:bg-yellow-700 text-white px-6 py-3 rounded-lg flex items-center space-x-2 transition-colors duration-200 font-medium shadow-sm"
         >
           <Plus className="w-5 h-5" />
           <span>Create Refund</span>
         </button>
       </div>
       
-      <div className="flex flex-wrap gap-3 mb-8">
+      {/* Filter Dropdown */}
+      <div className="mb-8 relative">
         <button
-          onClick={() => setFilter("all")}
-          className={`px-4 py-2 rounded-lg font-medium transition-colors duration-200 ${
-            filter === "all" 
-              ? "bg-yellow-600 text-white shadow-md" 
-              : "bg-yellow-50 text-yellow-700 hover:bg-yellow-100"
-          }`}
+          onClick={() => setShowFilterDropdown(!showFilterDropdown)}
+          className="bg-yellow-50 hover:bg-yellow-100 text-yellow-700 px-4 py-2 rounded-lg flex items-center space-x-2 transition-colors duration-200 border border-yellow-200"
         >
-          All Refunds
+          <Filter className="w-4 h-4" />
+          <span>{getFilterLabel()}</span>
+          <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${showFilterDropdown ? 'rotate-180' : ''}`} />
         </button>
-        <button
-          onClick={() => setFilter("pending")}
-          className={`px-4 py-2 rounded-lg font-medium transition-colors duration-200 ${
-            filter === "pending" 
-              ? "bg-yellow-600 text-white shadow-md" 
-              : "bg-yellow-50 text-yellow-700 hover:bg-yellow-100"
-          }`}
-        >
-          Pending
-        </button>
-        <button
-          onClick={() => setFilter("processing")}
-          className={`px-4 py-2 rounded-lg font-medium transition-colors duration-200 ${
-            filter === "processing" 
-              ? "bg-yellow-600 text-white shadow-md" 
-              : "bg-yellow-50 text-yellow-700 hover:bg-yellow-100"
-          }`}
-        >
-          Processing
-        </button>
-        <button
-          onClick={() => setFilter("approved")}
-          className={`px-4 py-2 rounded-lg font-medium transition-colors duration-200 ${
-            filter === "approved" 
-              ? "bg-yellow-600 text-white shadow-md" 
-              : "bg-yellow-50 text-yellow-700 hover:bg-yellow-100"
-          }`}
-        >
-          Approved
-        </button>
-        <button
-          onClick={() => setFilter("rejected")}
-          className={`px-4 py-2 rounded-lg font-medium transition-colors duration-200 ${
-            filter === "rejected" 
-              ? "bg-yellow-600 text-white shadow-md" 
-              : "bg-yellow-50 text-yellow-700 hover:bg-yellow-100"
-          }`}
-        >
-          Rejected
-        </button>
+        
+        {showFilterDropdown && (
+          <div className="absolute top-full left-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-10 w-48">
+            <div className="py-1">
+              {[
+                { value: "all", label: "All Refunds" },
+                { value: "pending", label: "Pending" },
+                { value: "processing", label: "Processing" },
+                { value: "approved", label: "Approved" },
+                { value: "rejected", label: "Rejected" }
+              ].map((option) => (
+                <button
+                  key={option.value}
+                  onClick={() => {
+                    setFilter(option.value);
+                    setShowFilterDropdown(false);
+                  }}
+                  className={`w-full text-left px-4 py-2 hover:bg-yellow-50 transition-colors duration-150 ${
+                    filter === option.value ? 'bg-yellow-50 text-yellow-700 font-medium' : 'text-gray-700'
+                  }`}
+                >
+                  {option.label}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
       
       <div className="bg-yellow-50 rounded-lg overflow-hidden shadow-sm">
@@ -240,7 +235,7 @@ export const ProcessRefunds = () => {
                 <th className="px-6 py-4 text-left text-sm font-semibold text-yellow-800">Amount</th>
                 <th className="px-6 py-4 text-left text-sm font-semibold text-yellow-800">Status</th>
                 <th className="px-6 py-4 text-left text-sm font-semibold text-yellow-800">Request Date</th>
-                <th className="px-6 py-4 text-left text-sm font-semibold text-yellow-800">Reason</th>
+                <th className="px-6 py-4 text-left text-sm font-semibold text-yellow-800 w-48">Reason</th>
                 <th className="px-6 py-4 text-center text-sm font-semibold text-yellow-800">Actions</th>
               </tr>
             </thead>
@@ -251,47 +246,45 @@ export const ProcessRefunds = () => {
                   <td className="px-6 py-4 whitespace-nowrap text-gray-700">{refund.bookingId}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-gray-700 font-medium">{refund.customer}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-gray-700 font-semibold">${refund.amount.toFixed(2)}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">{getStatusBadge(refund.status)}</td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    <select
+                      value={refund.status}
+                      onChange={(e) => handleStatusChange(refund.id, e.target.value)}
+                      className="bg-white border border-gray-300 rounded-md px-3 py-1 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-500 appearance-none cursor-pointer min-w-[120px]"
+                      style={{
+                        backgroundImage: `url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e")`,
+                        backgroundPosition: 'right 0.5rem center',
+                        backgroundRepeat: 'no-repeat',
+                        backgroundSize: '1.5em 1.5em'
+                      }}
+                    >
+                      <option value="pending">Pending</option>
+                      <option value="processing">Processing</option>
+                      <option value="approved">Approved</option>
+                      <option value="rejected">Rejected</option>
+                    </select>
+                  </td>
                   <td className="px-6 py-4 whitespace-nowrap text-gray-700">{refund.requestDate}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-gray-700 truncate max-w-xs">{refund.reason}</td>
+                  <td className="px-6 py-4 text-gray-700 w-48">
+                    <div className="truncate max-w-48" title={refund.reason}>
+                      {refund.reason}
+                    </div>
+                  </td>
                   <td className="px-6 py-4 whitespace-nowrap text-center">
-                    <div className="flex justify-center space-x-2">
-                      {refund.status === "pending" && (
-                        <>
-                          <button 
-                            onClick={() => handleApproveRefund(refund.id)}
-                            className="text-green-600 hover:text-green-800 hover:bg-green-50 p-1 rounded transition-colors duration-200"
-                            title="Approve"
-                          >
-                            <Check className="w-5 h-5" />
-                          </button>
-                          <button 
-                            onClick={() => handleRejectRefund(refund.id)}
-                            className="text-red-600 hover:text-red-800 hover:bg-red-50 p-1 rounded transition-colors duration-200"
-                            title="Reject"
-                          >
-                            <AlertTriangle className="w-5 h-5" />
-                          </button>
-                        </>
-                      )}
-                      {refund.status === "processing" && (
-                        <button className="text-blue-600 hover:text-blue-800 hover:bg-blue-50 p-1 rounded transition-colors duration-200">
-                          <RefreshCcw className="w-5 h-5" />
-                        </button>
-                      )}
+                    <div className="flex justify-center items-center space-x-1">
                       <button 
                         onClick={() => openViewModal(refund)}
-                        className="text-yellow-600 hover:text-yellow-800 hover:bg-yellow-50 p-1 rounded transition-colors duration-200"
+                        className="bg-yellow-100 hover:bg-yellow-200 text-yellow-700 p-2 rounded-md transition-colors duration-200 border border-yellow-200"
                         title="View Details"
                       >
-                        <Eye className="w-5 h-5" />
+                        <Eye className="w-4 h-4" />
                       </button>
                       <button 
                         onClick={() => openEditModal(refund)}
-                        className="text-yellow-600 hover:text-yellow-800 hover:bg-yellow-50 p-1 rounded transition-colors duration-200"
+                        className="bg-blue-100 hover:bg-blue-200 text-blue-700 p-2 rounded-md transition-colors duration-200 border border-blue-200"
                         title="Edit"
                       >
-                        <Edit className="w-5 h-5" />
+                        <Edit className="w-4 h-4" />
                       </button>
                     </div>
                   </td>
