@@ -12,7 +12,9 @@ import {
   AlertCircle,
   CheckCircle,
   Clock,
-  BarChart3
+  BarChart3,
+  ChevronDown,
+  Filter
 } from "lucide-react";
 import { 
   ResponsiveContainer, 
@@ -25,7 +27,6 @@ import {
   YAxis,
   Tooltip
 } from "recharts";
-import FinancialReport from './FinancialReports';
 
 // Enhanced data structure
 const stats = [
@@ -105,10 +106,18 @@ const alerts = [
   { type: "info", message: "New financial report available", time: "1d ago" },
 ];
 
+const timeFrameOptions = [
+  { value: "weekly", label: "Weekly" },
+  { value: "monthly", label: "Monthly" },
+  { value: "quarterly", label: "Quarterly" },
+  { value: "yearly", label: "Yearly" }
+];
+
 const AccountOverview = () => {
   const [timeFrame, setTimeFrame] = useState("monthly");
   const [activeChart, setActiveChart] = useState("revenue");
   const [currentView, setCurrentView] = useState("overview");
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const renderOverview = () => (
     <>
@@ -143,6 +152,8 @@ const AccountOverview = () => {
           </div>
         ))}
       </div>
+
+     
 
       {/* Charts Section */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
@@ -335,6 +346,42 @@ const AccountOverview = () => {
               : "Detailed financial analysis and reporting."}
           </p>
         </div>
+
+
+         {/* Time Frame Filter Dropdown */}
+      <div className="flex justify-center mb-8">
+        <div className="relative">
+          <button
+            className="flex items-center bg-white/80 backdrop-blur-sm px-6 py-3 rounded-xl border border-amber-200 shadow-sm hover:shadow-md transition-all duration-200 text-amber-700 hover:bg-amber-50"
+            onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+          >
+            <Filter size={12} className="mr-2" />
+            <span className="font-medium">Time Frame: {timeFrameOptions.find(option => option.value === timeFrame)?.label}</span>
+            <ChevronDown size={15} className={`ml-3 transition-transform duration-200 ${isDropdownOpen ? 'rotate-180' : ''}`} />
+          </button>
+          
+          {isDropdownOpen && (
+            <div className="absolute top-full mt-2 w-full bg-white/95 backdrop-blur-sm border border-amber-200 rounded-xl shadow-lg z-10 overflow-hidden">
+              {timeFrameOptions.map((option) => (
+                <button
+                  key={option.value}
+                  className={`w-full px-6 py-3 text-left hover:bg-amber-50 transition-colors duration-150 ${
+                    timeFrame === option.value 
+                      ? 'bg-amber-100 text-amber-800 font-medium' 
+                      : 'text-amber-700'
+                  }`}
+                  onClick={() => {
+                    setTimeFrame(option.value);
+                    setIsDropdownOpen(false);
+                  }}
+                >
+                  {option.label}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
         
         {/* View Toggle */}
         <div className="flex bg-white/80 backdrop-blur-sm p-1 rounded-xl border border-amber-200 shadow-sm">
@@ -363,29 +410,8 @@ const AccountOverview = () => {
         </div>
       </div>
 
-      {/* Time Frame Selector - Only show on overview */}
-      {currentView === "overview" && (
-        <div className="flex justify-center mb-8">
-          <div className="flex bg-white/80 backdrop-blur-sm p-1 rounded-xl border border-amber-200 shadow-sm">
-            {["weekly", "monthly", "yearly"].map((period) => (
-              <button 
-                key={period}
-                className={`px-6 py-2 text-sm rounded-lg transition-all duration-200 capitalize ${
-                  timeFrame === period 
-                    ? "bg-gradient-to-r from-amber-500 to-orange-500 text-white shadow-md" 
-                    : "text-amber-700 hover:bg-amber-100"
-                }`}
-                onClick={() => setTimeFrame(period)}
-              >
-                {period}
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
-
       {/* Dynamic Content */}
-      {currentView === "overview" ? renderOverview() : <FinancialReport />}
+      {currentView === "overview" ? renderOverview() : <div className="text-center text-amber-700 py-12">Financial Reports section would go here</div>}
     </div>
   );
 };
