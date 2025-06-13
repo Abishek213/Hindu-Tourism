@@ -49,7 +49,6 @@ export const generateBookingPDF = async (data) => {
     if (data.invoice) {
       doc.moveDown().text('Invoice:', { underline: true });
       doc.text(`Amount: $${data.invoice.amount}`);
-      doc.text(`Status: ${data.invoice.status}`);
     }
 
     doc.end();
@@ -61,19 +60,22 @@ export const generateInvoicePDF = (invoice) => {
     const doc = new PDFDocument({ margin: 50 });
     const buffers = [];
     
-    // Buffer setup
     doc.on('data', buffers.push.bind(buffers));
     doc.on('end', () => resolve(Buffer.concat(buffers)));
     doc.on('error', reject);
 
     try {
-      // Safe data access with defaults
       const booking = invoice.booking_id || {};
       const customer = booking.customer_id || {};
       const pkg = booking.package_id || {};
       const inclusions = Array.isArray(pkg.inclusions) ? pkg.inclusions.map(String) : [];
-const exclusions = Array.isArray(pkg.exclusions) ? pkg.exclusions.map(String) : [];
+      const exclusions = Array.isArray(pkg.exclusions) ? pkg.exclusions.map(String) : [];
       const numTravelers = booking.num_travelers || 1;
+      const guide = booking.guide_id || {};
+      const transport = booking.transport_id || {};
+      
+      // Generate booking reference ID (last 6 characters)
+      const bookingReference = booking._id ? booking._id.toString().slice(-6).toUpperCase() : 'N/A';
 
       // Logo handling
       const logoPath = path.join(process.cwd(), 'uploads', 'logo', 'logo.png');
@@ -88,7 +90,7 @@ const exclusions = Array.isArray(pkg.exclusions) ? pkg.exclusions.map(String) : 
       doc.fontSize(20)
         .text('INVOICE', 200, 50, { align: 'right' })
         .fontSize(10)
-        .text(`Invoice ID: ${invoice._id}`, { align: 'right' })
+        .text(`Booking ID: ${bookingReference}`, { align: 'right' })
         .text(`Date: ${new Date(invoice.invoice_date).toLocaleDateString()}`, { align: 'right' });
 
       // Customer Information
@@ -109,33 +111,34 @@ const exclusions = Array.isArray(pkg.exclusions) ? pkg.exclusions.map(String) : 
         .text(`Base Price: $${pkg.base_price || 0}`, 50, y + 50)
         .text(`Travelers: ${numTravelers}`, 50, y + 65);
 
-      // Inclusions/Exclusions
+      // Guide and Transport Information
       y += 100;
-      doc.fontSize(12).text('Includes:', 50, y);
-      inclusions.forEach((item, index) => {
-        doc.fontSize(10).text(`• ${item}`, 50, y + 15 + (index * 15));
-      });
-
-      y += (inclusions.length * 15) + 30;
-      doc.fontSize(12).text('Excludes:', 50, y);
-      exclusions.length > 0 
-        ? exclusions.forEach((item, index) => {
-            doc.fontSize(10).text(`• ${item}`, 50, y + 15 + (index * 15));
-          })
-        : doc.fontSize(10).text('No exclusions listed', 50, y + 15);
-
+      doc.fontSize(12).text('Assigned Services:', 50, y);
+      
+      if (guide.name) {
+        doc.fontSize(10)
+          .text(`• Guide: ${guide.name} (${guide.phone || 'No phone'})`, 50, y + 20);
+        y += 20;
+      }
+      
+      if (transport.name) {
+        doc.fontSize(10)
+          .text(`• Transport: ${transport.name} (${transport.type || 'No type'})`, 50, y + 20);
+        y += 20;
+      }
+      
       // Invoice Breakdown
-      y = 450;
+      y = Math.max(y + (exclusions.length * 15) + 30, 450); // Ensure minimum y position
       doc.fontSize(12)
         .text('Amount Due:', 50, y)
         .fontSize(14)
         .text(`$${invoice.amount || 0}`, 50, y + 20)
         .fontSize(10)
-        .text(`Status: ${invoice.status.toUpperCase()}`, 50, y + 45);
 
-      // Footer
+      // Footer - dynamically positioned
+      const footerY = Math.min(doc.y + 50, 750); // Ensure footer doesn't go too low
       doc.fontSize(8)
-        .text('Thank you for your business!', 50, 780, { align: 'center' });
+        .text('Thank you for your business!', 50, footerY, { align: 'center' });
 
       doc.end();
     } catch (err) {

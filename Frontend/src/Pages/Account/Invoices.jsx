@@ -1,14 +1,15 @@
 import { useState, useEffect } from "react";
-import { X, Calendar, User, FileText, Eye } from "lucide-react";
+import { X, Calendar, User, FileText, Eye, Search } from "lucide-react";
 import { invoiceService } from "../../services/invoiceService";
+import { toast } from 'react-hot-toast';
 
 const InvoiceManagement = () => {
   const [invoices, setInvoices] = useState([]);
   const [filterStatus, setFilterStatus] = useState("all");
+  const [searchTerm, setSearchTerm] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // Status colors mapping
   const statusColors = {
     paid: 'bg-emerald-100 text-emerald-700 border-emerald-200',
     draft: 'bg-gray-100 text-gray-700 border-gray-200',
@@ -36,7 +37,30 @@ const InvoiceManagement = () => {
     pending: 'bg-orange-100 text-orange-700 border-orange-200'
   };
 
-  // Fetch invoices from backend
+  const getCustomerName = (invoice) => {
+    return invoice.booking_id?.customer_id?.name || 'Unknown Customer';
+  };
+
+  const getBookingReference = (invoice) => {
+    const bookingId = invoice.booking_id?._id;
+    if (!bookingId) return 'N/A';
+    return bookingId.toString().slice(-6).toUpperCase();
+  };
+
+  const getBookingStatus = (invoice) => {
+    return invoice.booking_id?.status || 'unknown';
+  };
+
+  const getPaymentStatus = (invoice) => {
+    if (!invoice.payments || invoice.payments.length === 0) return 'pending';
+    
+    const totalPaid = invoice.payments.reduce((sum, payment) => sum + payment.amount, 0);
+    
+    if (totalPaid >= invoice.amount) return 'paid';
+    if (totalPaid > 0) return 'partial';
+    return 'pending';
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
@@ -54,7 +78,12 @@ const InvoiceManagement = () => {
   }, []);
 
   const filteredInvoices = invoices.filter((invoice) => {
-    return filterStatus === "all" || invoice.status === filterStatus;
+    const matchesStatus = filterStatus === "all" || invoice.status === filterStatus;
+    const matchesSearch = searchTerm === "" || 
+      getCustomerName(invoice).toLowerCase().includes(searchTerm.toLowerCase()) ||
+      getBookingReference(invoice).toLowerCase().includes(searchTerm.toLowerCase());
+    
+    return matchesStatus && matchesSearch;
   });
 
   const statusBadge = (status) => {
@@ -98,34 +127,55 @@ const InvoiceManagement = () => {
     }
   };
 
-  const handleStatusChange = async (invoiceId, newStatus) => {
-    try {
-      setIsLoading(true);
-      const updatedInvoice = await invoiceService.updateInvoiceStatus(invoiceId, newStatus);
-      
-      // Update the invoice in state
-      const updatedInvoices = invoices.map(inv => 
-        inv._id === invoiceId ? updatedInvoice : inv
+const handleStatusChange = async (invoiceId, newStatus) => {
+  try {
+    setIsLoading(true);
+    
+    // Get current status before optimistic update
+    const currentInvoice = invoices.find(inv => inv._id === invoiceId);
+    const currentStatus = currentInvoice.status;
+    
+    // Only show optimistic UI update for non-email transitions
+    if (newStatus !== 'sent') {
+      setInvoices(prev => 
+        prev.map(inv => 
+          inv._id === invoiceId ? { ...inv, status: newStatus } : inv
+        )
       );
-      setInvoices(updatedInvoices);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setIsLoading(false);
     }
-  };
+    
+    const updatedInvoice = await invoiceService.updateInvoiceStatus(invoiceId, newStatus);
+    
+    // Always update with server response
+    setInvoices(prev => 
+      prev.map(inv => 
+        inv._id === invoiceId ? updatedInvoice : inv
+      )
+    );
+    
+    if (newStatus !== 'sent') {
+      toast.success('Invoice status updated successfully');
+    } else {
+      toast.success('Invoice sent successfully');
+    }
+  } catch (err) {
+    // Revert only if we did optimistic update
+    if (newStatus !== 'sent') {
+      setInvoices(prev => 
+        prev.map(inv => 
+          inv._id === invoiceId ? { ...inv, status: currentStatus } : inv
+        )
+      );
+    }
+    toast.error(err.message);
+  } finally {
+    setIsLoading(false);
+  }
+};
 
   const getStatusCount = (status) => {
     if (status === "all") return invoices.length;
     return invoices.filter(inv => inv.status === status).length;
-  };
-
-  const getCustomerName = (invoice) => {
-    return invoice.booking_id?.customer_id?.name || 'Unknown Customer';
-  };
-
-  const getBookingStatus = (invoice) => {
-    return invoice.booking_id?.status || 'unknown';
   };
 
   const getGuideStatus = (invoice) => {
@@ -134,17 +184,6 @@ const InvoiceManagement = () => {
 
   const getTransportStatus = (invoice) => {
     return invoice.booking_id?.transport_id ? 'Assigned' : 'Not Assigned';
-  };
-
-  const getPaymentStatus = (invoice) => {
-    // Calculate payment status based on payments
-    if (!invoice.payments || invoice.payments.length === 0) return 'pending';
-    
-    const totalPaid = invoice.payments.reduce((sum, payment) => sum + payment.amount, 0);
-    
-    if (totalPaid >= invoice.amount) return 'paid';
-    if (totalPaid > 0) return 'partial';
-    return 'pending';
   };
 
   if (isLoading && invoices.length === 0) {
@@ -179,7 +218,7 @@ const InvoiceManagement = () => {
     <div className="min-h-screen p-4 bg-gradient-to-br from-orange-50 to-yellow-50">
       <div className="mx-auto max-w-7xl">
         {/* Header Section */}
-        <div className="p-8 mb-8 bg-white border border-orange-100 shadow-lg rounded-2xl">
+        <div className="p-8 mb-6 bg-white border border-orange-100 shadow-lg rounded-2xl">
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-4xl font-bold text-transparent bg-gradient-to-r from-orange-400 to-yellow-500 bg-clip-text">
@@ -188,7 +227,6 @@ const InvoiceManagement = () => {
               <p className="mt-2 text-gray-600">View and manage your invoices</p>
             </div>
             <div className="flex items-center space-x-4">
-              {/* Filter Dropdown */}
               <div className="relative">
                 <select
                   value={filterStatus}
@@ -206,71 +244,99 @@ const InvoiceManagement = () => {
           </div>
         </div>
 
+        {/* Search Bar */}
+        <div className="p-6 mb-8 bg-white border border-orange-100 shadow-lg rounded-2xl">
+          <div className="relative">
+            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+            <input
+              type="text"
+              placeholder="Search by booking reference or customer name..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full pl-12 pr-4 py-3 text-gray-700 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent focus:bg-white transition-colors"
+            />
+          </div>
+        </div>
+
         {/* Invoice Table */}
         <div className="overflow-hidden bg-white border border-orange-100 shadow-lg rounded-2xl">
           <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
+            <table className="w-full">
               <thead className="bg-gradient-to-r from-orange-50 to-yellow-50">
                 <tr>
-                  <th className="px-8 py-6 text-left text-sm font-bold text-gray-700 uppercase tracking-wider">Customer</th>
-                  <th className="px-8 py-6 text-left text-sm font-bold text-gray-700 uppercase tracking-wider">Booking Status</th>
-                  <th className="px-8 py-6 text-left text-sm font-bold text-gray-700 uppercase tracking-wider">Guide Status</th>
-                  <th className="px-8 py-6 text-left text-sm font-bold text-gray-700 uppercase tracking-wider">Transport Status</th>
-                  <th className="px-8 py-6 text-left text-sm font-bold text-gray-700 uppercase tracking-wider">Payment Status</th>
-                  <th className="px-8 py-6 text-left text-sm font-bold text-gray-700 uppercase tracking-wider">Invoice Status</th>
-                  <th className="px-8 py-6 text-right text-sm font-bold text-gray-700 uppercase tracking-wider">Actions</th>
+                  <th className="px-4 py-4 text-left text-sm font-bold text-gray-700 uppercase tracking-wider whitespace-nowrap">Booking Ref</th>
+                  <th className="px-4 py-4 text-left text-sm font-bold text-gray-700 uppercase tracking-wider whitespace-nowrap">Customer</th>
+                  <th className="px-4 py-4 text-left text-sm font-bold text-gray-700 uppercase tracking-wider whitespace-nowrap">Booking Status</th>
+                  <th className="px-4 py-4 text-left text-sm font-bold text-gray-700 uppercase tracking-wider whitespace-nowrap">Guide</th>
+                  <th className="px-4 py-4 text-left text-sm font-bold text-gray-700 uppercase tracking-wider whitespace-nowrap">Transport</th>
+                  <th className="px-4 py-4 text-left text-sm font-bold text-gray-700 uppercase tracking-wider whitespace-nowrap">Payment</th>
+                  <th className="px-4 py-4 text-left text-sm font-bold text-gray-700 uppercase tracking-wider whitespace-nowrap">Invoice</th>
+                  <th className="px-4 py-4 text-right text-sm font-bold text-gray-700 uppercase tracking-wider whitespace-nowrap">Actions</th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-100">
                 {filteredInvoices.map((invoice, index) => (
                   <tr key={invoice._id} className={`hover:bg-orange-25 transition-colors duration-150 ${index % 2 === 0 ? 'bg-gray-25' : ''}`}>
-                    <td className="px-8 py-6 whitespace-nowrap font-medium text-gray-800">{getCustomerName(invoice)}</td>
-                    <td className="px-8 py-6 whitespace-nowrap">
+                    <td className="px-4 py-4 whitespace-nowrap">
+                      <span className="text-sm font-mono text-gray-600 bg-gray-100 px-2 py-1 rounded">
+                        {getBookingReference(invoice)}
+                      </span>
+                    </td>
+                    <td className="px-4 py-4 max-w-[200px] truncate font-medium text-gray-800">
+                      {getCustomerName(invoice)}
+                    </td>
+                    <td className="px-4 py-4 whitespace-nowrap">
                       {bookingStatusBadge(getBookingStatus(invoice))}
                     </td>
-                    <td className="px-8 py-6 whitespace-nowrap">
+                    <td className="px-4 py-4 whitespace-nowrap">
                       {assignmentBadge(!!invoice.booking_id?.guide_id)}
                     </td>
-                    <td className="px-8 py-6 whitespace-nowrap">
+                    <td className="px-4 py-4 whitespace-nowrap">
                       {assignmentBadge(!!invoice.booking_id?.transport_id)}
                     </td>
-                    <td className="px-8 py-6 whitespace-nowrap">
+                    <td className="px-4 py-4 whitespace-nowrap">
                       {paymentStatusBadge(getPaymentStatus(invoice))}
                     </td>
-                    <td className="px-8 py-6 whitespace-nowrap">
-                      <select
-                        value={invoice.status}
-                        onChange={(e) => handleStatusChange(invoice._id, e.target.value)}
-                        className={`appearance-none bg-transparent border rounded-md px-3 py-1 text-xs font-semibold ${statusColors[invoice.status] || 'bg-gray-100 text-gray-700 border-gray-200'}`}
-                        disabled={invoice.status === 'paid' || invoice.status === 'cancelled'}
-                      >
-                        <option value="draft">Draft</option>
-                        <option value="sent">Sent</option>
-                        <option value="paid">Paid</option>
-                        <option value="cancelled">Cancel</option>
-                      </select>
-                    </td>
-                    <td className="px-8 py-6 whitespace-nowrap text-right text-sm font-medium space-x-4">
+                    <td className="px-4 py-4 whitespace-nowrap">
+  <select
+    value={invoice.status}
+    onChange={(e) => handleStatusChange(invoice._id, e.target.value)}
+    className={`appearance-none bg-transparent border rounded-md px-3 py-1 text-xs font-semibold ${statusColors[invoice.status] || 'bg-gray-100 text-gray-700 border-gray-200'}`}
+    disabled={invoice.status === 'paid' || invoice.status === 'cancelled'}
+  >
+    {['draft', 'sent', 'paid', 'cancelled'].includes(invoice.status) && (
+      <option value={invoice.status} disabled>
+        {invoice.status.charAt(0).toUpperCase() + invoice.status.slice(1)}
+      </option>
+    )}
+    {invoice.status !== 'sent' && <option value="sent">Sent</option>}
+    {invoice.status !== 'paid' && <option value="paid">Paid</option>}
+    {invoice.status !== 'cancelled' && <option value="cancelled">Cancel Invoice</option>}
+  </select>
+</td>
+                    <td className="px-4 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
                       <button 
                         onClick={() => handleDownloadPDF(invoice._id)}
                         className="inline-flex items-center font-semibold text-blue-500 transition-colors duration-150 hover:text-blue-700"
+                        title="Download PDF"
                       >
-                        <FileText className="w-4 h-4 mr-1" />
-                        PDF
+                        <FileText className="w-4 h-4" />
                       </button>
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
-
-            {filteredInvoices.length === 0 && (
-              <div className="py-16 text-center">
-                <FileText className="w-16 h-16 mx-auto mb-4 text-gray-300" />
-                <p className="text-lg text-gray-500">No invoices found for the selected filter</p>
-              </div>
-            )}
           </div>
+
+          {filteredInvoices.length === 0 && (
+            <div className="py-16 text-center">
+              <FileText className="w-16 h-16 mx-auto mb-4 text-gray-300" />
+              <p className="text-lg text-gray-500">
+                {searchTerm ? 'No invoices found matching your search' : 'No invoices found for the selected filter'}
+              </p>
+            </div>
+          )}
         </div>
       </div>
     </div>
