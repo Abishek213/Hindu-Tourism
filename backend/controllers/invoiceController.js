@@ -1,7 +1,7 @@
 import Invoice from '../models/Invoice.js';
 import { generateInvoicePDF } from '../services/pdfService.js';
 import { NotFoundError, ValidationError } from '../utils/validators.js';
-import { sendInvoiceEmail } from '../services/emailService.js';
+import { sendInvoiceEmail, sendPaymentConfirmationEmail, sendCancellationEmail } from '../services/emailService.js';
 import { logError } from '../utils/logger.js';
 
 export const getInvoices = async (req, res, next) => {
@@ -56,12 +56,13 @@ export const updateInvoiceStatus = async (req, res, next) => {
         const originalStatus = invoice.status;
         if (originalStatus === status) return res.json(invoice);
 
-        // Prevent email sending if status is changing between non-draft states
-        const shouldSendEmail = originalStatus === 'draft' && status === 'sent' && !invoice.emailSent;
+        const shouldSendInvoiceEmail = originalStatus === 'draft' && status === 'sent' && !invoice.emailSent;
+        const shouldSendPaymentEmail = status === 'paid';
+        const shouldSendCancellationEmail = status === 'cancelled';
 
         invoice.status = status;
         
-        if (shouldSendEmail) {
+        if (shouldSendInvoiceEmail) {
             invoice.emailSent = true;
         }
 
@@ -75,10 +76,20 @@ export const updateInvoiceStatus = async (req, res, next) => {
 
         res.json(updatedInvoice);
 
-        if (shouldSendEmail) {
+        if (shouldSendInvoiceEmail) {
             sendInvoiceEmail(req.params.id)
                 .catch(err => {
                     logError('Error sending invoice email:', err);
+                });
+        } else if (shouldSendPaymentEmail) {
+            sendPaymentConfirmationEmail(req.params.id)
+                .catch(err => {
+                    logError('Error sending payment confirmation email:', err);
+                });
+        } else if (shouldSendCancellationEmail) {
+            sendCancellationEmail(req.params.id)
+                .catch(err => {
+                    logError('Error sending cancellation email:', err);
                 });
         }
     } catch (error) {
@@ -93,7 +104,9 @@ export const downloadInvoicePDF = async (req, res, next) => {
                 path: 'booking_id',
                 populate: [
                     { path: 'customer_id', select: 'name email phone' },
-                    { path: 'package_id', select: 'title base_price inclusions' }
+                    { path: 'package_id', select: 'title base_price duration_days inclusions exclusions' },
+                    { path: 'guide_id', select: 'name phone' },
+                    { path: 'transport_id', select: 'name type' }
                 ]
             });
 
@@ -101,7 +114,23 @@ export const downloadInvoicePDF = async (req, res, next) => {
             throw new NotFoundError('Invoice not found');
         }
 
-        const pdfBuffer = await generateInvoicePDF(invoice);
+        // Transform the data to match what generateInvoicePDF expects
+        const pdfData = {
+            ...invoice.toObject(),
+            booking_id: {
+                ...invoice.booking_id.toObject(),
+                customer_id: invoice.booking_id?.customer_id,
+                package_id: {
+                    ...invoice.booking_id?.package_id?.toObject(),
+                    inclusions: invoice.booking_id?.package_id?.inclusions || [],
+                    exclusions: invoice.booking_id?.package_id?.exclusions || []
+                },
+                guide_id: invoice.booking_id?.guide_id || null,
+                transport_id: invoice.booking_id?.transport_id || null
+            }
+        };
+
+        const pdfBuffer = await generateInvoicePDF(pdfData);
         
         res.setHeader('Content-Type', 'application/pdf');
         res.setHeader('Content-Disposition', `attachment; filename=invoice_${invoice._id}.pdf`);
