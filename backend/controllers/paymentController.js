@@ -1,12 +1,10 @@
 import Payment from '../models/Payment.js';
 import Booking from '../models/Booking.js';
 import Invoice from '../models/Invoice.js';
-import Package from '../models/Package.js';
 
 // Create a new payment
 export const createPayment = async (req, res) => {
     try {
-        // Add 'status' to destructuring to allow frontend to send it
         const { booking_id, amount, payment_date, payment_method, transaction_id, notes, status } = req.body;
 
         // Validate required fields
@@ -16,13 +14,13 @@ export const createPayment = async (req, res) => {
             });
         }
 
-        // Check if booking exists (Mongoose)
+        // Check if booking exists
         const booking = await Booking.findById(booking_id);
         if (!booking) {
             return res.status(404).json({ error: 'Booking not found' });
         }
 
-        // Create payment (Mongoose)
+        // Create payment
         const payment = new Payment({
             booking_id,
             amount,
@@ -35,10 +33,12 @@ export const createPayment = async (req, res) => {
 
         await payment.save();
 
-        // Update invoice status
-        await updateInvoiceStatus(booking_id);
+        // Only update invoice if payment status is 'completed' or 'advance'
+        if (['completed', 'advance'].includes(payment.status)) {
+            await updateInvoiceStatus(booking_id);
+        }
 
-        // Populate booking_id for the response, so frontend can immediately show customer details
+        // Populate booking_id for the response
         const populatedPayment = await Payment.findById(payment._id).populate({
             path: 'booking_id',
             select: 'customer_name booking_ref_id'
@@ -71,7 +71,7 @@ export const getAllPayments = async (req, res) => {
                     }
                 ]
             })
-            .sort({ payment_date: -1 }); // Sort by most recent payment
+            .sort({ payment_date: -1 });
 
         res.json(payments);
     } catch (error) {
@@ -81,128 +81,115 @@ export const getAllPayments = async (req, res) => {
 };
 
 export const getLatestPaymentsPerBooking = async (req, res) => {
-  try {
-    const payments = await Payment.aggregate([
-      {
-        $sort: { payment_date: -1 }
-      },
-      {
-        $group: {
-          _id: "$booking_id",
-          latestPayment: { $first: "$$ROOT" }
-        }
-      }
-    ]);
+    try {
+        const payments = await Payment.aggregate([
+            {
+                $sort: { payment_date: -1 }
+            },
+            {
+                $group: {
+                    _id: "$booking_id",
+                    latestPayment: { $first: "$$ROOT" }
+                }
+            }
+        ]);
 
-    // Extract latest payment IDs
-    const paymentIds = payments.map(p => p.latestPayment._id);
+        const paymentIds = payments.map(p => p.latestPayment._id);
 
-    // Fetch full payment docs with population
-    const populated = await Payment.find({ _id: { $in: paymentIds } })
-      .populate({
-        path: 'booking_id',
-        // Important: Populate customer and package for the main table
-        // We will fetch payment summary separately for overlay
-        populate: [
-          { path: 'customer_id', select: 'name email phone' },
-          { path: 'package_id', select: 'title base_price' }
-        ]
-      });
+        const populated = await Payment.find({ _id: { $in: paymentIds } })
+            .populate({
+                path: 'booking_id',
+                populate: [
+                    { path: 'customer_id', select: 'name email phone' },
+                    { path: 'package_id', select: 'title base_price' }
+                ]
+            });
 
-    res.json(populated);
-  } catch (error) {
-    console.error('Error in getLatestPaymentsPerBooking:', error);
-    res.status(500).json({ error: error.message });
-  }
+        res.json(populated);
+    } catch (error) {
+        console.error('Error in getLatestPaymentsPerBooking:', error);
+        res.status(500).json({ error: error.message });
+    }
 };
-
 
 export const recordPayment = async (req, res, next) => {
-  try {
-    const { booking_id, amount, payment_method, transaction_id, notes, status } = req.body;
+    try {
+        const { booking_id, amount, payment_method, transaction_id, notes, status } = req.body;
 
-    // Validate required fields
-    if (!booking_id || !amount || !payment_method) {
-      return res.status(400).json({ error: 'Booking ID, amount, and payment method are required.' });
+        // Validate required fields
+        if (!booking_id || !amount || !payment_method) {
+            return res.status(400).json({ error: 'Booking ID, amount, and payment method are required.' });
+        }
+
+        // Validate amount is a positive number
+        if (isNaN(amount) || parseFloat(amount) <= 0) {
+            return res.status(400).json({ error: 'Amount must be a positive number.' });
+        }
+
+        const booking = await Booking.findById(booking_id).populate('package_id');
+        if (!booking) {
+            return res.status(404).json({ error: 'Booking not found.' });
+        }
+
+        if (!booking.package_id || !booking.package_id.base_price) {
+            return res.status(400).json({ error: 'Package information (base_price) is missing for this booking.' });
+        }
+
+        const payments = await Payment.find({ booking_id, status: { $in: ['completed', 'advance'] } });
+        const totalPaid = payments.reduce((sum, payment) => sum + payment.amount, 0);
+        const packageAmount = booking.package_id.base_price;
+        const newTotalPaid = totalPaid + parseFloat(amount);
+
+        let overallStatus = 'pending';
+        if (newTotalPaid >= packageAmount) {
+            overallStatus = 'completed';
+        } else if (newTotalPaid > 0) {
+            overallStatus = 'advance';
+        }
+
+        const newPayment = await Payment.create({
+            booking_id,
+            amount: parseFloat(amount),
+            payment_method,
+            transaction_id: transaction_id || null,
+            notes: notes || null,
+            status: status || 'pending',
+            payment_date: new Date()
+        });
+
+        await Booking.findByIdAndUpdate(booking_id, {
+            overallPaymentStatus: overallStatus
+        });
+
+        // Only update invoice if payment status is 'completed' or 'advance'
+        if (['completed', 'advance'].includes(status)) {
+            await updateInvoiceStatus(booking_id);
+        }
+
+        const populatedPayment = await Payment.findById(newPayment._id)
+            .populate({
+                path: 'booking_id',
+                populate: [
+                    { path: 'customer_id', select: 'name email phone' },
+                    { path: 'package_id', select: 'title base_price' }
+                ]
+            });
+
+        res.status(201).json(populatedPayment);
+    } catch (error) {
+        console.error('Error recording payment:', error);
+        res.status(500).json({
+            error: 'Failed to record payment',
+            details: process.env.NODE_ENV === 'development' ? error.stack : undefined
+        });
     }
-
-    // Validate amount is a positive number
-    if (isNaN(amount) || parseFloat(amount) <= 0) {
-      return res.status(400).json({ error: 'Amount must be a positive number.' });
-    }
-
-    const booking = await Booking.findById(booking_id).populate('package_id');
-    if (!booking) {
-      return res.status(404).json({ error: 'Booking not found.' });
-    }
-
-    if (!booking.package_id || !booking.package_id.base_price) {
-        return res.status(400).json({ error: 'Package information (base_price) is missing for this booking.' });
-    }
-
-    // --- IMPORTANT CHANGE HERE: Include 'advance' payments in totalPaid calculation ---
-    const payments = await Payment.find({ booking_id, status: { $in: ['completed', 'advance'] } });
-    const totalPaid = payments.reduce((sum, payment) => sum + payment.amount, 0);
-    const packageAmount = booking.package_id.base_price;
-    const newTotalPaid = totalPaid + parseFloat(amount); // Add the new payment amount
-
-    // Determine overall payment status based on new total paid
-    let overallStatus = 'pending'; // Default
-    if (newTotalPaid >= packageAmount) {
-      overallStatus = 'completed';
-    } else if (newTotalPaid > 0) {
-      overallStatus = 'advance';
-    }
-
-    // Create the payment record with the status determined by the frontend logic
-    // The frontend sends 'completed' or 'advance' based on `paymentAmount >= dueAmount`
-    const newPayment = await Payment.create({
-      booking_id,
-      amount: parseFloat(amount),
-      payment_method,
-      transaction_id: transaction_id || null,
-      notes: notes || null,
-      status: status || 'pending', // Use the status sent from frontend, default to 'pending'
-      payment_date: new Date()
-    });
-
-    // Then update the booking's overallPaymentStatus in the database
-    await Booking.findByIdAndUpdate(booking_id, {
-      overallPaymentStatus: overallStatus
-    });
-
-    // Update invoice status (this helper should also be adjusted if it only looks at 'completed')
-    await updateInvoiceStatus(booking_id);
-
-    // Return the payment with populated booking data for frontend confirmation
-    const populatedPayment = await Payment.findById(newPayment._id)
-      .populate({
-        path: 'booking_id',
-        // Populate customer and package info for the response
-        populate: [
-          { path: 'customer_id', select: 'name email phone' },
-          { path: 'package_id', select: 'title base_price' }
-        ]
-      });
-
-    res.status(201).json(populatedPayment);
-  } catch (error) {
-    console.error('Error recording payment:', error);
-    res.status(500).json({
-      error: 'Failed to record payment',
-      details: process.env.NODE_ENV === 'development' ? error.stack : undefined
-    });
-  }
 };
-// Get all payments for a booking
+
 export const getPaymentsByBooking = async (req, res) => {
     try {
         const { booking_id } = req.params;
-
-        // Find payments (Mongoose)
         const payments = await Payment.find({ booking_id })
-            .sort({ payment_date: -1 }); // Descending order
-
+            .sort({ payment_date: -1 });
         res.json(payments);
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -210,74 +197,73 @@ export const getPaymentsByBooking = async (req, res) => {
 };
 
 export const getPaymentSummary = async (req, res) => {
-  try {
-    const { booking_id } = req.params;
+    try {
+        const { booking_id } = req.params;
 
-    const booking = await Booking.findById(booking_id).populate('package_id');
-    if (!booking) {
-      return res.status(404).json({ error: 'Booking not found' });
+        const booking = await Booking.findById(booking_id).populate('package_id');
+        if (!booking) {
+            return res.status(404).json({ error: 'Booking not found' });
+        }
+
+        const total_amount = booking.package_id ? booking.package_id.base_price : 0;
+        const payments = await Payment.find({ booking_id, status: { $in: ['completed', 'advance'] } });
+        const total_paid_amount = payments.reduce((sum, payment) => sum + payment.amount, 0);
+        const due_amount = Math.max(0, total_amount - total_paid_amount);
+
+        res.json({
+            booking_id: booking._id,
+            total_amount,
+            total_paid_amount,
+            due_amount,
+            payments_count: payments.length,
+            overall_payment_status: booking.overallPaymentStatus ||
+                (total_paid_amount >= total_amount ? 'completed' :
+                    (total_paid_amount > 0 ? 'advance' : 'pending'))
+        });
+    } catch (error) {
+        console.error('Error getting payment summary:', error);
+        res.status(500).json({
+            error: error.message,
+            details: process.env.NODE_ENV === 'development' ? error.stack : undefined
+        });
     }
-
-    const total_amount = booking.package_id ? booking.package_id.base_price : 0;
-    // --- IMPORTANT CHANGE HERE: Include 'advance' payments in total_paid_amount calculation ---
-    const payments = await Payment.find({ booking_id, status: { $in: ['completed', 'advance'] } });
-    const total_paid_amount = payments.reduce((sum, payment) => sum + payment.amount, 0);
-    const due_amount = Math.max(0, total_amount - total_paid_amount);
-
-    res.json({
-      booking_id: booking._id,
-      total_amount,
-      total_paid_amount,
-      due_amount,
-      payments_count: payments.length,
-      // The overall_payment_status should ideally come from the booking document itself,
-      // which is updated in recordPayment. This provides consistency.
-      overall_payment_status: booking.overallPaymentStatus ||
-                            (total_paid_amount >= total_amount ? 'completed' :
-                             (total_paid_amount > 0 ? 'advance' : 'pending'))
-    });
-  } catch (error) {
-    console.error('Error getting payment summary:', error);
-    res.status(500).json({
-      error: error.message,
-      details: process.env.NODE_ENV === 'development' ? error.stack : undefined
-    });
-  }
 };
 
-
-// Update payment status
 export const updatePaymentStatus = async (req, res) => {
     try {
         const { payment_id } = req.params;
         const { status } = req.body;
 
-        // Validate status in request body
         if (!status) {
             return res.status(400).json({ error: "Status is required" });
         }
 
-        // Find and update payment (Mongoose)
-        const payment = await Payment.findByIdAndUpdate(
-            payment_id,
-            { status },
-            { new: true } // Return updated document
-        );
-
-        if (!payment) {
+        const currentPayment = await Payment.findById(payment_id);
+        if (!currentPayment) {
             return res.status(404).json({ error: 'Payment not found' });
         }
 
-        // After updating a payment's status, recalculate overall status for the booking
+        if (currentPayment.status === status) {
+            return res.json(currentPayment);
+        }
+
+        const payment = await Payment.findByIdAndUpdate(
+            payment_id,
+            { status },
+            { new: true }
+        );
+
         await recalculateBookingOverallStatus(payment.booking_id);
-        await updateInvoiceStatus(payment.booking_id);
+        
+        if (['completed', 'advance'].includes(status)) {
+            await updateInvoiceStatus(payment.booking_id);
+        }
 
         res.json(payment);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 };
-
 
 export const updatePayment = async (req, res) => {
     try {
@@ -292,7 +278,6 @@ export const updatePayment = async (req, res) => {
         if (notes !== undefined) updatedFields.notes = notes;
         if (status) updatedFields.status = status;
 
-
         const payment = await Payment.findByIdAndUpdate(
             payment_id,
             { $set: updatedFields },
@@ -303,9 +288,9 @@ export const updatePayment = async (req, res) => {
             return res.status(404).json({ error: 'Payment not found' });
         }
 
-        // After updating a payment, recalculate overall status for the booking
-        // await recalculateBookingOverallStatus(payment.booking_id);
-        await updateInvoiceStatus(payment.booking_id);
+        if (status && ['completed', 'advance'].includes(status)) {
+            await updateInvoiceStatus(payment.booking_id);
+        }
 
         res.json(payment);
     } catch (error) {
@@ -317,50 +302,52 @@ export const updatePayment = async (req, res) => {
     }
 };
 
-// Helper function to recalculate and update the booking's overallPaymentStatus
-// const recalculateBookingOverallStatus = async (booking_id) => {
-//     const booking = await Booking.findById(booking_id).populate('package_id');
-//     if (!booking) return;
-
-//     const total_amount = booking.package_id ? booking.package_id.base_price : 0;
-//     // Include 'completed' and 'advance' payments for this calculation
-//     const payments = await Payment.find({ booking_id, status: { $in: ['completed', 'advance'] } });
-//     const total_paid_amount = payments.reduce((sum, payment) => sum + payment.amount, 0);
-
-//     let newOverallStatus = 'pending';
-//     if (total_paid_amount >= total_amount) {
-//         newOverallStatus = 'completed';
-//     } else if (total_paid_amount > 0) {
-//         newOverallStatus = 'advance';
-//     }
-
-//     if (booking.overallPaymentStatus !== newOverallStatus) {
-//         booking.overallPaymentStatus = newOverallStatus;
-//         await booking.save();
-//     }
-// };
-
-
 // Helper function to update invoice status
 const updateInvoiceStatus = async (booking_id) => {
     const invoice = await Invoice.findOne({ booking_id });
     if (!invoice) return;
 
-    // IMPORTANT: Invoice status should also consider 'advance' payments if they are part of "paid"
     const payments = await Payment.find({
         booking_id,
-        status: { $in: ['completed', 'advance'] } // Include advance payments for invoice status
+        status: { $in: ['completed', 'advance'] }
     });
 
     const totalPaid = payments.reduce((sum, payment) => sum + payment.amount, 0);
+    const originalStatus = invoice.status;
 
+    let newStatus = originalStatus;
     if (totalPaid >= invoice.amount) {
-        invoice.status = 'paid';
+        newStatus = 'paid';
     } else if (totalPaid > 0) {
-        invoice.status = 'sent'; // Or 'partial_paid' if you have such a status
+        newStatus = 'sent';
     } else {
-        invoice.status = 'draft';
+        newStatus = 'draft';
     }
 
-    await invoice.save();
+    if (newStatus !== originalStatus) {
+        invoice.status = newStatus;
+        await invoice.save();
+    }
+};
+
+// Helper function to recalculate and update the booking's overallPaymentStatus
+const recalculateBookingOverallStatus = async (booking_id) => {
+    const booking = await Booking.findById(booking_id).populate('package_id');
+    if (!booking) return;
+
+    const total_amount = booking.package_id ? booking.package_id.base_price : 0;
+    const payments = await Payment.find({ booking_id, status: { $in: ['completed', 'advance'] } });
+    const total_paid_amount = payments.reduce((sum, payment) => sum + payment.amount, 0);
+
+    let newOverallStatus = 'pending';
+    if (total_paid_amount >= total_amount) {
+        newOverallStatus = 'completed';
+    } else if (total_paid_amount > 0) {
+        newOverallStatus = 'advance';
+    }
+
+    if (booking.overallPaymentStatus !== newOverallStatus) {
+        booking.overallPaymentStatus = newOverallStatus;
+        await booking.save();
+    }
 };
