@@ -13,10 +13,8 @@ import {
 } from "lucide-react";
 import api from "../../api/auth";
 import { debounce } from "lodash";
-import { ChevronDown } from "lucide-react";
 
 export default function LeadManagement() {
-  // Lead list state
   const [leads, setLeads] = useState([]);
   const [filteredLeads, setFilteredLeads] = useState([]);
   const [loading, setLoading] = useState(false);

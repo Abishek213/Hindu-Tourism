@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import api from "../../api/auth";
 import { toast } from "react-toastify";
+import { AssignTeamService } from "../../services/AssignTeamService";
 
 export default function AssignTeamForm() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -13,31 +13,23 @@ export default function AssignTeamForm() {
   const [fetchingData, setFetchingData] = useState(false);
   const [isManualRefresh, setIsManualRefresh] = useState(false);
 
+  // Fetch data from backend
   const fetchData = async (isManual = false) => {
     try {
       setFetchingData(true);
       setIsManualRefresh(isManual);
 
-      const [bookingsRes, guidesRes, transportsRes] = await Promise.all([
-        api.get("/booking"),
-        api.get("/guide"),
-        api.get("/transport"),
-      ]);
+      const { bookings, guides, transports } = await AssignTeamService.fetchAllData();
 
-      setConfirmedBookings(
-        bookingsRes.data.filter((b) => b.status === "confirmed")
-      );
-      setAvailableGuides(guidesRes.data.filter((g) => g.is_active));
-      setAvailableTransports(transportsRes.data.filter((t) => t.is_active));
+      setConfirmedBookings(bookings.filter((b) => b.status === "confirmed"));
+      setAvailableGuides(guides.filter((g) => g.is_active));
+      setAvailableTransports(transports.filter((t) => t.is_active));
 
       if (isManual) {
         toast.success("Data refreshed successfully!");
       }
     } catch (error) {
-      toast.error(
-        "Failed to fetch data: " +
-          (error.response?.data?.error || error.message)
-      );
+      toast.error("Failed to fetch data: " + error.message);
       console.error("Fetch error:", error);
     } finally {
       setIsLoading(false);
@@ -137,20 +129,14 @@ export default function AssignTeamForm() {
     setSubmittingBookings((prev) => new Set(prev).add(bookingId));
 
     try {
+      // Process each assignment for this booking
       const results = await Promise.all(
         bookingAssignments.map(async (assignment) => {
           try {
             if (assignment.type === "guide") {
-              await api.put(`/guide/${assignment.bookingId}/assignguide`, {
-                guide_id: assignment.resourceId,
-              });
+              await AssignTeamService.assignGuide(assignment.bookingId, assignment.resourceId);
             } else {
-              await api.put(
-                `/transport/${assignment.bookingId}/assigntransport`,
-                {
-                  transport_id: assignment.resourceId,
-                }
-              );
+              await AssignTeamService.assignTransport(assignment.bookingId, assignment.resourceId);
             }
             return { success: true, id: assignment.id, assignment };
           } catch (error) {
@@ -163,6 +149,7 @@ export default function AssignTeamForm() {
         })
       );
 
+      // Check results
       const successfulAssignments = results.filter((r) => r.success);
       const failedAssignments = results.filter((r) => !r.success);
 
@@ -177,6 +164,7 @@ export default function AssignTeamForm() {
         );
 
         if (bookingIndex >= 0) {
+          // Update all assignments first
           successfulAssignments.forEach(({ assignment }) => {
             updatedBookings[bookingIndex] = {
               ...updatedBookings[bookingIndex],
@@ -185,30 +173,30 @@ export default function AssignTeamForm() {
           });
 
           const updatedBooking = updatedBookings[bookingIndex];
+
+          // Only proceed with status updates if we have both guide and transport
           if (updatedBooking.guide_id && updatedBooking.transport_id) {
             try {
-              // First update booking status
-              await api.put(`/booking/${bookingId}/status`, {
-                status: "completed",
-              });
+              // Update booking status
+              await AssignTeamService.updateBookingStatus(bookingId, "completed");
 
               updatedBookings[bookingIndex] = {
                 ...updatedBookings[bookingIndex],
                 status: "completed",
               };
 
-              // Then check for invoice and update status only once
-              const invoiceResponse = await api.get(
-                `/invoice?booking_id=${bookingId}`
-              );
-              if (invoiceResponse.data.length > 0) {
-                const invoiceId = invoiceResponse.data[0]._id;
-                // Only update invoice status if it's not already 'sent'
-                if (invoiceResponse.data[0].status !== "sent") {
-                  await api.put(`/invoice/${invoiceId}/status`, {
-                    status: "sent",
-                  });
-                  toast.success("Booking marked as completed and invoice sent");
+              // Then handle invoice
+              const invoiceData = await AssignTeamService.getInvoiceForBooking(bookingId);
+
+              if (invoiceData.length > 0) {
+                const invoiceId = invoiceData[0]._id;
+                const currentInvoiceStatus = invoiceData[0].status;
+
+                if (currentInvoiceStatus !== "sent") {
+                  await AssignTeamService.updateInvoiceStatus(invoiceId, "sent");
+                  toast.success(
+                    "Booking marked as completed and invoice sent"
+                  );
                 } else {
                   toast.success(
                     "Booking marked as completed (invoice was already sent)"
@@ -222,6 +210,7 @@ export default function AssignTeamForm() {
               toast.error("Failed to update booking/invoice status");
             }
           }
+
           setConfirmedBookings(updatedBookings);
         }
       }
@@ -230,6 +219,7 @@ export default function AssignTeamForm() {
         toast.error(`Failed to assign ${failedAssignments.length} items`);
       }
 
+      // Remove processed assignments
       setPendingAssignments((prev) =>
         prev.filter((a) => a.bookingId !== bookingId)
       );
@@ -249,6 +239,7 @@ export default function AssignTeamForm() {
     return pendingAssignments.filter((a) => a.bookingId === bookingId);
   };
 
+  // Filter bookings based on search query
   const filteredBookings = confirmedBookings.filter(
     (booking) =>
       booking.bookingRef?.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -265,8 +256,7 @@ export default function AssignTeamForm() {
 
   if (isLoading) {
     return (
-
-      <div className="p-4 bg-white rounded-lg shadow-md p-6 flex items-center justify-center">
+      <div className="p-4 bg-white rounded-lg shadow-md flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-orange-500 mx-auto mb-4"></div>
           <p className="text-orange-700">Loading bookings and resources...</p>
@@ -310,39 +300,44 @@ export default function AssignTeamForm() {
                 />
               </svg>
             </div>
-          
 
-                  <input
+            <input
               type="text"
               placeholder="Search by customer, email, or package..."
               className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent text-sm"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
-
           </div>
         </div>
       </div>
 
       {/* Confirmed Bookings Table */}
       <h2 className="p-1 text-2xl font-bold text-black">Confirmed Bookings</h2>
-      
+
       <div className="bg-white rounded-xl border-orange-100 overflow-hidden">
-
-        <h2 className="text-2xl font-bold text-black">Confirmed Bookings</h2>
-
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead className=" px-8 py-6 bg-secondary-green">
+            <thead className="px-8 py-6 bg-secondary-green">
               <tr>
-
-                <th className="px-4 py-3 text-left text-sm font-semibold text-white uppercase tracking-wider">Booking Details</th>
-                <th className="px-4 py-3 text-left text-sm font-semibold text-white uppercase tracking-wider">Customer</th>
-                <th className="px-4 py-3 text-left text-sm font-semibold text-white uppercase tracking-wider">Schedule</th>
-                <th className="px-4 py-3 text-left text-sm font-semibold text-white uppercase tracking-wider">Guide</th>
-                <th className="px-4 py-3 text-left text-sm font-semibold text-white uppercase tracking-wider">Transport</th>
-                <th className="px-4 py-3 text-left text-sm font-semibold text-white uppercase tracking-wider">Action</th>
-
+                <th className="px-4 py-3 text-left text-sm font-semibold text-white uppercase tracking-wider">
+                  Booking Details
+                </th>
+                <th className="px-4 py-3 text-left text-sm font-semibold text-white uppercase tracking-wider">
+                  Customer
+                </th>
+                <th className="px-4 py-3 text-left text-sm font-semibold text-white uppercase tracking-wider">
+                  Schedule
+                </th>
+                <th className="px-4 py-3 text-left text-sm font-semibold text-white uppercase tracking-wider">
+                  Guide
+                </th>
+                <th className="px-4 py-3 text-left text-sm font-semibold text-white uppercase tracking-wider">
+                  Transport
+                </th>
+                <th className="px-4 py-3 text-left text-sm font-semibold text-white uppercase tracking-wider">
+                  Action
+                </th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
