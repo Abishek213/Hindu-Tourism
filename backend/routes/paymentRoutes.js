@@ -5,7 +5,9 @@ import {
     updatePaymentStatus,
      updatePayment,
      getAllPayments ,
-     getPaymentSummaryByBookingId
+     getPaymentSummary,
+     recordPayment,
+     getLatestPaymentsPerBooking
 } from '../controllers/paymentController.js';
 import { protect } from '../middleware/auth.js';
 import { checkRole } from '../middleware/roleCheck.js';
@@ -18,6 +20,19 @@ router.post('/',
     checkRole('Admin', 'Accountant', 'Sales Agent'), // Added 'Sales Agent' as they might need to create payments
     createPayment
 );
+
+router.put('/record',
+    protect,
+    checkRole('Admin', 'Accountant', 'Sales Agent'),
+    recordPayment
+);
+
+router.get('/latest-per-booking',
+  protect,
+  checkRole('Admin', 'Accountant', 'Sales Agent', 'Operation Team'),
+  getLatestPaymentsPerBooking
+);
+
 
 router.get('/',
     protect,
@@ -36,7 +51,7 @@ router.get('/booking/:booking_id',
 router.get('/summary/:booking_id',
     protect,
     checkRole('Admin', 'Accountant', 'Sales Agent', 'Operation Team'), // Anyone who can view payments should see summary
-    getPaymentSummaryByBookingId
+    getPaymentSummary
 );
 
 // Update payment status (accessible by admin, accountant)
