@@ -3,6 +3,7 @@ import Lead from '../models/Lead.js';
 import Customer from '../models/Customer.js';
 import Package from '../models/Package.js';
 import Invoice from '../models/Invoice.js';
+import Payment from '../models/Payment.js';
 import BookingService from '../models/BookingService.js';
 import OptionalService from '../models/OptionalService.js';
 import { generateBookingPDF as generateBookingPDFHelper } from '../services/pdfService.js';
@@ -104,6 +105,16 @@ export const createBooking = async (req, res, next) => {
       status: 'draft'
     });
 
+     const initialPayment = await Payment.create({
+      booking_id: booking._id,
+      amount: totalAmount, // Initial payment amount is the total booking amount
+      payment_method: 'other', // Default to 'other' or a suitable default
+      status: 'pending', // Initial status is pending
+      notes: 'Initial payment entry upon booking creation'
+    });
+
+
+
     // Send booking confirmation email (don't await to avoid blocking the response)
     sendBookingConfirmationEmail(booking._id)
       .then(result => {
@@ -119,7 +130,8 @@ export const createBooking = async (req, res, next) => {
     res.status(201).json({
       booking,
       services: createdServices,
-      invoice
+      invoice,
+      initialPayment
     });
 
   } catch (error) {
