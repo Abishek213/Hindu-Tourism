@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { toast } from 'react-toastify';
-import { Plus } from 'lucide-react';
-import * as packageService from '../../services/packageService';
+import React, { useState, useEffect } from "react";
+import { toast } from "react-toastify";
+import { Plus } from "lucide-react";
+import * as packageService from "../../services/packageService";
 import {
   PackageFormModal,
   ItineraryViewModal,
@@ -12,8 +12,8 @@ import {
   DayCard,
   EmptyItinerary,
   emptyPackage,
-  emptyItinerary
-} from '../../Components/Operation/PackageComponents';
+  emptyItinerary,
+} from "../../Components/Operation/PackageComponents";
 
 const PackageDashboard = () => {
   const [packages, setPackages] = useState([]);
@@ -23,7 +23,7 @@ const PackageDashboard = () => {
     createForm: false,
     editForm: false,
     itineraryView: false,
-    itineraryForm: false
+    itineraryForm: false,
   });
   const [selectedPackage, setSelectedPackage] = useState(null);
   const [formData, setFormData] = useState({ ...emptyPackage });
@@ -35,68 +35,77 @@ const PackageDashboard = () => {
       else setIsLoading(true);
 
       const data = await packageService.getAllPackages();
-      const transformedPackages = data.map(pkg => ({
+      const transformedPackages = data.map((pkg) => ({
         id: pkg._id,
         name: pkg.title,
         duration: pkg.duration_days,
         price: pkg.base_price,
         destinations: pkg.description,
-        status: pkg.is_active ? 'Active' : 'Inactive',
-        itinerary: (pkg.itineraries || []).map(it => ({
+        status: pkg.is_active ? "Active" : "Inactive",
+        itinerary: (pkg.itineraries || []).map((it) => ({
           id: it._id,
           day: it.day_number,
           title: it.title,
           description: it.description,
           meals: it.meals,
-          accommodation: it.accommodation
-        }))
+          accommodation: it.accommodation,
+        })),
       }));
 
       setPackages(transformedPackages);
       if (selectedPackage) {
-        const updatedPkg = transformedPackages.find(p => p.id === selectedPackage.id);
+        const updatedPkg = transformedPackages.find(
+          (p) => p.id === selectedPackage.id
+        );
         if (updatedPkg) setSelectedPackage(updatedPkg);
       }
     } catch (error) {
-      toast.error('Failed to load packages');
-      console.error('Error:', error);
+      toast.error("Failed to load packages");
+      console.error("Error:", error);
     } finally {
       setIsLoading(false);
       setIsRefreshing(false);
     }
   };
 
-  useEffect(() => { fetchPackages(); }, []);
+  useEffect(() => {
+    fetchPackages();
+  }, []);
 
   const handleFormInputChange = (e) => {
-    setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
+    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
   const handleItineraryInputChange = (e) => {
-    setItineraryData(prev => ({ ...prev, [e.target.name]: e.target.value }));
+    setItineraryData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
   const openCreateModal = () => {
-    setFormData({ ...emptyPackage, status: 'Active' });
-    setModalState(prev => ({ ...prev, createForm: true }));
+    setFormData({ ...emptyPackage, status: "Active" });
+    setModalState((prev) => ({ ...prev, createForm: true }));
   };
 
   const openEditModal = (pkg) => {
     setSelectedPackage(pkg);
-    setFormData({ 
+    setFormData({
       name: pkg.name,
       duration: pkg.duration,
       price: pkg.price,
-      description: pkg.description || '',
+      description: pkg.description || "",
       destinations: pkg.destinations,
-      inclusions: pkg.inclusions || '',
-      exclusions: pkg.exclusions || ''
+      inclusions: pkg.inclusions || "",
+      exclusions: pkg.exclusions || "",
     });
-    setModalState(prev => ({ ...prev, editForm: true }));
+    setModalState((prev) => ({ ...prev, editForm: true }));
   };
 
   const closeAllModals = () => {
-    setModalState({ createForm: false, editForm: false, itineraryView: false, itineraryForm: false });
+    setModalState({
+      createForm: false,
+      editForm: false,
+      itineraryView: false,
+      itineraryForm: false,
+    });
     setSelectedPackage(null);
     setFormData({ ...emptyPackage });
     setItineraryData({ ...emptyItinerary });
@@ -104,7 +113,7 @@ const PackageDashboard = () => {
 
   const handleCreatePackage = async () => {
     if (!formData.name || !formData.duration || !formData.price) {
-      return toast.error('Please fill in all required fields');
+      return toast.error("Please fill in all required fields");
     }
 
     try {
@@ -115,14 +124,14 @@ const PackageDashboard = () => {
         description: formData.destinations,
         inclusions: formData.inclusions,
         exclusions: formData.exclusions,
-        is_active: formData.status === 'Active'
+        is_active: formData.status === "Active",
       });
       closeAllModals();
-      toast.success('Package created');
+      toast.success("Package created");
       await fetchPackages(true);
     } catch (error) {
-      toast.error(error.message || 'Creation failed');
-      console.error('Error:', error);
+      toast.error(error.message || "Creation failed");
+      console.error("Error:", error);
     }
   };
 
@@ -136,31 +145,31 @@ const PackageDashboard = () => {
         base_price: Number(formData.price),
         description: formData.description,
         inclusions: formData.inclusions,
-        exclusions: formData.exclusions
+        exclusions: formData.exclusions,
       });
       closeAllModals();
-      toast.success('Package updated');
+      toast.success("Package updated");
       await fetchPackages(true);
     } catch (error) {
-      toast.error(error.message || 'Update failed');
-      console.error('Error:', error);
+      toast.error(error.message || "Update failed");
+      console.error("Error:", error);
     }
   };
 
   const handleToggleStatus = async (pkgId, isActive) => {
     try {
       await packageService.updatePackageStatus(pkgId, isActive);
-      toast.success('Status updated');
+      toast.success("Status updated");
       await fetchPackages(true);
     } catch (error) {
-      toast.error('Status update failed');
-      console.error('Error:', error);
+      toast.error("Status update failed");
+      console.error("Error:", error);
     }
   };
 
   const handleViewItinerary = (pkg) => {
     setSelectedPackage(pkg);
-    setModalState(prev => ({ ...prev, itineraryView: true }));
+    setModalState((prev) => ({ ...prev, itineraryView: true }));
   };
 
   const prepareNewItinerary = () => {
@@ -176,7 +185,7 @@ const PackageDashboard = () => {
       title: itinerary.title,
       description: itinerary.description,
       meals: itinerary.meals,
-      accommodation: itinerary.accommodation
+      accommodation: itinerary.accommodation,
     });
     setModalState({ itineraryView: false, itineraryForm: true });
   };
@@ -191,7 +200,7 @@ const PackageDashboard = () => {
           title: itineraryData.title,
           description: itineraryData.description,
           meals: itineraryData.meals,
-          accommodation: itineraryData.accommodation
+          accommodation: itineraryData.accommodation,
         });
       } else {
         await packageService.addItinerary(selectedPackage.id, {
@@ -199,33 +208,35 @@ const PackageDashboard = () => {
           title: itineraryData.title,
           description: itineraryData.description,
           meals: itineraryData.meals,
-          accommodation: itineraryData.accommodation
+          accommodation: itineraryData.accommodation,
         });
       }
 
       await fetchPackages(true);
       const updatedPackages = await packageService.getAllPackages();
-      const refreshedPackage = updatedPackages.find(p => p._id === selectedPackage.id);
-      
+      const refreshedPackage = updatedPackages.find(
+        (p) => p._id === selectedPackage.id
+      );
+
       if (refreshedPackage) {
         setSelectedPackage({
           ...selectedPackage,
-          itinerary: refreshedPackage.itineraries.map(it => ({
+          itinerary: refreshedPackage.itineraries.map((it) => ({
             id: it._id,
             day: it.day_number,
             title: it.title,
             description: it.description,
             meals: it.meals,
-            accommodation: it.accommodation
-          }))
+            accommodation: it.accommodation,
+          })),
         });
         setModalState({ itineraryForm: false, itineraryView: true });
       }
-      
-      toast.success(`Itinerary ${itineraryData.id ? 'updated' : 'added'}`);
+
+      toast.success(`Itinerary ${itineraryData.id ? "updated" : "added"}`);
     } catch (error) {
-      toast.error('Operation failed');
-      console.error('Error:', error);
+      toast.error("Operation failed");
+      console.error("Error:", error);
     }
   };
 
@@ -243,11 +254,29 @@ const PackageDashboard = () => {
   }
 
   return (
-    <div className="min-h-screen bg-orange-50">
+    <div className="p-4  bg-white rounded-lg shadow-md">
       {/* Header Section */}
-      <div className="px-4 py-8">
-        <div className="flex items-center justify-between px-6 py-8 mb-6 border-b border-gray-100 bg-primary-saffron">
+      <div className="">
+        <div
+          className="mb-6 flex justify-between items-center px-6 py-9 border-b border-gray-100
+              bg-primary-saffron"
+        >
           <h1 className="text-xl font-bold text-white">Package Management</h1>
+          <div className="flex space-x-4">
+            <button
+              onClick={handleManualRefresh}
+              disabled={isRefreshing}
+              className="px-4 py-2 text-sm text-orange-600 transition-all duration-200 bg-white rounded-md shadow-lg sm:mt-0 hover:bg-orange-100"
+            >
+              Refresh
+            </button>
+            <button
+              onClick={openCreateModal}
+              className="px-4 py-2 text-sm text-orange-600 transition-all duration-200 bg-white rounded-md shadow-lg sm:mt-0 hover:bg-orange-100"
+            >
+              Create Package
+            </button>
+          </div>
           {isRefreshing && (
             <div className="flex items-center gap-2 text-orange-600">
               <div className="w-4 h-4 border-t-2 border-b-2 border-orange-600 rounded-full animate-spin"></div>
@@ -255,44 +284,41 @@ const PackageDashboard = () => {
             </div>
           )}
         </div>
-        <div className="flex gap-3">
-          <button
-            onClick={handleManualRefresh}
-            disabled={isRefreshing}
-            className="px-4 py-2 text-sm text-orange-600 transition-all duration-200 bg-white rounded-md shadow-lg sm:mt-0 hover:bg-orange-100"
-          >
-            Refresh
-          </button>
-          <button
-            onClick={openCreateModal}
-            className="px-4 py-2 text-sm text-orange-600 transition-all duration-200 bg-white rounded-md shadow-lg sm:mt-0 hover:bg-orange-100"
-          >
-            Create Package
-          </button>
-        </div>
       </div>
 
       {/* Packages Table */}
-      <div className="px-4 py-8 mx-auto max-w-7xl">
+      <div className=" py-14 mx-auto max-w-7xl">
         <div className="overflow-hidden bg-white shadow-lg rounded-xl">
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="bg-secondary-green border-secondary-green-700">
-                <tr className="font-semibold text-white">
-                  <th className="px-4 py-2 border-r border-green-700">Package Name</th>
-                  <th className="px-4 py-2 border-r border-green-700">Duration</th>
-                  <th className="px-4 py-2 border-r border-green-700">Price</th>
-                  <th className="px-4 py-2 border-r border-green-700">Destinations</th>
-                  <th className="px-4 py-2 border-r border-green-700">Status</th>
-                  <th className="px-4 py-2">Actions</th>
+          <div className="flex justify-start">
+            <table className="min-w-full text-sm">
+              <thead className=" bg-secondary-green border-secondary-green-700">
+                <tr className="font-semibold text-sm text-white  uppercase">
+                  <th className="px-4 py-3 border-r text-left border-green-700">
+                    Package Name
+                  </th>
+                  <th className="px-4 py-3 border-r text-left border-green-700">
+                    Duration
+                  </th>
+                  <th className="px-4 py-3 border-r text-left border-green-700">
+                    Price
+                  </th>
+                  <th className="px-4 py-3 border-r text-left border-green-700">
+                    Destinations
+                  </th>
+                  <th className="px-4 py-3 border-r text-left border-green-700">
+                    Status
+                  </th>
+                  <th className="px-4 py-3 border-r text-left border-green-700">
+                    Actions
+                  </th>
                 </tr>
               </thead>
               <tbody>
                 {packages.length > 0 ? (
                   packages.map((pkg, index) => (
-                    <PackageRow 
-                      key={pkg.id} 
-                      pkg={pkg} 
+                    <PackageRow
+                      key={pkg.id}
+                      pkg={pkg}
                       index={index}
                       onView={handleViewItinerary}
                       onEdit={openEditModal}
@@ -301,7 +327,10 @@ const PackageDashboard = () => {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="6" className="px-6 py-4 text-center text-gray-500">
+                    <td
+                      colSpan="6"
+                      className="px-6 py-4 text-center text-gray-500"
+                    >
                       No packages found. Create your first package!
                     </td>
                   </tr>
@@ -344,7 +373,9 @@ const PackageDashboard = () => {
         itineraryData={itineraryData}
         onInputChange={handleItineraryInputChange}
         onSave={handleSaveItinerary}
-        onClose={() => setModalState({ itineraryForm: false, itineraryView: true })}
+        onClose={() =>
+          setModalState({ itineraryForm: false, itineraryView: true })
+        }
       />
     </div>
   );

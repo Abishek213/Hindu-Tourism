@@ -48,20 +48,10 @@ import AccountOverview from '../../Pages/Account/AccountOverview';
 export const salesDashboardConfig = {
   basePath: '/salesdashboard',
   defaultTab: 'overview',
-  tabs: {
-    overview: { 
-      title: 'Overview',    
-      component: SalesOverview, 
-      icon: BarChart3 // FIXED: Added missing icon
-    },
-     leads:{title:'Leads', component:LeadsPage, icon:Users},
-     booking:{title:'Booking',component:Bookings ,icon:PlusIcon},
-
-    GenerateReports: { 
-      title: 'Report', 
-      component: GenerateReport, 
-      icon: BarChart3
-    }
+  tabs: {overview: { title: 'Overview', component:SalesOverview,icon: BarChart3},
+  leads:{title:'Leads', component:LeadsPage, icon:Users},
+  booking:{title:'Booking', component:Bookings, icon:PlusIcon},
+  GenerateReports: { title:'Report', component: GenerateReport, icon: BarChart3}
   }
 };
 
