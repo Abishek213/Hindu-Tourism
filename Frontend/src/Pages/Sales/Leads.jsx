@@ -247,16 +247,16 @@ export default function LeadManagement() {
 
   return (
     // <div className="">
-      <div className="p-4  bg-white rounded-lg shadow-md">
-        <div className="">
+      <div className="p-4 bg-white rounded-lg shadow-md">
+        <div>
           {/* Header */}
-          <div className="mb-6 px-6 py-8 border-b border-gray-100 bg-primary-saffron">
+          <div className="mb-6 px-6 py-6 border-b border-gray-100 bg-primary-saffron">
             <div className="flex flex-col items-center justify-between sm:flex-row">
               <div>
-                <h2 className="mb-2 text-xl font-bold text-white">
+                <h2 className=" text-xl font-bold text-white">
                   Lead Management
                 </h2>
-                <p className="text-orange-100">Manage and track your potential customers</p>
+                <p className="text-white">Manage and track your potential customers</p>
               </div>
 
               <button
@@ -264,7 +264,7 @@ export default function LeadManagement() {
                   resetForm();
                   setShowForm(true);
                 }}
-                className="flex items-center gap-2 px-4 py-4 mt-4 font-medium
+                className="flex items-center gap-2 px-4 py-2 mt-4 font-medium
                  text-orange-600 transition-all duration-200
                   bg-white shadow-lg sm:mt-0 rounded-md hover:bg-orange-100"
               >
@@ -305,125 +305,113 @@ export default function LeadManagement() {
               </div>
             )}
 
-            {/* Lead Form Modal */}
-            {showForm && (
-              <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50">
-                <div className="w-full max-w-sm bg-white shadow-2xl rounded-2xl">
-                  <div className="p-5">
-                    <div className="flex items-center justify-between mb-4">
-                      <h3 className="text-lg font-semibold text-gray-900">
-                        Add New Lead
-                      </h3>
+           {/* Lead Form Modal */}
+              {showForm && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-60 backdrop-blur-sm">
+                  <div className="bg-white rounded-lg shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
+                    <div className="flex items-center justify-between px-6 py-4 rounded-t-lg bg-primary-saffron">
+                      <h2 className="text-xl font-bold text-white">Add New Lead</h2>
                       <button
                         onClick={() => {
                           setShowForm(false);
                           resetForm();
                         }}
-                        className="p-1 text-gray-400 hover:text-gray-600"
+                        className="text-white hover:text-yellow-200 transition duration-200"
                       >
-                        <X className="w-5 h-5" />
+                        <X size={24} />
                       </button>
                     </div>
 
                     <form onSubmit={handleSubmit}>
-                      <div className="space-y-3">
-                        <div>
-                          <input
-                            type="text"
-                            name="name"
-                            value={form.name}
-                            onChange={handleFormChange}
-                            placeholder="Full Name *"
-                            required
-                            className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-                          />
-                        </div>
+                      <div className="p-6 space-y-4">
+                        <input
+                          type="text"
+                          name="name"
+                          value={form.name}
+                          onChange={handleFormChange}
+                          placeholder="Full Name *"
+                          required
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+                        />
 
-                        <div>
-                          <input
-                            type="email"
-                            name="email"
-                            value={form.email}
-                            onChange={handleFormChange}
-                            placeholder="Email Address *"
-                            required
-                            className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-                          />
-                        </div>
+                        <input
+                          type="email"
+                          name="email"
+                          value={form.email}
+                          onChange={handleFormChange}
+                          placeholder="Email Address *"
+                          required
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+                        />
 
-                        <div>
-                          <input
-                            type="text"
-                            name="phone"
-                            value={form.phone}
-                            onChange={handleFormChange}
-                            placeholder="Phone Number *"
-                            required
-                            className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-                          />
-                        </div>
+                        <input
+                          type="text"
+                          name="phone"
+                          value={form.phone}
+                          onChange={handleFormChange}
+                          placeholder="Phone Number *"
+                          required
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+                        />
 
-                      <div>
-                          <select
-                            name="sources"
-                            value={form.sources}
-                            onChange={handleFormChange}
-                            required
-                            className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-                          >
-                            <option value="" disabled selected hidden>Sources</option>
-                            <option value="website">Website</option>
-                            <option value="referral">Referral</option>
-                            <option value="social_media">Social Media</option>
-                            <option value="walk_in">Walk-in</option>
-                            <option value="other">Other</option>
-                          </select>
-                        </div>
+                        <select
+                          name="sources"
+                          value={form.sources}
+                          onChange={handleFormChange}
+                          required
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm bg-white focus:outline-none focus:ring-2 focus:ring-orange-500"
+                        >
+                          <option value="" disabled hidden>
+                            Sources
+                          </option>
+                          <option value="website">Website</option>
+                          <option value="referral">Referral</option>
+                          <option value="social_media">Social Media</option>
+                          <option value="walk_in">Walk-in</option>
+                          <option value="other">Other</option>
+                        </select>
 
+                        <select
+                          name="comm"
+                          value={form.comm}
+                          onChange={handleFormChange}
+                          required
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm bg-white focus:outline-none focus:ring-2 focus:ring-orange-500"
+                        >
+                          <option value="comm" disabled hidden>
+                            Communication Log
+                          </option>
+                          <option value="email">Email</option>
+                          <option value="call">Call</option>
+                          <option value="meeting">Meeting</option>
+                          <option value="message">Message</option>
+                          <option value="other">Other</option>
+                        </select>
 
-                        <div>
-                          <select
-                            name="comm"
-                            value={form.comm}
-                            onChange={handleFormChange}
-                            required
-                            className="w-full p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-                          >
-                           <option value="comm" disabled selected hidden>Communication Log</option>
-                            <option value="email">Email</option>
-                            <option value="call">Call</option>
-                            <option value="meeting">Meeting</option>
-                            <option value="message">Message</option>
-                            <option value="other">Other</option>
-                          </select>
-                        </div>
+                        <textarea
+                          name="notes"
+                          value={form.notes}
+                          onChange={handleFormChange}
+                          rows="2"
+                          placeholder="Notes (optional)"
+                          className="w-full px-2 py-3 border border-gray-300 rounded-lg resize-none shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+                        />
 
-                        <div>
-                          <textarea
-                            name="notes"
-                            value={form.notes}
-                            onChange={handleFormChange}
-                            rows="2"
-                            placeholder="Notes (optional)"
-                            className="w-full p-3 border border-gray-200 rounded-lg resize-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-                          />
-                        </div>
-
-                        <div className="flex gap-2 pt-3">
+                        <div className="flex gap-3 pt-4">
                           <button
                             type="button"
                             onClick={() => {
                               setShowForm(false);
                               resetForm();
                             }}
-                            className="flex-1 px-4 py-2.5 text-gray-700 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+                            className="flex-1 px-4 py-2 text-gray-700 bg-gray-100 border border-gray-300 rounded-lg hover:bg-gray-200 transition-all"
                           >
                             Cancel
                           </button>
                           <button
                             type="submit"
                             disabled={submitting}
-                            className="flex-1 px-4 py-2.5 text-white bg-orange-500 rounded-lg hover:bg-orange-600 disabled:opacity-50 transition-colors font-medium"
+                            className="flex-1 px-4 py-2 text-white bg-orange-500 rounded-lg hover:bg-orange-600 disabled:opacity-60 transition-all font-medium"
                           >
                             {submitting ? 'Creating...' : 'Create Lead'}
                           </button>
@@ -432,18 +420,18 @@ export default function LeadManagement() {
                     </form>
                   </div>
                 </div>
-              </div>
-            )}
+              )}
+
 
             {/* Filters Section */}
-            <div className="flex flex-col gap-4 mb-6 lg:flex-row">
+            <div className="relative flex flex-col gap-4 mb-6 lg:flex-row">
               <div className="relative flex-grow">
                 <Search className="absolute w-5 h-5 text-gray-400 transform -translate-y-1/2 left-3 top-1/2" />
                 <input
                   type="text"
                   placeholder="Search leads by name, email, phone, or notes..."
                   onChange={(e) => debouncedSearch(e.target.value)}
-                  className="w-full p-3 pl-10 border border-gray-200 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                  className="w-full p-3 pl-10 border border-gray-400 rounded-xl focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                 />
               </div>
 
@@ -469,23 +457,23 @@ export default function LeadManagement() {
                   value={statusFilter}
                   onChange={(e) => setStatusFilter(e.target.value)}
                   className="
-                    w-full
-                    pl-3 pr-10 py-2.5
-                    text-gray-700
-                    bg-white
-                    border border-gray-300
-                    rounded-lg
-                    shadow-sm
-                    focus:outline-none
-                    focus:ring-2 focus:ring-orange-500
-                    focus:border-transparent
-                    appearance-none
-                    transition-all
-                    duration-150
-                    ease-in-out
-                    hover:border-gray-400
-                  "
-                >
+                      w-full
+                      pl-3 pr-10 py-2.5
+                      text-gray-700
+                      bg-white
+                      border border-gray-300
+                      rounded-lg
+                      shadow-sm
+                      focus:outline-none
+                      focus:ring-2 focus:ring-orange-500
+                      focus:border-transparent
+                      appearance-none
+                      transition-all
+                      duration-150
+                      ease-in-out
+                      hover:border-gray-400
+                    "
+                  >
                   <option value="">All Status</option>
                   {Object.entries(statusLabels).map(([value, label]) => (
                     <option key={value} value={value}>{label}</option>
@@ -500,17 +488,14 @@ export default function LeadManagement() {
                   pr-2
                   pointer-events-none
                 ">
-                  <svg
-                    className="w-5 h-5 text-gray-400"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
+                 <svg
+                    className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 text-gray-500 transform -translate-y-1/2"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    viewBox="0 0 24 24"
                   >
-                    <path
-                      fillRule="evenodd"
-                      d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                      clipRule="evenodd"
-                    />
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
                   </svg>
                 </div>
               </div>
@@ -556,39 +541,39 @@ export default function LeadManagement() {
               <div className="overflow-hidden border border-gray-200 rounded-2xl">
                 <div className="overflow-x-auto">
                   <table className="min-w-full bg-white">
-                    <thead className="bg-gradient-to-r from-gray-50 to-gray-100">
+                    <thead className=" bg-secondary-green">
                       <tr>
-                        <th className="px-6 py-4 text-xs font-semibold tracking-wider text-left text-gray-600 uppercase">
+                        <th className="px-6 py-4 text-xs font-semibold tracking-wider text-left text-white uppercase">
                           <div className="flex items-center">
                             <User className="w-4 h-4 mr-2" />
                             Lead Name
                           </div>
                         </th>
-                        <th className="hidden px-6 py-4 text-xs font-semibold tracking-wider text-left text-gray-600 uppercase md:table-cell">
+                        <th className="hidden px-6 py-4 text-xs font-semibold tracking-wider text-left  text-white uppercase md:table-cell">
                           <div className="flex items-center">
                             <Phone className="w-4 h-4 mr-2" />
                             Contact
                           </div>
                         </th>
-                        <th className="px-6 py-4 text-xs font-semibold tracking-wider text-left text-gray-600 uppercase">
+                        <th className="px-6 py-4 text-xs font-semibold tracking-wider text-left  text-white uppercase">
                           <div className="flex items-center">
                             <MapPin className="w-4 h-4 mr-2" />
                             Source
                           </div>
                         </th>
-                        <th className="px-6 py-4 text-xs font-semibold tracking-wider text-left text-gray-600 uppercase">
+                        <th className="px-6 py-4 text-xs font-semibold tracking-wider text-left  text-white uppercase">
                           <div className="flex items-center">
                             <Tag className="w-4 h-4 mr-2" />
                             Status
                           </div>
                         </th>
-                        <th className="hidden px-6 py-4 text-xs font-semibold tracking-wider text-left text-gray-600 uppercase sm:table-cell">
+                        <th className="hidden px-6 py-4 text-xs font-semibold tracking-wider text-left text-white uppercase sm:table-cell">
                           <div className="flex items-center">
                             <Calendar className="w-4 h-4 mr-2" />
                             Created
                           </div>
                         </th>
-                        <th className="px-6 py-4 text-xs font-semibold tracking-wider text-left text-gray-600 uppercase">
+                        <th className="px-6 py-4 text-xs font-semibold tracking-wider text-left text-white uppercase">
                           Actions
                         </th>
                       </tr>
@@ -614,49 +599,72 @@ export default function LeadManagement() {
                               {sourceLabels[lead.source] || lead.source}
                             </div>
                           </td>
-                          <td className="px-6 py-4">
-                            <div className="relative">
-                              <select
-                                value={lead.status}
-                                onChange={async (e) => {
-                                  try {
-                                    await api.put(`/lead/${lead._id}`, {
-                                      status: e.target.value
-                                    });
-                                    loadLeads();
-                                  } catch (error) {
-                                    console.error('Error:', error.response?.data);
-                                    setError(error.response?.data?.message || 'Update failed');
-                                  }
-                                }}
-                                className={`appearance-none px-3 py-1 text-xs font-semibold rounded-full border ${statusColors[lead.status] || 'bg-gray-50 text-gray-700 border-gray-200'} pr-7 focus:outline-none focus:ring-1 focus:ring-orange-500`}
-                              >
-                                {/* Current status (display only) */}
-                                <option value={lead.status} disabled className="bg-white">
-                                  {statusLabels[lead.status] || lead.status}
-                                </option>
+                       
 
-                                {/* Options for NEW leads */}
-                                {lead.status === 'new' && (
-                                  <>
-                                    <option value="contacted">Contacted</option>
-                                    <option value="lost">Lost</option>
-                                  </>
-                                )}
+                              <td className="px-6 py-4">
+                                <div className="relative"> {/* Keep this relative div for positioning */}
+                                  <select
+                                    value={lead.status}
+                                    onChange={async (e) => {
+                                      try {
+                                        await api.put(`/lead/${lead._id}`, {
+                                          status: e.target.value
+                                        });
+                                        loadLeads();
+                                      } catch (error) {
+                                        console.error('Error:', error.response?.data);
+                                        setError(error.response?.data?.message || 'Update failed');
+                                      }
+                                    }}
+                                    // Combine all necessary Tailwind classes here.
+                                    // The `appearance-none` hides the default arrow.
+                                    // The `bg-[url(...)]` provides your custom arrow.
+                                    // Ensure `pr-7` or a similar padding is sufficient for your arrow.
+                                    className={`
+                                      appearance-none
+                                      px-3 py-1 text-xs font-semibold rounded-full border
+                                      ${statusColors[lead.status] || 'bg-gray-50 text-gray-700 border-gray-200'}
+                                      pr-7
+                                      focus:outline-none focus:ring-1 focus:ring-orange-500
+                                      bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 20 20%27 fill=%27gray%27%3E%3Cpath d=%27M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z%27/%3E%3C/svg%3E')]
+                                      bg-no-repeat bg-right bg-[length:1rem]
+                                      
+                                      /* Add these for consistent arrow hiding across browsers if not already covered by appearance-none */
+                                      /* For Firefox */
+                                      [-moz-appearance:none]
+                                      /* For Webkit (Chrome, Safari) */
+                                      [-webkit-appearance:none]
+                                      /* For IE 10+ (requires a separate CSS rule, typically) */
+                                      /* If you need IE10/11 support, you'll need a global CSS rule like: */
+                                      /* select::-ms-expand { display: none; } */
+                                    `}
+                                  >
+                                    {/* Current status (display only) */}
+                                    <option value={lead.status} disabled className="bg-white">
+                                      {statusLabels[lead.status] || lead.status}
+                                    </option>
 
-                                {/* Options for CONTACTED leads */}
-                                {lead.status === 'contacted' && (
-                                  <>
-                                    <option value="lost">Lost</option>
-                                  </>
-                                )}
+                                    {/* Options for NEW leads */}
+                                    {lead.status === 'new' && (
+                                      <>
+                                        <option value="contacted">Contacted</option>
+                                        <option value="lost">Lost</option>
+                                      </>
+                                    )}
 
-                              </select>
-                              {lead.status !== 'converted' && lead.status !== 'lost' && (
-                                <ChevronDown className="absolute w-3 h-3 transform -translate-y-1/2 pointer-events-none right-2 top-1/2" />
-                              )}
-                            </div>
-                          </td>
+                                    {/* Options for CONTACTED leads */}
+                                    {lead.status === 'contacted' && (
+                                      <>
+                                        <option value="lost">Lost</option>
+                                      </>
+                                    )}
+
+                                  </select>
+                                 
+                                </div>
+                              </td>
+
+
                           <td className="hidden px-6 py-4 text-sm font-medium text-gray-500 sm:table-cell">
                             {formatDate(lead.createdAt)}
                           </td>

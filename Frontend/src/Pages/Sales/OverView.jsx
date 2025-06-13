@@ -197,12 +197,12 @@ const Overview = () => {
       </div>
 
       {/* Recent Leads Table */}
-      <div className="mb-6">
+      <div className="mb-6 bg-secondary-green">
         <DataTable 
           columns={leadsColumns}
           data={recentLeads}
           title="Recent Leads"
-          pageSize={5}
+          pageSize={200}
         />
       </div>
     </div>

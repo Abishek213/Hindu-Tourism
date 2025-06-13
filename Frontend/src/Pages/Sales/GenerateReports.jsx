@@ -102,8 +102,19 @@ const GenerateReport = () => {
   };
 
   return (
-    <div className="p-6 bg-white rounded-lg shadow-md">
-      <h1 className="text-2xl font-bold text-gray-800 mb-4">Generate Report</h1>
+    <div className="p-4 bg-white rounded-lg shadow-md">
+        <div className="mb-6 px-6 py-6 border-b border-gray-100 bg-primary-saffron">
+            <div className="flex flex-col items-center justify-between sm:flex-row">
+              <div>
+                <h2 className=" text-xl font-bold text-white">
+                  Generate Report
+                </h2>
+                <p className="text-white">Track all the sales reports</p>
+              </div>
+
+              </div>
+              </div>
+
 
       {/* Filters */}
       <div className="flex flex-col md:flex-row items-center gap-2 mb-2">
@@ -128,7 +139,7 @@ const GenerateReport = () => {
         <button
           onClick={handleFilter}
           disabled={loading}
-          className="bg-orange-500 hover:bg-orange-600 disabled:bg-orange-300 text-white px-4 py-2 rounded-md"
+          className=" bg-primary-saffron hover:bg-black text-white px-4 py-2 rounded-md"
         >
           {loading ? "Loading..." : "Apply Filter"}
         </button>
