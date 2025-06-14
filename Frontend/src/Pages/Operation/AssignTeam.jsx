@@ -256,8 +256,8 @@ export default function AssignTeamForm() {
 
       {/* Search Bar */}
       <div className="mb-6">
-        <div className="max-w-md">
-          <div className="relative">
+        <div className=" max-w-full">
+          <div className="relative flex-grow">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
               <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -278,22 +278,21 @@ export default function AssignTeamForm() {
       </div>
 
       {/* Confirmed Bookings Table */}
-      <h2 className="p-1 text-2xl font-bold text-black">Confirmed Bookings</h2>
       
-      <div className="bg-white rounded-xl border-orange-100 overflow-hidden">
+      <div className="bg-white rounded-xl ">
        
         
         <div className="overflow-x-auto ">
           <table className="w-full">
             <thead className=" px-8 py-6 bg-secondary-green">
-              <tr>
-                <th className="px-4 py-3 text-left text-sm font-semibold text-white uppercase tracking-wider">Booking Details</th>
-                <th className="px-4 py-3 text-left text-sm font-semibold text-white uppercase tracking-wider">Customer</th>
-                <th className="px-4 py-3 text-left text-sm font-semibold text-white uppercase tracking-wider">Schedule</th>
-                <th className="px-4 py-3 text-left text-sm font-semibold text-white uppercase tracking-wider">Guide</th>
-                <th className="px-4 py-3 text-left text-sm font-semibold text-white uppercase tracking-wider">Transport</th>
-                <th className="px-4 py-3 text-left text-sm font-semibold text-white uppercase tracking-wider">Action</th>
-              </tr>
+              <tr className="text-white">
+                <th className="px-4 py-3 border-r text-left border-green-700">Booking Details</th>
+                <th className="px-4 py-3 border-r text-left border-green-700">Customer</th>
+                <th className="px-4 py-3 border-r text-left border-green-700">Schedule</th>
+                <th className="px-4 py-3 border-r text-left border-green-700">Guide</th>
+                <th className="px-4 py-3 border-r text-left border-green-700">Transport</th>
+                <th className="px-4 py-3 border-r text-left border-green-700">Action </th>
+                </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
               {filteredBookings.length === 0 ? (

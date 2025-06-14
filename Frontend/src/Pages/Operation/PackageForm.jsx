@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { toast } from "react-toastify";
-import { Plus } from "lucide-react";
+import { Plus, Search, Filter } from "lucide-react"; // Import Search and Filter icons
 import * as packageService from "../../services/packageService";
 import {
   PackageFormModal,
@@ -28,6 +28,8 @@ const PackageDashboard = () => {
   const [selectedPackage, setSelectedPackage] = useState(null);
   const [formData, setFormData] = useState({ ...emptyPackage });
   const [itineraryData, setItineraryData] = useState({ ...emptyItinerary });
+  const [searchTerm, setSearchTerm] = useState(""); // State for search term
+  const [statusFilter, setStatusFilter] = useState("All"); // State for status filter
 
   const fetchPackages = async (showRefreshLoader = false) => {
     try {
@@ -40,7 +42,7 @@ const PackageDashboard = () => {
         name: pkg.title,
         duration: pkg.duration_days,
         price: pkg.base_price,
-        destinations: pkg.description,
+        destinations: pkg.description, // Assuming 'description' holds destinations
         status: pkg.is_active ? "Active" : "Inactive",
         itinerary: (pkg.itineraries || []).map((it) => ({
           id: it._id,
@@ -242,6 +244,20 @@ const PackageDashboard = () => {
 
   const handleManualRefresh = () => fetchPackages(true);
 
+  // Filtered packages logic
+  const filteredPackages = packages.filter((pkg) => {
+    const matchesSearchTerm =
+      pkg.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (pkg.destinations &&
+        pkg.destinations.toLowerCase().includes(searchTerm.toLowerCase()));
+
+    const matchesStatus =
+      statusFilter === "All" ||
+      pkg.status.toLowerCase() === statusFilter.toLowerCase();
+
+    return matchesSearchTerm && matchesStatus;
+  });
+
   if (isLoading) {
     return (
       <div className="p-4 bg-white rounded-lg shadow-md">
@@ -254,12 +270,12 @@ const PackageDashboard = () => {
   }
 
   return (
-    <div className="p-4  bg-white rounded-lg shadow-md">
+    <div className="p-4 bg-white rounded-lg shadow-md">
       {/* Header Section */}
       <div className="">
         <div
           className="mb-6 flex justify-between items-center px-6 py-9 border-b border-gray-100
-              bg-primary-saffron"
+            bg-primary-saffron"
         >
           <h1 className="text-xl font-bold text-white">Package Management</h1>
           <div className="flex space-x-4">
@@ -286,13 +302,41 @@ const PackageDashboard = () => {
         </div>
       </div>
 
+      {/* Search and Filter */}
+      <div className="mb-6">
+        <div className="flex flex-col sm:flex-row gap-4">
+          <div className="flex-1 relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+            <input
+              type="text"
+              placeholder="Search by package name or destinations..."
+              className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent text-sm"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
+          <div className="relative">
+            <Filter className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+            <select
+              className="pl-10 pr-8 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent appearance-none bg-white text-sm"
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+            >
+              <option value="All">All Status</option>
+              <option value="Active">Active</option>
+              <option value="Inactive">Inactive</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
       {/* Packages Table */}
-      <div className=" py-14 mx-auto max-w-7xl">
+      <div className=" mx-auto max-w-7xl">
         <div className="overflow-hidden bg-white shadow-lg rounded-xl">
           <div className="flex justify-start">
             <table className="min-w-full text-sm">
-              <thead className=" bg-secondary-green border-secondary-green-700">
-                <tr className="font-semibold text-sm text-white  uppercase">
+              <thead className="bg-secondary-green border-secondary-green-700">
+                <tr className="font-semibold text-sm text-white uppercase">
                   <th className="px-4 py-3 border-r text-left border-green-700">
                     Package Name
                   </th>
@@ -314,8 +358,8 @@ const PackageDashboard = () => {
                 </tr>
               </thead>
               <tbody>
-                {packages.length > 0 ? (
-                  packages.map((pkg, index) => (
+                {filteredPackages.length > 0 ? (
+                  filteredPackages.map((pkg, index) => (
                     <PackageRow
                       key={pkg.id}
                       pkg={pkg}
@@ -331,7 +375,7 @@ const PackageDashboard = () => {
                       colSpan="6"
                       className="px-6 py-4 text-center text-gray-500"
                     >
-                      No packages found. Create your first package!
+                      No packages found matching your criteria.
                     </td>
                   </tr>
                 )}

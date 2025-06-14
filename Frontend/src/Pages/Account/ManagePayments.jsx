@@ -20,6 +20,7 @@ import {
   Receipt,
   BadgeDollarSign,
   PlusCircle, // Added for new payment button
+  Search, // Added for search icon
 } from "lucide-react";
 import api from "../../api/auth"; // Make sure this is properly configured
 
@@ -33,7 +34,7 @@ const PaymentOverlay = ({
   getStatusBadge,
   onPaymentRecorded, // Callback after a new payment is recorded
   initialLoading, // Added to indicate initial load for overlay
-  initialError,   // Added to indicate initial error for overlay
+  initialError, // Added to indicate initial error for overlay
 }) => {
   const [newPaymentAmount, setNewPaymentAmount] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("bank_transfer");
@@ -66,7 +67,9 @@ const PaymentOverlay = ({
       }
 
       if (paymentAmount > dueAmount) {
-        throw new Error(`Payment amount cannot exceed due amount of $${dueAmount.toFixed(2)}`);
+        throw new Error(
+          `Payment amount cannot exceed due amount of $${dueAmount.toFixed(2)}`
+        );
       }
 
       const paymentData = {
@@ -75,12 +78,14 @@ const PaymentOverlay = ({
         payment_method: paymentMethod,
         transaction_id: transactionId,
         notes,
-        status: paymentAmount >= dueAmount ? 'completed' : 'advance'
+        status: paymentAmount >= dueAmount ? "completed" : "advance",
       };
 
-      const response = await api.put('/payment/record', paymentData).catch(e => {
-        throw e;
-      });
+      const response = await api
+        .put("/payment/record", paymentData)
+        .catch((e) => {
+          throw e;
+        });
 
       if (response.data) {
         setRecordSuccess(true);
@@ -90,24 +95,31 @@ const PaymentOverlay = ({
 
         // Calculate new amounts
         const updatedTotalPaid = totalPaidAmount + paymentAmount;
-        const updatedDueAmount = Math.max(0, totalPackageAmount - updatedTotalPaid);
+        const updatedDueAmount = Math.max(
+          0,
+          totalPackageAmount - updatedTotalPaid
+        );
 
         // Determine new overall status
-        const newOverallStatus = updatedDueAmount <= 0 ? 'completed' :
-          (updatedTotalPaid > 0 ? 'advance' : 'pending');
+        const newOverallStatus =
+          updatedDueAmount <= 0
+            ? "completed"
+            : updatedTotalPaid > 0
+            ? "advance"
+            : "pending";
 
         // Update the local state with all changes
         setPaymentSummary({
           ...paymentSummary,
           total_paid_amount: updatedTotalPaid,
           due_amount: updatedDueAmount,
-          overall_payment_status: newOverallStatus
+          overall_payment_status: newOverallStatus,
         });
 
         // Also update the selected booking's status
-        setSelectedBooking(prev => ({
+        setSelectedBooking((prev) => ({
           ...prev,
-          overallPaymentStatus: newOverallStatus
+          overallPaymentStatus: newOverallStatus,
         }));
 
         onPaymentRecorded(selectedBooking._id);
@@ -135,9 +147,25 @@ const PaymentOverlay = ({
       <div className="relative max-w-4xl w-full p-8 mx-auto border shadow-xl rounded-2xl bg-white/90 border-amber-200 overflow-y-auto max-h-[90vh]">
         {initialLoading && (
           <div className="absolute inset-0 z-10 flex items-center justify-center bg-white/70">
-            <svg className="w-10 h-10 mr-3 animate-spin text-amber-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            <svg
+              className="w-10 h-10 mr-3 animate-spin text-amber-500"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <circle
+                className="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                strokeWidth="4"
+              ></circle>
+              <path
+                className="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+              ></path>
             </svg>
             <p className="text-xl text-amber-600">Loading payment summary...</p>
           </div>
@@ -171,7 +199,12 @@ const PaymentOverlay = ({
                 </h2>
               </div>
               {/* Display booking status here - using the overall payment status from selectedBooking */}
-              {getStatusBadge(paymentSummary?.overall_payment_status || selectedBooking.overallPaymentStatus || 'pending')}              </div>
+              {getStatusBadge(
+                paymentSummary?.overall_payment_status ||
+                  selectedBooking.overallPaymentStatus ||
+                  "pending"
+              )}
+            </div>
 
             <div className="grid grid-cols-1 gap-6 mb-8 md:grid-cols-2">
               {/* Customer Information */}
@@ -179,7 +212,9 @@ const PaymentOverlay = ({
                 <h3 className="flex items-center mb-3 text-lg font-semibold text-amber-800">
                   <User size={20} className="mr-2 text-amber-500" /> Customer
                 </h3>
-                <p className="font-medium text-amber-900">{selectedBooking.customer_id?.name || "N/A"}</p>
+                <p className="font-medium text-amber-900">
+                  {selectedBooking.customer_id?.name || "N/A"}
+                </p>
                 <p className="flex items-center mt-1 text-sm text-amber-700">
                   <Mail size={14} className="mr-2 opacity-75" />
                   {selectedBooking.customer_id?.email || "N/A"}
@@ -193,16 +228,31 @@ const PaymentOverlay = ({
               {/* Package / Booking Information */}
               <div className="flex flex-col items-start p-4 rounded-lg shadow-sm bg-orange-50/50">
                 <h3 className="flex items-center mb-3 text-lg font-semibold text-orange-800">
-                  <MapPin size={20} className="mr-2 text-orange-500" /> Destination
+                  <MapPin size={20} className="mr-2 text-orange-500" />{" "}
+                  Destination
                 </h3>
-                <p className="font-medium text-orange-900">{selectedBooking.package_id?.title || "N/A"}</p>
+                <p className="font-medium text-orange-900">
+                  {selectedBooking.package_id?.title || "N/A"}
+                </p>
                 <p className="flex items-center mt-1 text-sm text-orange-700">
                   <Tag size={14} className="mr-2 opacity-75" />
-                  Booking Ref: <span className="ml-1 font-mono">{selectedBooking.booking_ref_id || selectedBooking._id || "N/A"}</span>
+                  Booking Ref:{" "}
+                  <span className="ml-1 font-mono">
+                    {selectedBooking.booking_ref_id ||
+                      selectedBooking._id ||
+                      "N/A"}
+                  </span>
                 </p>
                 <p className="flex items-center mt-1 text-sm text-orange-700">
                   <Calendar size={14} className="mr-2 opacity-75" />
-                  Travel Dates: {new Date(selectedBooking.travel_start_date).toLocaleDateString()} - {new Date(selectedBooking.travel_end_date).toLocaleDateString()}
+                  Travel Dates:{" "}
+                  {new Date(
+                    selectedBooking.travel_start_date
+                  ).toLocaleDateString()}{" "}
+                  -{" "}
+                  {new Date(
+                    selectedBooking.travel_end_date
+                  ).toLocaleDateString()}
                 </p>
               </div>
             </div>
@@ -210,25 +260,38 @@ const PaymentOverlay = ({
             {/* Payment Summary Section */}
             <div className="p-6 mb-8 border rounded-lg shadow-inner bg-amber-100/70 border-amber-200">
               <h3 className="flex items-center mb-4 text-xl font-bold text-amber-800">
-                <BadgeDollarSign size={24} className="mr-2 text-amber-600" /> Overall Payment Status
+                <BadgeDollarSign size={24} className="mr-2 text-amber-600" />{" "}
+                Overall Payment Status
               </h3>
               <div className="grid grid-cols-1 gap-4 text-center md:grid-cols-3">
                 <div className="p-3 bg-white rounded-lg shadow-sm">
-                  <p className="mb-1 text-sm text-amber-700">Total Package Amount</p>
-                  <p className="text-xl font-bold text-amber-900">${totalPackageAmount.toFixed(2)}</p>
+                  <p className="mb-1 text-sm text-amber-700">
+                    Total Package Amount
+                  </p>
+                  <p className="text-xl font-bold text-amber-900">
+                    ${totalPackageAmount.toFixed(2)}
+                  </p>
                 </div>
                 <div className="p-3 bg-white rounded-lg shadow-sm">
                   <p className="mb-1 text-sm text-amber-700">Total Paid</p>
-                  <p className="text-xl font-bold text-green-600">${totalPaidAmount.toFixed(2)}</p>
+                  <p className="text-xl font-bold text-green-600">
+                    ${totalPaidAmount.toFixed(2)}
+                  </p>
                 </div>
                 <div className="p-3 bg-white rounded-lg shadow-sm">
                   <p className="mb-1 text-sm text-amber-700">Amount Due</p>
-                  <p className="text-xl font-bold text-red-600">${dueAmount.toFixed(2)}</p>
+                  <p className="text-xl font-bold text-red-600">
+                    ${dueAmount.toFixed(2)}
+                  </p>
                 </div>
               </div>
               {dueAmount > 0 && (
                 <p className="mt-4 text-sm text-center text-amber-700">
-                  A remaining balance of <span className="font-bold text-red-600">${dueAmount.toFixed(2)}</span> is due.
+                  A remaining balance of{" "}
+                  <span className="font-bold text-red-600">
+                    ${dueAmount.toFixed(2)}
+                  </span>{" "}
+                  is due.
                 </p>
               )}
               {dueAmount <= 0 && (
@@ -241,11 +304,18 @@ const PaymentOverlay = ({
             {/* Record New Payment Section */}
             <div className="p-6 border border-blue-200 rounded-lg shadow-inner bg-blue-50/50">
               <h3 className="flex items-center mb-4 text-xl font-bold text-blue-800">
-                <PlusCircle size={24} className="mr-2 text-blue-600" /> Record New Payment
+                <PlusCircle size={24} className="mr-2 text-blue-600" /> Record
+                New Payment
               </h3>
-              <form onSubmit={handleRecordPayment} className="grid grid-cols-1 gap-4 md:grid-cols-2">
+              <form
+                onSubmit={handleRecordPayment}
+                className="grid grid-cols-1 gap-4 md:grid-cols-2"
+              >
                 <div>
-                  <label htmlFor="amount" className="block mb-1 text-sm font-medium text-gray-700">
+                  <label
+                    htmlFor="amount"
+                    className="block mb-1 text-sm font-medium text-gray-700"
+                  >
                     Amount to Pay ($)
                   </label>
                   <input
@@ -260,7 +330,10 @@ const PaymentOverlay = ({
                   />
                 </div>
                 <div>
-                  <label htmlFor="paymentMethod" className="block mb-1 text-sm font-medium text-gray-700">
+                  <label
+                    htmlFor="paymentMethod"
+                    className="block mb-1 text-sm font-medium text-gray-700"
+                  >
                     Payment Method
                   </label>
                   <select
@@ -270,6 +343,7 @@ const PaymentOverlay = ({
                     className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
                     required
                   >
+                    <option value="all">All Status</option>
                     <option value="credit_card">Credit Card</option>
                     <option value="debit_card">Debit Card</option>
                     <option value="bank_transfer">Bank Transfer</option>
@@ -278,7 +352,10 @@ const PaymentOverlay = ({
                   </select>
                 </div>
                 <div className="md:col-span-2">
-                  <label htmlFor="transactionId" className="block mb-1 text-sm font-medium text-gray-700">
+                  <label
+                    htmlFor="transactionId"
+                    className="block mb-1 text-sm font-medium text-gray-700"
+                  >
                     Transaction ID (Optional)
                   </label>
                   <input
@@ -290,7 +367,10 @@ const PaymentOverlay = ({
                   />
                 </div>
                 <div className="md:col-span-2">
-                  <label htmlFor="notes" className="block mb-1 text-sm font-medium text-gray-700">
+                  <label
+                    htmlFor="notes"
+                    className="block mb-1 text-sm font-medium text-gray-700"
+                  >
                     Notes (Optional)
                   </label>
                   <textarea
@@ -308,7 +388,8 @@ const PaymentOverlay = ({
                 )}
                 {recordSuccess && (
                   <div className="flex items-center text-sm text-green-700 md:col-span-2">
-                    <CheckCircle size={16} className="mr-2" /> Payment recorded successfully!
+                    <CheckCircle size={16} className="mr-2" /> Payment recorded
+                    successfully!
                   </div>
                 )}
                 <div className="flex justify-end md:col-span-2">
@@ -338,26 +419,25 @@ const PaymentOverlay = ({
   );
 };
 
-
 // Main ManagePayments component
 const ManagePayments = () => {
   const [payments, setPayments] = useState([]);
   const [filter, setFilter] = useState("all");
+  const [searchTerm, setSearchTerm] = useState(""); // New state for search term
   const [currentView, setCurrentView] = useState("list");
-  const [selectedBookingForPayment, setSelectedBookingForPayment] = useState(null);
+  const [selectedBookingForPayment, setSelectedBookingForPayment] =
+    useState(null);
   const [paymentSummary, setPaymentSummary] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [summaryLoading, setSummaryLoading] = useState(false);
   const [summaryError, setSummaryError] = useState(null);
 
-
   // Function to fetch all payments from the API
   const fetchPayments = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
-
       const response = await api.get("/payment/latest-per-booking");
 
       if (!response.data) {
@@ -413,7 +493,8 @@ const ManagePayments = () => {
           errorMessage = e.response.data.message;
         }
       } else if (e.request) {
-        errorMessage = "Network error while fetching summary. Check connection.";
+        errorMessage =
+          "Network error while fetching summary. Check connection.";
       }
 
       setSummaryError(errorMessage);
@@ -426,14 +507,38 @@ const ManagePayments = () => {
     fetchPayments();
   }, [fetchPayments]);
 
-  const filteredPayments = payments.filter(payment => {
+  const filteredPayments = payments.filter((payment) => {
     // Check if booking_id exists before accessing its properties
     if (!payment.booking_id) return false;
 
     // Filter by the overall payment status of the booking
-    const statusMatch = filter === "all" || (payment.booking_id.overallPaymentStatus || payment.status) === filter;
+    const statusMatch =
+      filter === "all" ||
+      (payment.booking_id.overallPaymentStatus || payment.status) === filter;
 
-    return statusMatch;
+    // Search term logic
+    const lowerCaseSearchTerm = searchTerm.toLowerCase();
+    const customerName =
+      payment.booking_id.customer_id?.name?.toLowerCase() || "";
+    const customerEmail =
+      payment.booking_id.customer_id?.email?.toLowerCase() || "";
+    const customerPhone =
+      payment.booking_id.customer_id?.phone?.toLowerCase() || "";
+    const packageName =
+      payment.booking_id.package_id?.title?.toLowerCase() || "";
+    const bookingRefId =
+      payment.booking_id?.booking_ref_id?.toLowerCase() || "";
+    const bookingId = payment.booking_id?._id?.toLowerCase() || ""; // Allow searching by full booking ID
+
+    const searchMatch =
+      customerName.includes(lowerCaseSearchTerm) ||
+      customerEmail.includes(lowerCaseSearchTerm) ||
+      customerPhone.includes(lowerCaseSearchTerm) ||
+      packageName.includes(lowerCaseSearchTerm) ||
+      bookingRefId.includes(lowerCaseSearchTerm) ||
+      bookingId.includes(lowerCaseSearchTerm); // Check if booking ID includes search term
+
+    return statusMatch && searchMatch;
   });
 
   const getStatusBadge = (status) => {
@@ -481,7 +586,11 @@ const ManagePayments = () => {
           </span>
         );
       default:
-        return <span className="px-3 py-1 text-xs font-medium text-gray-800 bg-gray-100 rounded-full">{status}</span>;
+        return (
+          <span className="px-3 py-1 text-xs font-medium text-gray-800 bg-gray-100 rounded-full">
+            {status}
+          </span>
+        );
     }
   };
 
@@ -506,19 +615,16 @@ const ManagePayments = () => {
   };
 
   // This function is called from PaymentOverlay when a new payment is recorded
- const handlePaymentRecorded = async (bookingId) => {
-  // Run these in parallel instead of sequentially
-  await Promise.all([
-    fetchPaymentSummary(bookingId),
-    fetchPayments()
-  ]);
-  
-  // Only fetch booking if needed
-  if (selectedBookingForPayment?._id === bookingId) {
-    const updatedBooking = await api.get(`/booking/${bookingId}`);
-    setSelectedBookingForPayment(updatedBooking.data);
-  }
-};
+  const handlePaymentRecorded = async (bookingId) => {
+    // Run these in parallel instead of sequentially
+    await Promise.all([fetchPaymentSummary(bookingId), fetchPayments()]);
+
+    // Only fetch booking if needed
+    if (selectedBookingForPayment?._id === bookingId) {
+      const updatedBooking = await api.get(`/booking/${bookingId}`);
+      setSelectedBookingForPayment(updatedBooking.data);
+    }
+  };
 
   // Render the PaymentOverlay when in "details" view
   if (currentView === "details") {
@@ -527,7 +633,7 @@ const ManagePayments = () => {
         selectedBooking={selectedBookingForPayment}
         paymentSummary={paymentSummary}
         setPaymentSummary={setPaymentSummary}
-         setSelectedBooking={setSelectedBookingForPayment}
+        setSelectedBooking={setSelectedBookingForPayment}
         onCancel={handleCancel}
         getStatusBadge={getStatusBadge}
         onPaymentRecorded={handlePaymentRecorded}
@@ -539,29 +645,27 @@ const ManagePayments = () => {
 
   // Main list view
   return (
-    <div className="min-h-screen p-6 bg-gradient-to-br from-amber-50 to-orange-100 font-inter">
-      <div className="p-8 mx-auto border shadow-xl bg-white/90 backdrop-blur-sm rounded-2xl border-amber-200 max-w-7xl">
-        <div className="flex items-center justify-between mb-8">
+    <div className="p-4 bg-white rounded-lg shadow-md">
+      <div>
+        <div
+          className="mb-6 flex justify-between items-center px-6 py-6 border-b border-gray-100
+        bg-primary-saffron"
+        >
           <div>
-            <h1 className="text-4xl font-extrabold text-transparent bg-gradient-to-r from-amber-600 to-orange-600 bg-clip-text">
-              Manage Payments
-            </h1>
-            <p className="mt-2 text-lg text-amber-700">Track and manage all payment transactions</p>
+            <h1 className="text-xl font-bold text-white">Manage Payments</h1>
+            <p className="text-white">
+              Track and manage all payment transactions
+            </p>
           </div>
           <div className="flex items-center space-x-4">
             <div className="flex items-center space-x-2">
-              <Filter className="text-amber-600" size={18} />
-              <div className="relative">
+              <Filter className="text-white" size={18} />
+              <div>
                 <select
                   value={filter}
                   onChange={(e) => setFilter(e.target.value)}
-                  className="px-4 py-2 pr-10 text-base border rounded-lg shadow-sm appearance-none cursor-pointer border-amber-200 focus:outline-none focus:ring-2 focus:ring-amber-500 bg-white/80 text-amber-700"
-                  style={{
-                    backgroundImage: 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 20 20\' fill=\'currentColor\'%3E%3Cpath fill-rule=\'evenodd\' d=\'M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z\' clip-rule=\'evenodd\' /%3E%3C/svg%3E")',
-                    backgroundRepeat: 'no-repeat',
-                    backgroundPosition: 'right 0.5rem center',
-                    backgroundSize: '1.5em 1.5em',
-                  }}
+                  className="px-6 py-2 text-sm rounded-md text-orange-600 transition-all duration-200
+                   shadow-lg sm:mt-0 hover:bg-orange-100" // Removed bg-white
                 >
                   <option value="all">All Status</option>
                   <option value="pending">Pending</option>
@@ -579,9 +683,25 @@ const ManagePayments = () => {
         {loading && (
           <div className="py-12 text-center bg-white/50 rounded-xl">
             <div className="flex items-center justify-center">
-              <svg className="w-8 h-8 mr-3 -ml-1 animate-spin text-amber-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              <svg
+                className="w-8 h-8 mr-3 -ml-1 animate-spin text-amber-500"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                ></circle>
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                ></path>
               </svg>
               <p className="text-lg text-amber-600">Loading payments...</p>
             </div>
@@ -600,71 +720,125 @@ const ManagePayments = () => {
             </button>
           </div>
         )}
+        {/* Search Bar */}
+        <div className="relative flex flex-col gap-4 mb-6 lg:flex-row">
+          <div className="relative flex-grow">
+            <Search className="absolute w-5 h-5 text-gray-400 transform -translate-y-1/2 left-3 top-1/2" />
+            <input
+              type="text"
+              placeholder="Search by booking reference, customer name, email, phone, or destination..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-full pl-12 pr-4 py-3 text-gray-700 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent focus:bg-white transition-colors"
+            />
+          </div>
+        </div>
 
         {!loading && !error && (
-          <div className="overflow-x-auto border shadow-md rounded-xl border-amber-200">
-            <table className="min-w-full divide-y divide-amber-200">
-              <thead className="bg-gradient-to-r from-amber-100 to-orange-100">
-                <tr>
-                  <th className="px-6 py-4 text-xs font-semibold tracking-wider text-left uppercase text-amber-800">Customer Name</th>
-                  <th className="px-6 py-4 text-xs font-semibold tracking-wider text-left uppercase text-amber-800">Contact</th>
-                  <th className="px-6 py-4 text-xs font-semibold tracking-wider text-left uppercase text-amber-800">Destination</th>
-                  <th className="px-6 py-4 text-xs font-semibold tracking-wider text-left uppercase text-amber-800">Total Amount</th>
-                  <th className="px-6 py-4 text-xs font-semibold tracking-wider text-left uppercase text-amber-800">Payment Status</th>
-                  <th className="px-6 py-4 text-xs font-semibold tracking-wider text-left uppercase text-amber-800">Latest Payment Date</th>
-                  <th className="px-6 py-4 text-xs font-semibold tracking-wider text-right uppercase text-amber-800">Actions</th>
+          <div className="overflow-x-auto border shadow-md rounded-xl">
+            <table className="min-w-full ">
+              <thead className=" px-8 py-6 bg-secondary-green">
+                <tr className="text-white">
+                  <th className="px-4 py-3 border-r text-left border-green-700">
+                    Customer Name
+                  </th>
+                  <th className="px-4 py-3 border-r text-left border-green-700">
+                    Contact
+                  </th>
+                  <th className="px-4 py-3 border-r text-left border-green-700">
+                    Destination
+                  </th>
+                  <th className="px-4 py-3 border-r text-left border-green-700">
+                    Total Amount
+                  </th>
+                  <th className="px-4 py-3 border-r text-left border-green-700">
+                    Payment Status
+                  </th>
+                  <th className="px-4 py-3 border-r text-left border-green-700">
+                    Latest Payment Date
+                  </th>
+                  <th className="px-4 py-3 border-r text-left border-green-700">
+                    Actions
+                  </th>
                 </tr>
               </thead>
-              <tbody className="divide-y bg-white/50 backdrop-blur-sm divide-amber-100">
+              <tbody className="divide-y bg-white backdrop-blur-sm divide-amber-100">
                 {filteredPayments.length > 0 ? (
-                  filteredPayments.map((payment) => (
-                    // Ensure booking_id and customer_id are populated
-                    payment.booking_id && payment.booking_id.customer_id && payment.booking_id.package_id && (
-                      <tr key={payment._id} className="transition-colors duration-200 hover:bg-amber-50/50">
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <span className="font-medium text-amber-900">{payment.booking_id.customer_id.name}</span>
-                        </td>
-                        <td className="px-6 py-4 text-sm whitespace-nowrap text-amber-800">
-                          <p>{payment.booking_id.customer_id.phone}</p>
-                          <p className="text-xs text-amber-600">{payment.booking_id.customer_id.email}</p>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <span className="text-amber-800">{payment.booking_id.package_id.title}</span>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <span className="font-semibold text-amber-900">
-                            ${payment.booking_id.package_id.base_price?.toFixed(2) || "0.00"}
-                          </span>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          {/* Use the overallPaymentStatus from the populated booking_id */}
-                          {getStatusBadge(payment.booking_id.overallPaymentStatus || 'pending')}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <span className="text-amber-700">
-                            {new Date(payment.payment_date).toLocaleDateString()}
-                          </span>
-                        </td>
-                        <td className="px-6 py-4 text-sm font-medium text-right whitespace-nowrap">
-                          <div className="flex justify-end space-x-2">
-                            <button
-                              onClick={() => handleSelectBooking(payment)} // Pass the whole payment object
-                              className="px-4 py-2 text-white transition-colors duration-200 bg-blue-500 rounded-lg hover:bg-blue-600"
-                              title="Manage Payments for this Booking"
-                            >
-                              Manage
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    )
-                  ))
+                  filteredPayments.map(
+                    (payment) =>
+                      // Ensure booking_id and customer_id are populated
+                      payment.booking_id &&
+                      payment.booking_id.customer_id &&
+                      payment.booking_id.package_id && (
+                        <tr
+                          key={payment._id}
+                          className="transition-colors duration-200 hover:bg-amber-50/50"
+                        >
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <span className="font-medium text-black">
+                              {payment.booking_id.customer_id.name}
+                            </span>
+                          </td>
+                          <td className="px-6 py-4 text-sm whitespace-nowrap text-black">
+                            <p>{payment.booking_id.customer_id.phone}</p>
+                            <p className="text-xs text-black">
+                              {payment.booking_id.customer_id.email}
+                            </p>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <span className="text-black">
+                              {payment.booking_id.package_id.title}
+                            </span>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <span className="font-semibold text-amber-900">
+                              $
+                              {payment.booking_id.package_id.base_price?.toFixed(
+                                2
+                              ) || "0.00"}
+                            </span>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            {/* Use the overallPaymentStatus from the populated booking_id */}
+                            {getStatusBadge(
+                              payment.booking_id.overallPaymentStatus ||
+                                "pending"
+                            )}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <span className="text-amber-700">
+                              {new Date(
+                                payment.payment_date
+                              ).toLocaleDateString()}
+                            </span>
+                          </td>
+                          <td className="px-6 py-4 text-sm font-medium text-right whitespace-nowrap">
+                            <div className="flex justify-end space-x-2">
+                              <button
+                                onClick={() => handleSelectBooking(payment)} // Pass the whole payment object
+                                className="px-4 py-2 text-white transition-colors duration-200 bg-blue-500 rounded-lg hover:bg-blue-600"
+                                title="Manage Payments for this Booking"
+                              >
+                                Manage
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      )
+                  )
                 ) : (
                   <tr>
                     <td colSpan="7" className="py-12 text-center bg-white/50">
-                      <CreditCard className="mx-auto mb-4 text-amber-400" size={48} />
-                      <p className="text-lg text-amber-600">No payments found</p>
-                      <p className="text-sm text-amber-500">Try adjusting your filter.</p>
+                      <CreditCard
+                        className="mx-auto mb-4 text-amber-400"
+                        size={48}
+                      />
+                      <p className="text-lg text-amber-600">
+                        No payments found
+                      </p>
+                      <p className="text-sm text-amber-500">
+                        Try adjusting your filter or search.
+                      </p>
                     </td>
                   </tr>
                 )}

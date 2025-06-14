@@ -519,7 +519,7 @@ const OptionalServicesDashboard = () => {
       </div>
 
       {/* Services Table */}
-      <div className="max-w-7xl mx-auto px-4 py-8">
+      <div className=" mx-auto max-w-7xl py-8">
         <div className="bg-white rounded-xl shadow-lg overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full">
