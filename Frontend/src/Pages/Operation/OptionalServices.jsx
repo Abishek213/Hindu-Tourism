@@ -488,9 +488,10 @@ const OptionalServicesDashboard = () => {
             <div className="flex space-x-4">
               <select
                 value={currentView}
-                className="flex items-center gap-2 px-6 py-2 mx-auto  rounded-md text-sm
-                 text-orange-600 transition-all duration-200
-                  bg-white shadow-lg sm:mt-0 hover:bg-orange-100"
+                onChange={(e) => setcurrentView(e.target.value)}
+                className="flex items-center gap-2 px-6 py-2 mx-auto rounded-md text-sm
+             text-orange-600 transition-all duration-200
+             bg-white shadow-lg sm:mt-0 hover:bg-orange-100"
               >
                 <option value="all">All Services</option>
                 <option value="active">Active Only</option>

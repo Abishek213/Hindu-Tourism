@@ -282,7 +282,7 @@ export default function AssignTeamForm() {
       <div className="bg-white rounded-xl ">
        
         
-        <div className="overflow-x-auto ">
+        <div className="overflow-x-auto border shadow-md rounded-xl">
           <table className="w-full">
             <thead className=" px-8 py-6 bg-secondary-green">
               <tr className="text-white">
