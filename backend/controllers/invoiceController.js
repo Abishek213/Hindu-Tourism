@@ -3,6 +3,7 @@ import { generateInvoicePDF } from '../services/pdfService.js';
 import { NotFoundError, ValidationError } from '../utils/validators.js';
 import { sendInvoiceEmail, sendPaymentConfirmationEmail, sendCancellationEmail } from '../services/emailService.js';
 import { logError } from '../utils/logger.js';
+import BookingService from '../models/BookingService.js';
 
 export const getInvoices = async (req, res, next) => {
     try {
@@ -56,16 +57,11 @@ export const updateInvoiceStatus = async (req, res, next) => {
         const originalStatus = invoice.status;
         if (originalStatus === status) return res.json(invoice);
 
-        const shouldSendInvoiceEmail = originalStatus === 'draft' && status === 'sent' && !invoice.emailSent;
+        const shouldSendInvoiceEmail = status === 'sent';
         const shouldSendPaymentEmail = status === 'paid';
         const shouldSendCancellationEmail = status === 'cancelled';
 
         invoice.status = status;
-        
-        if (shouldSendInvoiceEmail) {
-            invoice.emailSent = true;
-        }
-
         await invoice.save();
 
         const updatedInvoice = await Invoice.findById(invoice._id)
@@ -114,6 +110,11 @@ export const downloadInvoicePDF = async (req, res, next) => {
             throw new NotFoundError('Invoice not found');
         }
 
+        // Get optional services for this booking
+        const bookingServices = await BookingService.find({ 
+            booking_id: invoice.booking_id._id 
+        }).populate('service_id');
+
         // Transform the data to match what generateInvoicePDF expects
         const pdfData = {
             ...invoice.toObject(),
@@ -122,12 +123,17 @@ export const downloadInvoicePDF = async (req, res, next) => {
                 customer_id: invoice.booking_id?.customer_id,
                 package_id: {
                     ...invoice.booking_id?.package_id?.toObject(),
-                    inclusions: invoice.booking_id?.package_id?.inclusions || [],
-                    exclusions: invoice.booking_id?.package_id?.exclusions || []
+                    inclusions: invoice.booking_id?.package_id?.inclusions || {},
+                    exclusions: invoice.booking_id?.package_id?.exclusions || {}
                 },
                 guide_id: invoice.booking_id?.guide_id || null,
-                transport_id: invoice.booking_id?.transport_id || null
-            }
+                transport_id: invoice.booking_id?.transport_id || null,
+                package_type: invoice.booking_id?.package_type || 'Deluxe' // Make sure package_type is included
+            },
+            services: bookingServices.map(bs => ({
+                service_id: bs.service_id,
+                price_applied: bs.price_applied
+            }))
         };
 
         const pdfBuffer = await generateInvoicePDF(pdfData);

@@ -15,17 +15,32 @@ export const createPackage = async (req, res) => {
             return res.status(400).json({ errors: errors.array() });
         }
 
-        const { title,destination, description, base_price, duration_days, inclusions, exclusions } = req.body;
-        
+        const { 
+            title,
+            description, 
+            base_price, 
+            duration_days,
+            inclusions = {},
+            exclusions = {},
+            is_active = true
+        } = req.body;
+
         const newTourPackage = new TourPackage({
             title,
-            destination,
             description,
             base_price,
             duration_days,
-            inclusions,
-            exclusions,
-            is_active: true,
+            inclusions: {
+                deluxe: inclusions.deluxe || '',
+                premium: inclusions.premium || '',
+                exclusive: inclusions.exclusive || ''
+            },
+            exclusions: {
+                deluxe: exclusions.deluxe || '',
+                premium: exclusions.premium || '',
+                exclusive: exclusions.exclusive || ''
+            },
+            is_active,
             created_by: req.user.id
         });
 
@@ -39,7 +54,10 @@ export const createPackage = async (req, res) => {
         res.status(201).json(newTourPackage);
     } catch (error) {
         logger.error(`Error creating package: ${error.message}`);
-        res.status(500).json({ message: 'Server error while creating package' });
+        res.status(500).json({ 
+            message: 'Failed to create package',
+            error: error.message
+        });
     }
 };
 
@@ -62,10 +80,22 @@ export const updatePackage = async (req, res) => {
         tourPackage.description = updateData.description || tourPackage.description;
         tourPackage.base_price = updateData.base_price || tourPackage.base_price;
         tourPackage.duration_days = updateData.duration_days || tourPackage.duration_days;
-        tourPackage.inclusions = updateData.inclusions || tourPackage.inclusions;
-        tourPackage.exclusions = updateData.exclusions || tourPackage.exclusions;
+        
+        // Update inclusions
+        if (updateData.inclusions) {
+            tourPackage.inclusions.deluxe = updateData.inclusions.deluxe || tourPackage.inclusions.deluxe;
+            tourPackage.inclusions.premium = updateData.inclusions.premium || tourPackage.inclusions.premium;
+            tourPackage.inclusions.exclusive = updateData.inclusions.exclusive || tourPackage.inclusions.exclusive;
+        }
+        
+        // Update exclusions
+        if (updateData.exclusions) {
+            tourPackage.exclusions.deluxe = updateData.exclusions.deluxe || tourPackage.exclusions.deluxe;
+            tourPackage.exclusions.premium = updateData.exclusions.premium || tourPackage.exclusions.premium;
+            tourPackage.exclusions.exclusive = updateData.exclusions.exclusive || tourPackage.exclusions.exclusive;
+        }
+        
         tourPackage.is_active = updateData.is_active !== undefined ? updateData.is_active : tourPackage.is_active;
-
 
         await tourPackage.save();
         

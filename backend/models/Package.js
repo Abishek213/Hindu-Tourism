@@ -20,11 +20,14 @@ const packageSchema = new mongoose.Schema({
     min: 1
   },
   inclusions: {
-    type: String,
-    required: true
+    deluxe: { type: String, default: "" },
+    premium: { type: String, default: "" },
+    exclusive: { type: String, default: "" }
   },
   exclusions: {
-    type: String
+    deluxe: { type: String, default: "" },
+    premium: { type: String, default: "" },
+    exclusive: { type: String, default: "" }
   },
   is_active: {
     type: Boolean,
@@ -32,6 +35,10 @@ const packageSchema = new mongoose.Schema({
   },
   brochure_url: {
     type: String
+  },
+  created_by: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
   }
 }, { 
   timestamps: true,

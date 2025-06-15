@@ -15,9 +15,17 @@ export const emptyPackage = {
   name: "",
   duration: "",
   price: "",
-  destinations: "",
-  inclusions: "",
-  exclusions: "",
+  description: "",
+  inclusions: {
+    deluxe: "",
+    premium: "",
+    exclusive: ""
+  },
+  exclusions: {
+    deluxe: "",
+    premium: "",
+    exclusive: ""
+  },
   status: "Active",
 };
 
@@ -55,61 +63,115 @@ export const PackageFormModal = ({
         </div>
 
         <form>
-          <div className="p-4 space-y-2">
+          <div className="p-4 space-y-4">
             <FormInput
+              label="Package Name"
               name="name"
               value={formData.name}
               onChange={onInputChange}
               placeholder="Enter package name"
+              required
             />
 
-            <div className="grid grid-cols-2 gap-1">
+            <div className="grid grid-cols-2 gap-4">
               <FormInput
+                label="Duration (days)"
                 name="duration"
                 value={formData.duration}
                 onChange={onInputChange}
-                placeholder="Enter duration(days) e.g., 7"
+                placeholder="e.g., 7"
                 type="number"
+                min="1"
+                required
               />
 
               <FormInput
+                label="Base Price"
                 name="price"
                 value={formData.price}
                 onChange={onInputChange}
-                placeholder="Enter Price e.g., 25000"
+                placeholder="e.g., 25000"
                 type="number"
+                min="0"
+                required
               />
             </div>
 
             <FormTextarea
-              name="destinations"
-              value={formData.destinations}
+              label="Description"
+              name="description"
+              value={formData.description}
               onChange={onInputChange}
-              placeholder="Enter Package description"
+              placeholder="Enter package description"
+              required
             />
 
-            <FormTextarea
-              name="inclusions"
-              value={formData.inclusions}
-              onChange={onInputChange}
-              placeholder="What's included in the package"
-            />
+            <div className="space-y-2">
+              <h3 className="font-medium text-orange-800">Inclusions</h3>
+              <FormTextarea
+                label="Deluxe Package"
+                name="inclusions.deluxe"
+                value={formData.inclusions.deluxe}
+                onChange={onInputChange}
+                placeholder="What's included in Deluxe package"
+                small
+              />
+              <FormTextarea
+                label="Premium Package"
+                name="inclusions.premium"
+                value={formData.inclusions.premium}
+                onChange={onInputChange}
+                placeholder="What's included in Premium package"
+                small
+              />
+              <FormTextarea
+                label="Exclusive Package"
+                name="inclusions.exclusive"
+                value={formData.inclusions.exclusive}
+                onChange={onInputChange}
+                placeholder="What's included in Exclusive package"
+                small
+              />
+            </div>
 
-            <FormTextarea
-              name="exclusions"
-              value={formData.exclusions}
-              onChange={onInputChange}
-              placeholder="What's not included in the package"
-             />
+            <div className="space-y-2">
+              <h3 className="font-medium text-orange-800">Exclusions</h3>
+              <FormTextarea
+                label="Deluxe Package"
+                name="exclusions.deluxe"
+                value={formData.exclusions.deluxe}
+                onChange={onInputChange}
+                placeholder="What's not included in Deluxe package"
+                small
+              />
+              <FormTextarea
+                label="Premium Package"
+                name="exclusions.premium"
+                value={formData.exclusions.premium}
+                onChange={onInputChange}
+                placeholder="What's not included in Premium package"
+                small
+              />
+              <FormTextarea
+                label="Exclusive Package"
+                name="exclusions.exclusive"
+                value={formData.exclusions.exclusive}
+                onChange={onInputChange}
+                placeholder="What's not included in Exclusive package"
+                small
+              />
+            </div>
 
-            <div className="flex gap-3 pt-2">
+            <div className="flex gap-3 pt-4">
               <button
+                type="button"
                 onClick={onClose}
                 className="flex-1 px-4 py-2 text-gray-700 bg-gray-100 border border-gray-300 rounded-lg hover:bg-gray-200 transition-all"
               >
                 Cancel
               </button>
               <button
+                type="button"
                 onClick={onSave}
                 className="flex-1 px-4 py-2 text-white bg-orange-500 rounded-lg hover:bg-orange-600 disabled:opacity-60 transition-all font-medium"
               >
@@ -141,7 +203,7 @@ export const ItineraryViewModal = ({
               {selectedPackage.name} - Itinerary
             </h2>
             <p className="text-orange-700">
-              {selectedPackage.duration} days • {selectedPackage.destinations}
+              {selectedPackage.duration} days
             </p>
           </div>
           <div className="flex gap-2">
@@ -262,15 +324,20 @@ export const FormInput = ({
   placeholder,
   type = "text",
   small = false,
+  required = false,
+  min,
 }) => (
   <div>
-    <label
-      className={`block text-orange-800 font-medium mb-1 ${
-        small ? "text-xs" : "text-sm"
-      }`}
-    >
-      {label}
-    </label>
+    {label && (
+      <label
+        className={`block text-orange-800 font-medium mb-1 ${
+          small ? "text-xs" : "text-sm"
+        }`}
+      >
+        {label}
+        {required && <span className="text-red-500"> *</span>}
+      </label>
+    )}
     <input
       type={type}
       name={name}
@@ -280,6 +347,8 @@ export const FormInput = ({
         small ? "p-2 text-sm" : "p-2.5"
       } border border-orange-200 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent`}
       placeholder={placeholder}
+      required={required}
+      min={min}
     />
   </div>
 );
@@ -291,15 +360,19 @@ export const FormTextarea = ({
   onChange,
   placeholder,
   small = false,
+  required = false,
 }) => (
   <div>
-    <label
-      className={`block text-orange-800 font-medium mb-1 ${
-        small ? "text-xs" : "text-sm"
-      }`}
-    >
-      {label}
-    </label>
+    {label && (
+      <label
+        className={`block text-orange-800 font-medium mb-1 ${
+          small ? "text-xs" : "text-sm"
+        }`}
+      >
+        {label}
+        {required && <span className="text-red-500"> *</span>}
+      </label>
+    )}
     <textarea
       name={name}
       value={value || ""}
@@ -308,6 +381,7 @@ export const FormTextarea = ({
         small ? "h-12 text-sm" : "h-20"
       } resize-none`}
       placeholder={placeholder}
+      required={required}
     />
   </div>
 );
@@ -321,7 +395,7 @@ export const PackageRow = ({ pkg, index, onView, onEdit, onToggleStatus }) => (
     <td className="px-6 py-4 font-medium text-gray-900">{pkg.name}</td>
     <td className="px-6 py-4 text-gray-700">{pkg.duration}</td>
     <td className="px-6 py-4 text-orange-700 font-semibold">Rs.{pkg.price}</td>
-    <td className="px-6 py-4 text-gray-700">{pkg.destinations}</td>
+    <td className="px-6 py-4 text-gray-700">{pkg.description}</td>
     <td className="px-6 py-4">
       <select
         value={pkg.status}

@@ -5,7 +5,8 @@ export const createPackage = async (packageData) => {
     const response = await api.post('/package', packageData);
     return response.data;
   } catch (error) {
-    throw error.response?.data?.message || 
+    throw error.response?.data?.errors || 
+          error.response?.data?.message || 
           error.response?.data?.error?.message || 
           'Failed to create package';
   }

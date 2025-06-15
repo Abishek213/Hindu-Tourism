@@ -1,7 +1,6 @@
 import mongoose from 'mongoose';
 import Lead from '../models/Lead.js';
 import Customer from '../models/Customer.js';
-import CommunicationLog from '../models/CommunicationLog.js';
 import { validationResult } from 'express-validator';
 
 export const createLead = async (req, res) => {
