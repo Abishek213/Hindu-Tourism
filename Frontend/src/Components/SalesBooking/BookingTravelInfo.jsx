@@ -9,7 +9,7 @@ function ServiceCheckbox({ service, checked, onChange }) {
       />
       <div className="flex flex-col">
         <span className="text-sm font-medium text-gray-700">{service.name}</span>
-        <span className="text-xs text-gray-500">${service.price}</span>
+        <span className="text-xs text-gray-500">Rs.{service.price}</span>
         {service.description && (
           <span className="text-xs text-gray-400">{service.description}</span>
         )}

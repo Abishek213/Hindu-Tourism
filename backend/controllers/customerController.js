@@ -85,9 +85,6 @@ export const getCustomer = async (req, res) => {
   }
 };
 
-// @desc    Update customer details
-// @route   PUT /api/customers/:id
-// @access  Admin
 export const updateCustomer = async (req, res) => {
   try {
     const updates = Object.keys(req.body);
@@ -117,9 +114,6 @@ export const updateCustomer = async (req, res) => {
   }
 };
 
-// @desc    Get customer booking history
-// @route   GET /api/customers/:id/bookings
-// @access  Admin, Sales
 export const getCustomerBookings = async (req, res) => {
   try {
     const bookings = await Booking.find({ customer_id: req.params.id })

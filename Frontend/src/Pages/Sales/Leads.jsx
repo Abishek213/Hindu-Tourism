@@ -23,9 +23,6 @@ export default function LeadManagement() {
   const [statusFilter, setStatusFilter] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [convertingLeads, setConvertingLeads] = useState(new Set());
-  // const navigate = useNavigate();
-
-  // Form state
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState({
     name: "",
@@ -37,7 +34,6 @@ export default function LeadManagement() {
   });
   const [submitting, setSubmitting] = useState(false);
 
-  // Status color mapping
   const statusColors = {
     new: "bg-blue-50 text-blue-700 border-blue-200",
     contacted: "bg-amber-50 text-amber-700 border-amber-200",
@@ -45,7 +41,6 @@ export default function LeadManagement() {
     lost: "bg-red-50 text-red-700 border-red-200",
   };
 
-  // Status label mapping
   const statusLabels = {
     new: "New",
     contacted: "Contacted",
@@ -53,7 +48,6 @@ export default function LeadManagement() {
     lost: "Lost",
   };
 
-  // Source label mapping
   const sourceLabels = {
     sources: "Sources",
     website: "Website",
@@ -63,7 +57,6 @@ export default function LeadManagement() {
     other: "Other",
   };
 
-  // Load leads from API
   const loadLeads = async () => {
     setLoading(true);
     setError("");
@@ -79,12 +72,10 @@ export default function LeadManagement() {
     }
   };
 
-  // Debounced search
   const debouncedSearch = debounce((term) => {
     setSearchTerm(term);
   }, 300);
 
-  // Handle search and filtering
   useEffect(() => {
     const fetchFilteredLeads = async () => {
       try {
@@ -108,7 +99,6 @@ export default function LeadManagement() {
     loadLeads();
   }, []);
 
-  // Form handlers
   const handleFormChange = (e) => {
     const { name, value } = e.target;
     setForm({ ...form, [name]: value });
@@ -130,11 +120,9 @@ export default function LeadManagement() {
     setSubmitting(true);
 
     try {
-      // First create the lead
       const response = await api.post("/lead", form);
       console.log("Lead created successfully:", response.data);
 
-      // Then create the communication log
       try {
         const logData = {
           lead_id: response.data._id,
@@ -148,10 +136,9 @@ export default function LeadManagement() {
         console.log("Communication log created successfully");
       } catch (logError) {
         console.error("Failed to create communication log:", logError);
-        // Don't fail the entire operation if log creation fails
       }
 
-      loadLeads(); // Refresh the leads list
+      loadLeads();
       setShowForm(false);
       resetForm();
     } catch (error) {
@@ -168,27 +155,23 @@ export default function LeadManagement() {
   const handleConvertToCustomer = async (leadId) => {
     console.log("Attempting to convert lead:", leadId);
 
-    // Add lead to converting state
     setConvertingLeads((prev) => new Set([...prev, leadId]));
 
     try {
       const response = await api.post(`/lead/${leadId}/convert`);
       console.log("Conversion successful:", response.data);
 
-      // Show success feedback
       const leadName =
         leads.find((lead) => lead._id === leadId)?.name || "Lead";
-      setError(""); // Clear any previous errors
+      setError("");
       setSuccessMessage(`${leadName} successfully converted to customer!`);
 
-      // Refresh the leads list to show updated data
       await loadLeads();
     } catch (error) {
       console.error("Failed to convert lead:", error);
       console.error("Error details:", error.response?.data);
       setError("Failed to convert lead to customer.");
     } finally {
-      // Remove lead from converting state
       setConvertingLeads((prev) => {
         const newSet = new Set(prev);
         newSet.delete(leadId);
@@ -207,7 +190,6 @@ export default function LeadManagement() {
     }
   };
 
-  // Function to render convert button based on lead status
   const renderConvertButton = (lead) => {
     const leadId = lead._id || lead.id;
     const isConverting = convertingLeads.has(leadId);
@@ -257,10 +239,8 @@ export default function LeadManagement() {
   };
 
   return (
-    // <div className="">
     <div className="p-4 bg-white rounded-lg shadow-md">
       <div>
-        {/* Header */}
         <div className="mb-6 px-6 py-6 border-b border-gray-100 bg-primary-saffron">
           <div className="flex flex-col items-center justify-between sm:flex-row">
             <div>
@@ -646,10 +626,6 @@ export default function LeadManagement() {
                                   );
                                 }
                               }}
-                              // Combine all necessary Tailwind classes here.
-                              // The `appearance-none` hides the default arrow.
-                              // The `bg-[url(...)]` provides your custom arrow.
-                              // Ensure `pr-7` or a similar padding is sufficient for your arrow.
                               className={`
                                       appearance-none
                                       px-3 py-1 text-xs font-semibold rounded-full border
@@ -715,6 +691,5 @@ export default function LeadManagement() {
         </div>
       </div>
     </div>
-    // </div>
   );
 }

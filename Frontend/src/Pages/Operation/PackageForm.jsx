@@ -40,7 +40,17 @@ const PackageDashboard = () => {
         name: pkg.title,
         duration: pkg.duration_days,
         price: pkg.base_price,
-        destinations: pkg.description,
+        description: pkg.description,
+        inclusions: pkg.inclusions || {
+          deluxe: "",
+          premium: "",
+          exclusive: "",
+        },
+        exclusions: pkg.exclusions || {
+          deluxe: "",
+          premium: "",
+          exclusive: "",
+        },
         status: pkg.is_active ? "Active" : "Inactive",
         itinerary: (pkg.itineraries || []).map((it) => ({
           id: it._id,
@@ -60,7 +70,7 @@ const PackageDashboard = () => {
         if (updatedPkg) setSelectedPackage(updatedPkg);
       }
     } catch (error) {
-      toast.error("Failed to load packages");
+      toast.error(error.message || "Failed to load packages");
       console.error("Error:", error);
     } finally {
       setIsLoading(false);
@@ -73,7 +83,20 @@ const PackageDashboard = () => {
   }, []);
 
   const handleFormInputChange = (e) => {
-    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    const { name, value } = e.target;
+
+    if (name.includes(".")) {
+      const [parent, child] = name.split(".");
+      setFormData((prev) => ({
+        ...prev,
+        [parent]: {
+          ...prev[parent],
+          [child]: value,
+        },
+      }));
+    } else {
+      setFormData((prev) => ({ ...prev, [name]: value }));
+    }
   };
 
   const handleItineraryInputChange = (e) => {
@@ -91,10 +114,10 @@ const PackageDashboard = () => {
       name: pkg.name,
       duration: pkg.duration,
       price: pkg.price,
-      description: pkg.description || "",
-      destinations: pkg.destinations,
-      inclusions: pkg.inclusions || "",
-      exclusions: pkg.exclusions || "",
+      description: pkg.description,
+      inclusions: pkg.inclusions,
+      exclusions: pkg.exclusions,
+      status: pkg.status,
     });
     setModalState((prev) => ({ ...prev, editForm: true }));
   };
@@ -112,7 +135,7 @@ const PackageDashboard = () => {
   };
 
   const handleCreatePackage = async () => {
-    if (!formData.name || !formData.duration || !formData.price) {
+    if (!formData.name || !formData.duration || !formData.price || !formData.description) {
       return toast.error("Please fill in all required fields");
     }
 
@@ -121,17 +144,17 @@ const PackageDashboard = () => {
         title: formData.name,
         duration_days: formData.duration,
         base_price: formData.price,
-        description: formData.destinations,
+        description: formData.description,
         inclusions: formData.inclusions,
         exclusions: formData.exclusions,
         is_active: formData.status === "Active",
       });
       closeAllModals();
-      toast.success("Package created");
+      toast.success("Package created successfully");
       await fetchPackages(true);
     } catch (error) {
-      toast.error(error.message || "Creation failed");
-      console.error("Error:", error);
+      toast.error(error.message || "Failed to create package");
+      console.error("Error details:", error);
     }
   };
 
@@ -148,10 +171,10 @@ const PackageDashboard = () => {
         exclusions: formData.exclusions,
       });
       closeAllModals();
-      toast.success("Package updated");
+      toast.success("Package updated successfully");
       await fetchPackages(true);
     } catch (error) {
-      toast.error(error.message || "Update failed");
+      toast.error(error.message || "Failed to update package");
       console.error("Error:", error);
     }
   };
@@ -159,10 +182,10 @@ const PackageDashboard = () => {
   const handleToggleStatus = async (pkgId, isActive) => {
     try {
       await packageService.updatePackageStatus(pkgId, isActive);
-      toast.success("Status updated");
+      toast.success("Status updated successfully");
       await fetchPackages(true);
     } catch (error) {
-      toast.error("Status update failed");
+      toast.error(error.message || "Failed to update status");
       console.error("Error:", error);
     }
   };
@@ -233,9 +256,9 @@ const PackageDashboard = () => {
         setModalState({ itineraryForm: false, itineraryView: true });
       }
 
-      toast.success(`Itinerary ${itineraryData.id ? "updated" : "added"}`);
+      toast.success(`Itinerary ${itineraryData.id ? "updated" : "added"} successfully`);
     } catch (error) {
-      toast.error("Operation failed");
+      toast.error(error.message || "Failed to save itinerary");
       console.error("Error:", error);
     }
   };
@@ -254,7 +277,7 @@ const PackageDashboard = () => {
   }
 
   return (
-    <div className="p-4  bg-white rounded-lg shadow-md">
+    <div className="p-4 bg-white rounded-lg shadow-md">
       {/* Header Section */}
       <div className="">
         <div
@@ -287,12 +310,12 @@ const PackageDashboard = () => {
       </div>
 
       {/* Packages Table */}
-      <div className=" py-14 mx-auto max-w-7xl">
+      <div className="py-14 mx-auto max-w-7xl">
         <div className="overflow-hidden bg-white shadow-lg rounded-xl">
           <div className="flex justify-start">
             <table className="min-w-full text-sm">
-              <thead className=" bg-secondary-green border-secondary-green-700">
-                <tr className="font-semibold text-sm text-white  uppercase">
+              <thead className="bg-secondary-green border-secondary-green-700">
+                <tr className="font-semibold text-sm text-white uppercase">
                   <th className="px-4 py-3 border-r text-left border-green-700">
                     Package Name
                   </th>
@@ -303,7 +326,7 @@ const PackageDashboard = () => {
                     Price
                   </th>
                   <th className="px-4 py-3 border-r text-left border-green-700">
-                    Destinations
+                    Description
                   </th>
                   <th className="px-4 py-3 border-r text-left border-green-700">
                     Status
