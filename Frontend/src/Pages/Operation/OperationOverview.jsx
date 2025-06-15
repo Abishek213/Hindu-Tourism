@@ -22,6 +22,10 @@ import {
   ChevronRight,
   Car,
   UserX,
+  Plus,
+  ShoppingBag,
+  DollarSign,
+  BarChart3
 } from "lucide-react";
 import {
   BarChart,
@@ -46,6 +50,27 @@ import {
   processStatusDistribution,
 } from "../../services/OperationOverviewServices";
 
+import api from "../../api/auth";
+
+// Optional Services API functions
+const optionalServiceService = {
+  getAllServices: async () => {
+    const response = await api.get("/optService");
+    return response.data;
+  },
+
+  getActiveServices: async () => {
+    const response = await api.get("/optService/active");
+    return response.data;
+  },
+
+  getServiceStats: async () => {
+    const response = await api.get("/optService/stats");
+    return response.data;
+  },
+};
+
+
 export default function EnhancedOperationDashboard() {
   const [activeTab, setActiveTab] = useState("overview");
   const [travelerStatuses, setTravelerStatuses] = useState([]);
@@ -66,7 +91,15 @@ export default function EnhancedOperationDashboard() {
   const [packageDistributionData, setPackageDistributionData] = useState([]);
   const [guidePerformanceData, setGuidePerformanceData] = useState([]);
   const [statusDistributionData, setStatusDistributionData] = useState([]);
+  const [optionalServices, setOptionalServices] = useState([]);
+  const [serviceStats, setServiceStats] = useState({
+    totalServices: 0,
+    activeServices: 0,
+    totalRevenue: 0,
+    popularServices: [],
+  });
   const [expanded, setExpanded] = useState(false);
+  const [servicesExpanded, setServicesExpanded] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -84,10 +117,76 @@ export default function EnhancedOperationDashboard() {
       setPackageDistributionData(processPackageDistribution(packages));
       setGuidePerformanceData(processGuidePerformance(guides));
       setStatusDistributionData(processStatusDistribution(bookings));
+
+      // Load optional services data
+      await loadOptionalServicesData();
     } catch (error) {
       toast.error("Failed to load dashboard data");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const loadOptionalServicesData = async () => {
+    try {
+      // Fetch all services first to get total count and active count
+      const allServicesResponse = await optionalServiceService.getAllServices();
+
+      if (allServicesResponse.success) {
+        const allServices = allServicesResponse.data || [];
+        const activeServices = allServices.filter(
+          (service) => service.is_active
+        );
+
+        // Set the services state with active services only
+        setOptionalServices(activeServices);
+
+        // Try to get stats if the endpoint exists
+        try {
+          const statsResponse = await optionalServiceService.getServiceStats();
+
+          if (statsResponse.success && Array.isArray(statsResponse.data)) {
+            // Calculate total revenue from stats data
+            const totalRevenue = statsResponse.data.reduce(
+              (sum, service) => sum + (service.totalRevenue || 0),
+              0
+            );
+
+            setServiceStats({
+              totalServices: allServices.length,
+              activeServices: activeServices.length,
+            });
+          } else {
+            throw new Error("Stats endpoint returned invalid data");
+          }
+        } catch (statsError) {
+          // Fallback: calculate basic stats from services data
+          console.log("Stats API not available, using fallback calculation");
+
+          setServiceStats({
+            totalServices: allServices.length,
+            activeServices: activeServices.length,
+            totalRevenue: activeServices.reduce(
+              (sum, service) => sum + (service.price || 0),
+              0
+            ),
+            popularServices: activeServices.slice(0, 5),
+          });
+        }
+      } else {
+        throw new Error(
+          allServicesResponse.message || "Failed to fetch services"
+        );
+      }
+    } catch (error) {
+      console.error("Failed to load optional services:", error);
+
+      // Set default values if everything fails
+      setOptionalServices([]);
+      setServiceStats({
+        totalServices: 0,
+        activeServices: 0,
+      });
     }
   };
 
@@ -148,6 +247,54 @@ export default function EnhancedOperationDashboard() {
     }
   };
 
+  const renderOptionalServicesSection = () => (
+    <div className="bg-white rounded-xl shadow-md border border-orange-100 overflow-hidden">
+      <div className="p-3 border-b border-orange-200">
+        <h2 className="text-lg font-bold text-gray-800 flex items-center">
+          <ShoppingBag className="mr-2 text-orange-500 w-5 h-5" />
+          Optional Services
+        </h2>
+      </div>
+
+      <div className="p-4">
+        {/* Service Stats Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+            <div className="flex items-center justify-between mb-3">
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-md">
+                <Package className="w-4 h-4 text-white" />
+              </div>
+            </div>
+            <div>
+              <h3 className="text-2xl font-bold text-gray-800 mb-1">
+                {serviceStats.totalServices}
+              </h3>
+              <p className="text-gray-600 font-medium text-sm">
+                Total Services
+              </p>
+            </div>
+          </div>
+
+          <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+            <div className="flex items-center justify-between mb-3">
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center shadow-md">
+                <CheckCircle className="w-4 h-4 text-white" />
+              </div>
+            </div>
+            <div>
+              <h3 className="text-2xl font-bold text-gray-800 mb-1">
+                {serviceStats.activeServices}
+              </h3>
+              <p className="text-gray-600 font-medium text-sm">
+                Active Services
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
   const renderOverview = () => (
     <div className="space-y-8">
       {loading ? (
@@ -187,6 +334,9 @@ export default function EnhancedOperationDashboard() {
               color="from-purple-500 to-indigo-500"
             />
           </div>
+
+          {/* Optional Services Section */}
+          {renderOptionalServicesSection()}
 
           {/* Resource Management Section */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -372,6 +522,7 @@ export default function EnhancedOperationDashboard() {
                           <td className="px-4 py-3">
                             <div className="text-gray-800">
                               {traveler.package}
+
                             </div>
                           </td>
                           <td className="px-4 py-3">
@@ -394,10 +545,12 @@ export default function EnhancedOperationDashboard() {
                                 <option value="delayed">Delayed</option>
                                 <option value="issue">Issue</option>
                               </select>
+
                             </div>
                           </td>
                           <td className="px-4 py-3">
                             <div className="flex items-center">
+
                               <Car className="w-4 h-4 text-blue-500 mr-1" />
                               <span className="text-sm text-gray-700">
                                 {traveler.assignedTransport}

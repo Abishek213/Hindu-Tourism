@@ -152,6 +152,7 @@ const InvoiceManagement = () => {
     }
   };
 
+
   const handleStatusChange = async (invoiceId, newStatus) => {
     try {
       setIsLoading(true);
@@ -198,6 +199,7 @@ const InvoiceManagement = () => {
       setIsLoading(false);
     }
   };
+
 
   const getStatusCount = (status) => {
     if (status === "all") return invoices.length;
@@ -292,6 +294,7 @@ const InvoiceManagement = () => {
         <div className="overflow-hidden bg-white border border-orange-100 shadow-lg rounded-2xl">
           <div className="overflow-x-auto">
             <table className="w-full">
+
             <thead className=" px-8 py-6 bg-secondary-green">
                 <tr className="text-white">
                   <th className="px-4 py-3 border-r text-left border-green-700">
@@ -326,16 +329,19 @@ const InvoiceManagement = () => {
                     {" "}
                     Actions
                   </th>
+
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-100">
                 {filteredInvoices.map((invoice, index) => (
+
                   <tr
                     key={invoice._id}
                     className={`hover:bg-orange-25 transition-colors duration-150 ${
                       index % 2 === 0 ? "bg-gray-25" : ""
                     }`}
                   >
+
                     <td className="px-4 py-4 whitespace-nowrap">
                       <span className="text-sm font-mono text-gray-600 bg-gray-100 px-2 py-1 rounded">
                         {getBookingReference(invoice)}
@@ -357,6 +363,7 @@ const InvoiceManagement = () => {
                       {paymentStatusBadge(getPaymentStatus(invoice))}
                     </td>
                     <td className="px-4 py-4 whitespace-nowrap">
+
                       <select
                         value={invoice.status}
                         onChange={(e) =>

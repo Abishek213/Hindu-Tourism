@@ -31,15 +31,16 @@ export default function BookingMonitor() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Fetch bookings from backend
   useEffect(() => {
     const loadBookings = async () => {
       try {
         setIsLoading(true);
         const data = await fetchBookings();
 
+
         // Transform backend data to match frontend structure
         const transformedBookings = data.map((booking) => ({
+
           id: booking._id,
           customer: booking.customer_id?.name || "Unknown Customer",
           email: booking.customer_id?.email || "No email",
@@ -47,10 +48,12 @@ export default function BookingMonitor() {
           date: new Date(booking.travel_start_date).toISOString().split("T")[0],
           travelers: booking.num_travelers,
           status: booking.status,
+
           guide: booking.guide_id?.name || "",
           transport: booking.transport_id?.name || "",
           travelStatus: booking.travelStatus || "Not Started",
           // Store additional required fields
+
           originalData: {
             travel_start_date: booking.travel_start_date,
             travel_end_date: booking.travel_end_date,
@@ -87,28 +90,8 @@ export default function BookingMonitor() {
     setIsStatusModalOpen(true);
   };
 
-  //   const handleUpdateTravelStatus = async () => {
-  //   if (selectedBooking) {
-  //     try {
-  //       // Only send travelStatus now
-  //       await updateTravelStatus(selectedBooking.id, currentTravelStatus);
 
-  //       // Update local state
-  //       setBookings(prev =>
-  //         prev.map(booking =>
-  //           booking.id === selectedBooking.id
-  //             ? { ...booking, travelStatus: currentTravelStatus }
-  //             : booking
-  //         )
-  //       );
-
-  //       setIsStatusModalOpen(false);
-  //     } catch (err) {
-  //       console.error('Update failed:', err);
-  //       setError('Failed to update travel status. Please try again.');
-  //     }
-  //   }
-  // };
+ 
 
   const handleUpdateTravelStatus = async () => {
     if (selectedBooking) {
@@ -145,6 +128,7 @@ export default function BookingMonitor() {
       } finally {
         setIsLoading(false);
       }
+
     }
   };
 

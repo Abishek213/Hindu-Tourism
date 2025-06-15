@@ -273,6 +273,7 @@ export const ProcessRefunds = () => {
         )}
       </div>
 
+
       <div className="overflow-x-auto border shadow-md rounded-xl">
         <div className="">
           <table className="min-w-full table-auto">
@@ -302,6 +303,7 @@ export const ProcessRefunds = () => {
                 <th className="px-3 py-3 border-r text-left border-green-700">
                   Actions
                 </th>
+
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-yellow-100">

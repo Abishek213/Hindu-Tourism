@@ -85,25 +85,6 @@ export const invoiceService = {
   },
 
   /**
-   * Update invoice status
-   * @param {string} invoiceId - The invoice ID
-   * @param {string} status - New status ('draft', 'sent', 'paid', 'cancelled')
-   * @returns {Promise<Object>} Updated invoice object
-   * @throws {Error} If not authenticated or API request fails
-   */
-  async updateInvoiceStatus(invoiceId, status) {
-    try {
-      if (!invoiceId) throw new Error('Invoice ID is required');
-      if (!status) throw new Error('Status is required');
-      
-      const response = await api.put(`/invoice/${invoiceId}/status`, { status });
-      return response.data;
-    } catch (error) {
-      throw this.handleError(error);
-    }
-  },
-
-  /**
    * Get invoice by booking ID
    * @param {string} bookingId - The booking ID
    * @returns {Promise<Object|null>} Invoice object or null if not found

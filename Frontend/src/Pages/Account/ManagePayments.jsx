@@ -199,12 +199,14 @@ const PaymentOverlay = ({
                 </h2>
               </div>
               {/* Display booking status here - using the overall payment status from selectedBooking */}
+
               {getStatusBadge(
                 paymentSummary?.overall_payment_status ||
                   selectedBooking.overallPaymentStatus ||
                   "pending"
               )}
             </div>
+
 
             <div className="grid grid-cols-1 gap-6 mb-8 md:grid-cols-2">
               {/* Customer Information */}
@@ -643,7 +645,7 @@ const ManagePayments = () => {
     );
   }
 
-  // Main list view
+ 
   return (
     <div className="p-4 bg-white rounded-lg shadow-md">
       <div>
@@ -735,6 +737,7 @@ const ManagePayments = () => {
         </div>
 
         {!loading && !error && (
+
           <div className="overflow-x-auto border shadow-md rounded-xl">
             <table className="min-w-full ">
               <thead className=" px-8 py-6 bg-secondary-green">
@@ -760,10 +763,12 @@ const ManagePayments = () => {
                   <th className="px-4 py-3 border-r text-left border-green-700">
                     Actions
                   </th>
+
                 </tr>
               </thead>
               <tbody className="divide-y bg-white backdrop-blur-sm divide-amber-100">
                 {filteredPayments.length > 0 ? (
+
                   filteredPayments.map(
                     (payment) =>
                       // Ensure booking_id and customer_id are populated
@@ -839,6 +844,7 @@ const ManagePayments = () => {
                       <p className="text-sm text-amber-500">
                         Try adjusting your filter or search.
                       </p>
+
                     </td>
                   </tr>
                 )}
