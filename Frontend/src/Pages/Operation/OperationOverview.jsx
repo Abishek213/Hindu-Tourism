@@ -25,7 +25,7 @@ import {
   Plus,
   ShoppingBag,
   DollarSign,
-  BarChart3,
+  BarChart3
 } from "lucide-react";
 import {
   BarChart,
@@ -49,6 +49,7 @@ import {
   processGuidePerformance,
   processStatusDistribution,
 } from "../../services/OperationOverviewServices";
+
 import api from "../../api/auth";
 
 // Optional Services API functions
@@ -68,6 +69,7 @@ const optionalServiceService = {
     return response.data;
   },
 };
+
 
 export default function EnhancedOperationDashboard() {
   const [activeTab, setActiveTab] = useState("overview");
@@ -520,6 +522,7 @@ export default function EnhancedOperationDashboard() {
                           <td className="px-4 py-3">
                             <div className="text-gray-800">
                               {traveler.package}
+
                             </div>
                           </td>
                           <td className="px-4 py-3">
@@ -542,10 +545,12 @@ export default function EnhancedOperationDashboard() {
                                 <option value="delayed">Delayed</option>
                                 <option value="issue">Issue</option>
                               </select>
+
                             </div>
                           </td>
                           <td className="px-4 py-3">
                             <div className="flex items-center">
+
                               <Car className="w-4 h-4 text-blue-500 mr-1" />
                               <span className="text-sm text-gray-700">
                                 {traveler.assignedTransport}

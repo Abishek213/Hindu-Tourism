@@ -146,8 +146,8 @@ const GenerateReport = () => {
       </div>
 
     {/* Metrics Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mb-2 w-[320px]">
-          <div className="bg-orange-50 border border-orange-200 rounded-md p-2 flex items-center gap-2 shadow-sm">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mb-2 w-[320px] px-7 ">
+          <div className="bg-orange-50 border border-orange-200 rounded-md p-2 flex items-end gap-2 shadow-sm">
             <Users className="text-orange-500 w-5 h-5" />
             <div>
               <p className="text-[11px] text-gray-600">Total Leads</p>
@@ -155,7 +155,7 @@ const GenerateReport = () => {
             </div>
           </div>
 
-          <div className="bg-orange-50 border border-orange-200 rounded-md p-2 flex items-center gap-2 shadow-sm">
+          <div className="bg-orange-50 border border-orange-200 rounded-md p-2 flex items-end gap-2 shadow-sm">
             <TrendingUp className="text-orange-500 w-5 h-5" />
             <div>
               <p className="text-[11px] text-gray-600">Conversions</p>

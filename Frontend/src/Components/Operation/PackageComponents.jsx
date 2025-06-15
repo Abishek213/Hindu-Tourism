@@ -326,7 +326,7 @@ export const PackageRow = ({ pkg, index, onView, onEdit, onToggleStatus }) => (
       <select
         value={pkg.status}
         onChange={(e) => onToggleStatus(pkg.id, e.target.value === "Active")}
-        className={`px-3 py-1 rounded-full text-sm font-medium ${
+        className={`px-6 py-1 rounded-full text-sm font-medium ${
           pkg.status === "Active"
             ? "bg-green-100 text-green-800 hover:bg-green-200"
             : "bg-red-100 text-red-800 hover:bg-red-200"

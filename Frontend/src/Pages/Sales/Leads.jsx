@@ -257,7 +257,7 @@ export default function LeadManagement() {
   };
 
   return (
-    // <div className="">
+    
     <div className="p-4 bg-white rounded-lg shadow-md">
       <div>
         {/* Header */}
@@ -285,7 +285,7 @@ export default function LeadManagement() {
           </div>
         </div>
 
-        <div className="p-6">
+        <div className="">
           {/* Success message */}
           {successMessage && (
             <div className="p-4 mb-6 text-green-700 border border-green-200 bg-green-50 rounded-xl">

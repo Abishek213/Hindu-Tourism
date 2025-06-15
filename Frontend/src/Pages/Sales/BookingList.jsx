@@ -611,8 +611,8 @@ export default function CustomerList({ onAddCustomer }) {
       <CustomerHeader onAddCustomer={handleAddCustomerClick} />
 
      {/* Search Bar */}
-            <div className="p-6 relative flex flex-col gap-4 mb-0 lg:flex-row">
-          <Search className="absolute w-5 h-5 text-gray-400 transform -translate-y-1/2 left-9 top-1/2" />
+            <div className=" mb-6 relative flex flex-col gap-4 mb-0 lg:flex-row">
+          <Search className="absolute w-5 h-5 text-gray-400 transform -translate-y-1/2 left-3 top-1/2" />
           <input
             type="text"
             placeholder="Search customers by name, email, phone, or lead ID..."
@@ -623,7 +623,7 @@ export default function CustomerList({ onAddCustomer }) {
 
 
       {/* Main Content */}
-      <div className="px-6 overflow-hidden bg-white rounded-lg ">
+      <div className=" overflow-hidden bg-white rounded-lg ">
         {filteredCustomers.length === 0 ? (
           <EmptyState onAddCustomer={handleAddCustomerClick} />
         ) : (

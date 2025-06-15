@@ -230,24 +230,22 @@ export default function ManageTeamForm() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {showGuideForm && (
-          <div className="bg-white p-6 rounded-xl shadow-lg border-l-4 border-orange-500">
-            <h3 className="text-xl font-bold mb-4 text-orange-600">Create New Guide</h3>
+          <div className="bg-white p-6 rounded-xl shadow-lg border-l-4 border-x-secondary-green">
+            <h3 className="text-xl font-bold mb-4 text-black">Create New Guide</h3>
             <div className="space-y-4">
               <input
                 name="name"
                 value={newGuide.name}
                 onChange={handleGuideChange}
                 placeholder="Guide Name *"
-                className="w-full p-3 border border-orange-200 rounded-lg focus:ring-2 focus:ring-orange-300 focus:border-transparent"
-                required
+                  className="w-full p-3 border border-gray-300 rounded-lg"
               />
               <input
                 name="phone"
                 value={newGuide.phone}
                 onChange={handleGuideChange}
                 placeholder="Phone Number *"
-                className="w-full p-3 border border-orange-200 rounded-lg focus:ring-2 focus:ring-orange-300 focus:border-transparent"
-                required
+                  className="w-full p-3 border border-gray-300 rounded-lg"
               />
               <input
                 name="email"
@@ -255,7 +253,7 @@ export default function ManageTeamForm() {
                 onChange={handleGuideChange}
                 placeholder="Email Address"
                 type="email"
-                className="w-full p-3 border border-orange-200 rounded-lg focus:ring-2 focus:ring-orange-300 focus:border-transparent"
+                  className="w-full p-3 border border-gray-300 rounded-lg"
               />
               <div className="flex items-center">
                 <input
@@ -265,12 +263,12 @@ export default function ManageTeamForm() {
                   onChange={handleGuideChange}
                   className="mr-2"
                 />
-                <label className="text-gray-700">Active Guide</label>
+                <label className="text-black">Active Guide</label>
               </div>
               <button
                 onClick={createGuide}
                 disabled={loading}
-                className="w-full bg-orange-500 text-white py-3 rounded-lg hover:bg-orange-600 disabled:opacity-50 font-semibold"
+                className="w-full bg-primary-saffron text-white py-3 rounded-lg hover:bg-orange-600 disabled:opacity-50 font-semibold"
               >
                 {loading ? 'Creating...' : 'Create Guide'}
               </button>
@@ -280,31 +278,29 @@ export default function ManageTeamForm() {
 
         {/* Transport Creation Form */}
         {showTransportForm && (
-          <div className="bg-white p-6 rounded-xl shadow-lg border-l-4 border-amber-500">
-            <h3 className="text-xl font-bold mb-4 text-amber-600">Create New Transport</h3>
+          <div className="bg-white p-6 rounded-xl shadow-lg border-l-4 border-secondary-green">
+            <h3 className="text-xl font-bold mb-4 text-black">Create New Transport</h3>
             <div className="space-y-4">
               <input
                 name="name"
                 value={newTransport.name}
                 onChange={handleTransportChange}
                 placeholder="Transport Name *"
-                className="w-full p-3 border border-amber-200 rounded-lg focus:ring-2 focus:ring-amber-300 focus:border-transparent"
-                required
+                  className="w-full p-3 border border-gray-300 rounded-lg"
               />
               <input
                 name="type"
                 value={newTransport.type}
                 onChange={handleTransportChange}
                 placeholder="Transport Type *"
-                className="w-full p-3 border border-amber-200 rounded-lg focus:ring-2 focus:ring-amber-300 focus:border-transparent"
-                required
+                className="w-full p-3 border border-gray-300 rounded-lg"
               />
               <input
                 name="contact_info"
                 value={newTransport.contact_info}
                 onChange={handleTransportChange}
                 placeholder="Contact Information"
-                className="w-full p-3 border border-amber-200 rounded-lg focus:ring-2 focus:ring-amber-300 focus:border-transparent"
+                className="w-full p-3 border border-gray-300 rounded-lg"
               />
               <div className="flex items-center">
                 <input
@@ -314,12 +310,12 @@ export default function ManageTeamForm() {
                   onChange={handleTransportChange}
                   className="mr-2"
                 />
-                <label className="text-gray-700">Active Transport</label>
+                <label className="text-black">Active Transport</label>
               </div>
               <button
                 onClick={createTransport}
                 disabled={loading}
-                className="w-full bg-amber-500 text-white py-3 rounded-lg hover:bg-amber-600 disabled:opacity-50 font-semibold"
+                className="w-full bg-primary-saffron text-white py-3 rounded-lg hover:bg-amber-600 disabled:opacity-50 font-semibold"
               >
                 {loading ? 'Creating...' : 'Create Transport'}
               </button>
@@ -330,9 +326,9 @@ export default function ManageTeamForm() {
 
 
         {/* Guides List */}
-        <div className="bg-white p-6 rounded-xl shadow-lg border-l-4 border-orange-500">
+        <div className="bg-white p-6 rounded-xl shadow-lg border-l-4 border-x-secondary-green">
           <div className="flex justify-between items-center mb-4">
-            <h3 className="text-xl font-bold text-orange-700">
+            <h3 className="text-xl font-bold text-black">
               Guides ({filteredGuides.length}/{guides.length})
             </h3>
             {fetchingData && <span className="text-sm text-gray-500">Loading...</span>}
@@ -346,7 +342,7 @@ export default function ManageTeamForm() {
                 placeholder="Search guides by name, email, or phone..."
                 value={guideSearchQuery}
                 onChange={(e) => setGuideSearchQuery(e.target.value)}
-                className="w-full p-3 pl-10 pr-10 border border-orange-200 rounded-lg focus:ring-2 focus:ring-orange-300 focus:border-transparent"
+                       className="w-full p-3 pl-10 pr-10 border border-gray-300 rounded-lg "
               />
               <div className="absolute left-3 top-1/2 transform -translate-y-1/2">
                 <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -441,9 +437,9 @@ export default function ManageTeamForm() {
         </div>
 
         {/* Transports List */}
-        <div className="bg-white p-6 rounded-xl shadow-lg border-l-4 border-amber-500">
+        <div className="bg-white p-6 rounded-xl shadow-lg border-l-4 border-x-secondary-green">
           <div className="flex justify-between items-center mb-4">
-            <h3 className="text-xl font-bold text-amber-700">
+            <h3 className="text-xl font-bold text-black">
               Transports ({filteredTransports.length}/{transports.length})
             </h3>
             {fetchingData && <span className="text-sm text-gray-500">Loading...</span>}
@@ -457,7 +453,7 @@ export default function ManageTeamForm() {
                 placeholder="Search transports by name, type, or contact..."
                 value={transportSearchQuery}
                 onChange={(e) => setTransportSearchQuery(e.target.value)}
-                className="w-full p-3 pl-10 pr-10 border border-amber-200 rounded-lg focus:ring-2 focus:ring-amber-300 focus:border-transparent"
+                className="w-full p-3 pl-10 pr-10 border border-gray-300 rounded-lg "
               />
               <div className="absolute left-3 top-1/2 transform -translate-y-1/2">
                 <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">

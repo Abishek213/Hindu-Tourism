@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { X, Calendar, User, FileText, Eye, Search } from "lucide-react";
 import { invoiceService } from "../../services/invoiceService";
-import { toast } from 'react-hot-toast';
+import { toast } from "react-hot-toast";
 
 const InvoiceManagement = () => {
   const [invoices, setInvoices] = useState([]);
@@ -11,56 +11,59 @@ const InvoiceManagement = () => {
   const [error, setError] = useState(null);
 
   const statusColors = {
-    paid: 'bg-emerald-100 text-emerald-700 border-emerald-200',
-    draft: 'bg-gray-100 text-gray-700 border-gray-200',
-    sent: 'bg-blue-100 text-blue-700 border-blue-200',
-    cancelled: 'bg-red-100 text-red-700 border-red-200',
-    partial: 'bg-yellow-100 text-yellow-700 border-yellow-200',
-    pending: 'bg-orange-100 text-orange-700 border-orange-200'
+    paid: "bg-emerald-100 text-emerald-700 border-emerald-200",
+    draft: "bg-gray-100 text-gray-700 border-gray-200",
+    sent: "bg-blue-100 text-blue-700 border-blue-200",
+    cancelled: "bg-red-100 text-red-700 border-red-200",
+    partial: "bg-yellow-100 text-yellow-700 border-yellow-200",
+    pending: "bg-orange-100 text-orange-700 border-orange-200",
   };
 
   const assignmentStatusColors = {
-    Assigned: 'bg-emerald-100 text-emerald-700 border-emerald-200',
-    'Not Assigned': 'bg-gray-100 text-gray-700 border-gray-200'
+    Assigned: "bg-emerald-100 text-emerald-700 border-emerald-200",
+    "Not Assigned": "bg-gray-100 text-gray-700 border-gray-200",
   };
 
   const bookingStatusColors = {
-    confirmed: 'bg-emerald-100 text-emerald-700 border-emerald-200',
-    completed: 'bg-gray-100 text-gray-700 border-gray-200',
-    cancelled: 'bg-red-100 text-red-700 border-red-200',
-    pending: 'bg-yellow-100 text-yellow-700 border-yellow-200'
+    confirmed: "bg-emerald-100 text-emerald-700 border-emerald-200",
+    completed: "bg-gray-100 text-gray-700 border-gray-200",
+    cancelled: "bg-red-100 text-red-700 border-red-200",
+    pending: "bg-yellow-100 text-yellow-700 border-yellow-200",
   };
 
   const paymentStatusColors = {
-    paid: 'bg-emerald-100 text-emerald-700 border-emerald-200',
-    partial: 'bg-yellow-100 text-yellow-700 border-yellow-200',
-    pending: 'bg-orange-100 text-orange-700 border-orange-200'
+    paid: "bg-emerald-100 text-emerald-700 border-emerald-200",
+    partial: "bg-yellow-100 text-yellow-700 border-yellow-200",
+    pending: "bg-orange-100 text-orange-700 border-orange-200",
   };
 
   const getCustomerName = (invoice) => {
-    return invoice.booking_id?.customer_id?.name || 'Unknown Customer';
+    return invoice.booking_id?.customer_id?.name || "Unknown Customer";
   };
 
   const getBookingReference = (invoice) => {
     const bookingId = invoice.booking_id?._id;
-    if (!bookingId) return 'N/A';
+    if (!bookingId) return "N/A";
     return bookingId.toString().slice(-6).toUpperCase();
   };
 
   const getBookingStatus = (invoice) => {
-    return invoice.booking_id?.status || 'unknown';
+    return invoice.booking_id?.status || "unknown";
   };
 
   const getPaymentStatus = (invoice) => {
-    if (!invoice.payments || invoice.payments.length === 0) return 'pending';
-    
-    const totalPaid = invoice.payments.reduce((sum, payment) => sum + payment.amount, 0);
-    
-    if (totalPaid >= invoice.amount) return 'paid';
-    if (totalPaid > 0) return 'partial';
-    return 'pending';
+    if (!invoice.payments || invoice.payments.length === 0) return "pending";
+
+    const totalPaid = invoice.payments.reduce(
+      (sum, payment) => sum + payment.amount,
+      0
+    );
+
+    if (totalPaid >= invoice.amount) return "paid";
+    if (totalPaid > 0) return "partial";
+    return "pending";
   };
-  
+
   useEffect(() => {
     const fetchData = async () => {
       setIsLoading(true);
@@ -78,26 +81,38 @@ const InvoiceManagement = () => {
   }, []);
 
   const filteredInvoices = invoices.filter((invoice) => {
-    const matchesStatus = filterStatus === "all" || invoice.status === filterStatus;
-    const matchesSearch = searchTerm === "" || 
-      getCustomerName(invoice).toLowerCase().includes(searchTerm.toLowerCase()) ||
-      getBookingReference(invoice).toLowerCase().includes(searchTerm.toLowerCase());
-    
+    const matchesStatus =
+      filterStatus === "all" || invoice.status === filterStatus;
+    const matchesSearch =
+      searchTerm === "" ||
+      getCustomerName(invoice)
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase()) ||
+      getBookingReference(invoice)
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase());
+
     return matchesStatus && matchesSearch;
   });
 
   const statusBadge = (status) => {
     return (
-      <span className={`px-3 py-1 text-xs font-semibold rounded-full border ${statusColors[status] || 'bg-gray-100 text-gray-700 border-gray-200'}`}>
+      <span
+        className={`px-3 py-1 text-xs font-semibold rounded-full border ${
+          statusColors[status] || "bg-gray-100 text-gray-700 border-gray-200"
+        }`}
+      >
         {status}
       </span>
     );
   };
 
   const assignmentBadge = (isAssigned) => {
-    const status = isAssigned ? 'Assigned' : 'Not Assigned';
+    const status = isAssigned ? "Assigned" : "Not Assigned";
     return (
-      <span className={`px-3 py-1 text-xs font-semibold rounded-full border ${assignmentStatusColors[status]}`}>
+      <span
+        className={`px-3 py-1 text-xs font-semibold rounded-full border ${assignmentStatusColors[status]}`}
+      >
         {status}
       </span>
     );
@@ -105,7 +120,12 @@ const InvoiceManagement = () => {
 
   const bookingStatusBadge = (status) => {
     return (
-      <span className={`px-3 py-1 text-xs font-semibold rounded-full border ${bookingStatusColors[status] || 'bg-gray-100 text-gray-700 border-gray-200'}`}>
+      <span
+        className={`px-3 py-1 text-xs font-semibold rounded-full border ${
+          bookingStatusColors[status] ||
+          "bg-gray-100 text-gray-700 border-gray-200"
+        }`}
+      >
         {status}
       </span>
     );
@@ -113,7 +133,12 @@ const InvoiceManagement = () => {
 
   const paymentStatusBadge = (status) => {
     return (
-      <span className={`px-3 py-1 text-xs font-semibold rounded-full border ${paymentStatusColors[status] || 'bg-gray-100 text-gray-700 border-gray-200'}`}>
+      <span
+        className={`px-3 py-1 text-xs font-semibold rounded-full border ${
+          paymentStatusColors[status] ||
+          "bg-gray-100 text-gray-700 border-gray-200"
+        }`}
+      >
         {status}
       </span>
     );
@@ -127,17 +152,66 @@ const InvoiceManagement = () => {
     }
   };
 
+
+  const handleStatusChange = async (invoiceId, newStatus) => {
+    try {
+      setIsLoading(true);
+
+      // Get current status before optimistic update
+      const currentInvoice = invoices.find((inv) => inv._id === invoiceId);
+      const currentStatus = currentInvoice.status;
+
+      // Only show optimistic UI update for non-email transitions
+      if (newStatus !== "sent") {
+        setInvoices((prev) =>
+          prev.map((inv) =>
+            inv._id === invoiceId ? { ...inv, status: newStatus } : inv
+          )
+        );
+      }
+
+      const updatedInvoice = await invoiceService.updateInvoiceStatus(
+        invoiceId,
+        newStatus
+      );
+
+      // Always update with server response
+      setInvoices((prev) =>
+        prev.map((inv) => (inv._id === invoiceId ? updatedInvoice : inv))
+      );
+
+      if (newStatus !== "sent") {
+        toast.success("Invoice status updated successfully");
+      } else {
+        toast.success("Invoice sent successfully");
+      }
+    } catch (err) {
+      // Revert only if we did optimistic update
+      if (newStatus !== "sent") {
+        setInvoices((prev) =>
+          prev.map((inv) =>
+            inv._id === invoiceId ? { ...inv, status: currentStatus } : inv
+          )
+        );
+      }
+      toast.error(err.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+
   const getStatusCount = (status) => {
     if (status === "all") return invoices.length;
-    return invoices.filter(inv => inv.status === status).length;
+    return invoices.filter((inv) => inv.status === status).length;
   };
 
   const getGuideStatus = (invoice) => {
-    return invoice.booking_id?.guide_id ? 'Assigned' : 'Not Assigned';
+    return invoice.booking_id?.guide_id ? "Assigned" : "Not Assigned";
   };
 
   const getTransportStatus = (invoice) => {
-    return invoice.booking_id?.transport_id ? 'Assigned' : 'Not Assigned';
+    return invoice.booking_id?.transport_id ? "Assigned" : "Not Assigned";
   };
 
   if (isLoading && invoices.length === 0) {
@@ -157,8 +231,8 @@ const InvoiceManagement = () => {
         <div className="w-full max-w-md p-6 text-center bg-white shadow-lg rounded-xl">
           <h2 className="mb-2 text-xl font-bold text-red-500">Error</h2>
           <p className="mb-4 text-gray-600">{error}</p>
-          <button 
-            onClick={() => window.location.reload()} 
+          <button
+            onClick={() => window.location.reload()}
             className="px-4 py-2 text-white transition-colors bg-orange-500 rounded-lg hover:bg-orange-600"
           >
             Try Again
@@ -169,29 +243,33 @@ const InvoiceManagement = () => {
   }
 
   return (
-    <div className="min-h-screen p-4 bg-gradient-to-br from-orange-50 to-yellow-50">
-      <div className="mx-auto max-w-7xl">
+    <div className="p-4 bg-white rounded-lg shadow-md">
+      <div className="">
         {/* Header Section */}
-        <div className="p-8 mb-6 bg-white border border-orange-100 shadow-lg rounded-2xl">
-          <div className="flex items-center justify-between">
+        <div className="mb-6 px-6 py-6 border-b border-gray-100 bg-primary-saffron">
+          <div className="flex flex-col items-center justify-between sm:flex-row">
             <div>
-              <h1 className="text-4xl font-bold text-transparent bg-gradient-to-r from-orange-400 to-yellow-500 bg-clip-text">
+              <h1 className="text-xl font-bold text-white">
                 Invoice Management
               </h1>
-              <p className="mt-2 text-gray-600">View and manage your invoices</p>
+              <p className=" text-white">View and manage your invoices</p>
             </div>
             <div className="flex items-center space-x-4">
               <div className="relative">
                 <select
                   value={filterStatus}
                   onChange={(e) => setFilterStatus(e.target.value)}
-                  className="px-4 py-3 pr-8 font-medium text-gray-700 bg-white border border-gray-300 appearance-none rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent"
-                >
+                  className="px-4 py-2 text-sm text-orange-600 transition-all duration-200 bg-white rounded-md shadow-lg sm:mt-0 hover:bg-orange-100"
+            >
                   <option value="all">All ({getStatusCount("all")})</option>
-                  <option value="draft">Draft ({getStatusCount("draft")})</option>
+                  <option value="draft">
+                    Draft ({getStatusCount("draft")})
+                  </option>
                   <option value="sent">Sent ({getStatusCount("sent")})</option>
                   <option value="paid">Paid ({getStatusCount("paid")})</option>
-                  <option value="cancelled">Cancelled ({getStatusCount("cancelled")})</option>
+                  <option value="cancelled">
+                    Cancelled ({getStatusCount("cancelled")})
+                  </option>
                 </select>
               </div>
             </div>
@@ -199,9 +277,9 @@ const InvoiceManagement = () => {
         </div>
 
         {/* Search Bar */}
-        <div className="p-6 mb-8 bg-white border border-orange-100 shadow-lg rounded-2xl">
-          <div className="relative">
-            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+        <div className="relative flex flex-col gap-4 mb-6 lg:flex-row">
+          <div className="relative flex-grow">
+            <Search className="absolute w-5 h-5 text-gray-400 transform -translate-y-1/2 left-3 top-1/2" />
             <input
               type="text"
               placeholder="Search by booking reference or customer name..."
@@ -216,23 +294,54 @@ const InvoiceManagement = () => {
         <div className="overflow-hidden bg-white border border-orange-100 shadow-lg rounded-2xl">
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-secondary-green bg-gray-50 px-8 py-6">
-                <tr>
 
-                  <th className="px-4 py-4 text-left text-sm font-bold text-gray-700 uppercase tracking-wider whitespace-nowrap">Booking Ref</th>
-                  <th className="px-4 py-4 text-left text-sm font-bold text-gray-700 uppercase tracking-wider whitespace-nowrap">Customer</th>
-                  <th className="px-4 py-4 text-left text-sm font-bold text-gray-700 uppercase tracking-wider whitespace-nowrap">Booking Status</th>
-                  <th className="px-4 py-4 text-left text-sm font-bold text-gray-700 uppercase tracking-wider whitespace-nowrap">Guide</th>
-                  <th className="px-4 py-4 text-left text-sm font-bold text-gray-700 uppercase tracking-wider whitespace-nowrap">Transport</th>
-                  <th className="px-4 py-4 text-left text-sm font-bold text-gray-700 uppercase tracking-wider whitespace-nowrap">Payment</th>
-                  <th className="px-4 py-4 text-left text-sm font-bold text-gray-700 uppercase tracking-wider whitespace-nowrap">Invoice Status</th>
-                  <th className="px-4 py-4 text-right text-sm font-bold text-gray-700 uppercase tracking-wider whitespace-nowrap">Actions</th>
+            <thead className=" px-8 py-6 bg-secondary-green">
+                <tr className="text-white">
+                  <th className="px-4 py-3 border-r text-left border-green-700">
+                    {" "}
+                    Booking Ref
+                  </th>
+                  <th className="px-4 py-3 border-r text-left border-green-700">
+                    {" "}
+                    Customer
+                  </th>
+                  <th className="px-4 py-3 border-r text-left border-green-700">
+                    {" "}
+                    Booking Status
+                  </th>
+                  <th className="px-4 py-3 border-r text-left border-green-700">
+                    {" "}
+                    Guide
+                  </th>
+                  <th className="px-4 py-3 border-r text-left border-green-700">
+                    {" "}
+                    Transport
+                  </th>
+                  <th className="px-4 py-3 border-r text-left border-green-700">
+                    {" "}
+                    Payment
+                  </th>
+                  <th className="px-4 py-3 border-r text-left border-green-700">
+                    {" "}
+                    Invoice
+                  </th>
+                  <th className="px-4 py-3 border-r text-left border-green-700">
+                    {" "}
+                    Actions
+                  </th>
 
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-100">
                 {filteredInvoices.map((invoice, index) => (
-                  <tr key={invoice._id} className={`hover:bg-orange-25 transition-colors duration-150 ${index % 2 === 0 ? 'bg-gray-25' : ''}`}>
+
+                  <tr
+                    key={invoice._id}
+                    className={`hover:bg-orange-25 transition-colors duration-150 ${
+                      index % 2 === 0 ? "bg-gray-25" : ""
+                    }`}
+                  >
+
                     <td className="px-4 py-4 whitespace-nowrap">
                       <span className="text-sm font-mono text-gray-600 bg-gray-100 px-2 py-1 rounded">
                         {getBookingReference(invoice)}
@@ -254,10 +363,42 @@ const InvoiceManagement = () => {
                       {paymentStatusBadge(getPaymentStatus(invoice))}
                     </td>
                     <td className="px-4 py-4 whitespace-nowrap">
-                      {statusBadge(invoice.status)}
+
+                      <select
+                        value={invoice.status}
+                        onChange={(e) =>
+                          handleStatusChange(invoice._id, e.target.value)
+                        }
+                        className={`appearance-none bg-transparent border rounded-md px-3 py-1 text-xs font-semibold ${
+                          statusColors[invoice.status] ||
+                          "bg-gray-100 text-gray-700 border-gray-200"
+                        }`}
+                        disabled={
+                          invoice.status === "paid" ||
+                          invoice.status === "cancelled"
+                        }
+                      >
+                        {["draft", "sent", "paid", "cancelled"].includes(
+                          invoice.status
+                        ) && (
+                          <option value={invoice.status} disabled>
+                            {invoice.status.charAt(0).toUpperCase() +
+                              invoice.status.slice(1)}
+                          </option>
+                        )}
+                        {invoice.status !== "sent" && (
+                          <option value="sent">Sent</option>
+                        )}
+                        {invoice.status !== "paid" && (
+                          <option value="paid">Paid</option>
+                        )}
+                        {invoice.status !== "cancelled" && (
+                          <option value="cancelled">Cancel Invoice</option>
+                        )}
+                      </select>
                     </td>
                     <td className="px-4 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
-                      <button 
+                      <button
                         onClick={() => handleDownloadPDF(invoice._id)}
                         className="inline-flex items-center font-semibold text-blue-500 transition-colors duration-150 hover:text-blue-700"
                         title="Download PDF"
@@ -275,7 +416,9 @@ const InvoiceManagement = () => {
             <div className="py-16 text-center">
               <FileText className="w-16 h-16 mx-auto mb-4 text-gray-300" />
               <p className="text-lg text-gray-500">
-                {searchTerm ? 'No invoices found matching your search' : 'No invoices found for the selected filter'}
+                {searchTerm
+                  ? "No invoices found matching your search"
+                  : "No invoices found for the selected filter"}
               </p>
             </div>
           )}
